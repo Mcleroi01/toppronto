@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Início",
+    "services": "Serviços",
+    "about": "Sobre Nós",
+    "careers": "Carreiras",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Entrega Rápida e Confiável em Angola",
+    "subtitle": "Top Pronto - Seu parceiro de confiança para entregas de produtos farmacêuticos, imobiliários, alimentares e muito mais.",
+    "cta": "Solicitar Entrega",
+    "phone": "Ligar Agora"
+  },
+  "services": {
+    "title": "Nossos Serviços",
+    "subtitle": "Oferecemos soluções completas de entrega para diversos setores",
+    "pharmaceutical": {
+      "title": "Produtos Farmacêuticos",
+      "description": "Entrega segura e rápida de medicamentos e produtos de saúde com controle de temperatura."
+    },
+    "food": {
+      "title": "Alimentação",
+      "description": "Entrega de alimentos frescos e produtos alimentares com garantia de qualidade."
+    },
+    "real_estate": {
+      "title": "Imobiliário",
+      "description": "Transporte de documentos e materiais relacionados ao setor imobiliário."
+    },
+    "general": {
+      "title": "Entrega Geral",
+      "description": "Serviços de entrega para diversos tipos de produtos e documentos."
+    }
+  },
+  "about": {
+    "title": "Sobre a Top Pronto",
+    "subtitle": "Liderando o mercado de entregas em Angola",
+    "description": "A Top Pronto é uma empresa angolana especializada em serviços de entrega rápida e confiável. Com anos de experiência no mercado, oferecemos soluções personalizadas para diversos setores, garantindo a satisfação dos nossos clientes.",
+    "mission": "Nossa missão é conectar pessoas e empresas através de serviços de entrega eficientes e seguros.",
+    "vision": "Ser a empresa líder em serviços de entrega em Angola, reconhecida pela excelência e inovação.",
+    "values": "Compromisso, Rapidez, Segurança, Confiabilidade"
+  },
+  "careers": {
+    "title": "Carreiras",
+    "subtitle": "Junte-se à nossa equipe",
+    "description": "Estamos sempre à procura de talentos para fazer parte da família Top Pronto. Descubra as oportunidades disponíveis.",
+    "apply": "Candidatar-se",
+    "requirements": "Requisitos",
+    "benefits": "Benefícios",
+    "location": "Localização",
+    "type": "Tipo",
+    "posted": "Publicado em"
+  },
+  "contact": {
+    "title": "Entre em Contacto",
+    "subtitle": "Estamos aqui para ajudar",
+    "phone": "Telefone",
+    "email": "Email",
+    "address": "Endereço",
+    "hours": "Horário de Funcionamento",
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "subject": "Assunto",
+      "message": "Mensagem",
+      "send": "Enviar Mensagem"
+    }
+  },
+  "footer": {
+    "description": "Top Pronto - Seu parceiro de confiança para entregas em Angola.",
+    "quickLinks": "Links Rápidos",
+    "followUs": "Siga-nos",
+    "rights": "Todos os direitos reservados."
+  }
+}

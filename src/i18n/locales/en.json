@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About Us",
+    "careers": "Careers",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Fast and Reliable Delivery in Angola",
+    "subtitle": "Top Pronto - Your trusted partner for pharmaceutical, real estate, food deliveries and more.",
+    "cta": "Request Delivery",
+    "phone": "Call Now"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "We offer complete delivery solutions for various sectors",
+    "pharmaceutical": {
+      "title": "Pharmaceutical Products",
+      "description": "Safe and fast delivery of medicines and health products with temperature control."
+    },
+    "food": {
+      "title": "Food",
+      "description": "Delivery of fresh food and food products with quality guarantee."
+    },
+    "real_estate": {
+      "title": "Real Estate",
+      "description": "Transport of documents and materials related to the real estate sector."
+    },
+    "general": {
+      "title": "General Delivery",
+      "description": "Delivery services for various types of products and documents."
+    }
+  },
+  "about": {
+    "title": "About Top Pronto",
+    "subtitle": "Leading the delivery market in Angola",
+    "description": "Top Pronto is an Angolan company specialized in fast and reliable delivery services. With years of experience in the market, we offer customized solutions for various sectors, ensuring customer satisfaction.",
+    "mission": "Our mission is to connect people and companies through efficient and secure delivery services.",
+    "vision": "To be the leading delivery service company in Angola, recognized for excellence and innovation.",
+    "values": "Commitment, Speed, Security, Reliability"
+  },
+  "careers": {
+    "title": "Careers",
+    "subtitle": "Join our team",
+    "description": "We are always looking for talent to be part of the Top Pronto family. Discover available opportunities.",
+    "apply": "Apply",
+    "requirements": "Requirements",
+    "benefits": "Benefits",
+    "location": "Location",
+    "type": "Type",
+    "posted": "Posted on"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "We're here to help",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Working Hours",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send Message"
+    }
+  },
+  "footer": {
+    "description": "Top Pronto - Your trusted partner for deliveries in Angola.",
+    "quickLinks": "Quick Links",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved."
+  }
+}

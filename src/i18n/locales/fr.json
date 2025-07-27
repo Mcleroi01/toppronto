@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "services": "Services",
+    "about": "À Propos",
+    "careers": "Carrières",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Livraison Rapide et Fiable en Angola",
+    "subtitle": "Top Pronto - Votre partenaire de confiance pour les livraisons pharmaceutiques, immobilières, alimentaires et plus.",
+    "cta": "Demander une Livraison",
+    "phone": "Appeler Maintenant"
+  },
+  "services": {
+    "title": "Nos Services",
+    "subtitle": "Nous offrons des solutions complètes de livraison pour divers secteurs",
+    "pharmaceutical": {
+      "title": "Produits Pharmaceutiques",
+      "description": "Livraison sûre et rapide de médicaments et produits de santé avec contrôle de température."
+    },
+    "food": {
+      "title": "Alimentation",
+      "description": "Livraison d'aliments frais et de produits alimentaires avec garantie de qualité."
+    },
+    "real_estate": {
+      "title": "Immobilier",
+      "description": "Transport de documents et matériaux liés au secteur immobilier."
+    },
+    "general": {
+      "title": "Livraison Générale",
+      "description": "Services de livraison pour divers types de produits et documents."
+    }
+  },
+  "about": {
+    "title": "À Propos de Top Pronto",
+    "subtitle": "Leader du marché de la livraison en Angola",
+    "description": "Top Pronto est une entreprise angolaise spécialisée dans les services de livraison rapide et fiable. Avec des années d'expérience sur le marché, nous offrons des solutions personnalisées pour divers secteurs, garantissant la satisfaction de nos clients.",
+    "mission": "Notre mission est de connecter les personnes et les entreprises grâce à des services de livraison efficaces et sécurisés.",
+    "vision": "Être l'entreprise leader en services de livraison en Angola, reconnue pour l'excellence et l'innovation.",
+    "values": "Engagement, Rapidité, Sécurité, Fiabilité"
+  },
+  "careers": {
+    "title": "Carrières",
+    "subtitle": "Rejoignez notre équipe",
+    "description": "Nous recherchons toujours des talents pour faire partie de la famille Top Pronto. Découvrez les opportunités disponibles.",
+    "apply": "Postuler",
+    "requirements": "Exigences",
+    "benefits": "Avantages",
+    "location": "Localisation",
+    "type": "Type",
+    "posted": "Publié le"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Nous sommes là pour vous aider",
+    "phone": "Téléphone",
+    "email": "Email",
+    "address": "Adresse",
+    "hours": "Heures d'ouverture",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "subject": "Sujet",
+      "message": "Message",
+      "send": "Envoyer le Message"
+    }
+  },
+  "footer": {
+    "description": "Top Pronto - Votre partenaire de confiance pour les livraisons en Angola.",
+    "quickLinks": "Liens Rapides",
+    "followUs": "Suivez-nous",
+    "rights": "Tous droits réservés."
+  }
+}
