@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
   return (
     <>
       <header
-        className=" relative text-white bg-cover bg-center bg-no-repeat overflow-hidden"
+        className=" relative h-screen sm:px-32 px-2 text-white bg-cover bg-center bg-no-repeat overflow-hidden"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Overlay foncé pour lisibilité */}
