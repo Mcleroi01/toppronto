@@ -11,8 +11,6 @@ export const Home: React.FC = () => {
   const { currentLanguage } = useLanguage();
   const [tab, setTab] = useState(0);
 
-  
-
   const features = [
     {
       title: {
