@@ -3,9 +3,9 @@ export const services = [
     id: "1",
     image: "https://cdn.prod.website-files.com/6193d546dfb64eec20323f4a/66fee6767ff2debfc1a93c45_Mouvement-de-stocks.png",
     name: {
-      pt: "📦 Gestão de Stock",
-      en: "📦 Stock Management",
-      fr: "📦 Gestion de Stock",
+      pt: "Gestão de Stock",
+      en: "Stock Management",
+      fr: "Gestion de Stock",
     },
     description: {
       pt: "A gestão de stock da TOPRONTO é essencial para empresas que desejam manter o controle eficiente das mercadorias, evitando perdas ou excessos.",
@@ -17,9 +17,9 @@ export const services = [
     id: "2",
     image: "https://portalviana.sieg.co.ao/sites/default/files/2023-07/news-500x280-delivery_0.png",
     name: {
-      pt: "📢 Relações Públicas",
-      en: "📢 Public Relations",
-      fr: "📢 Relations Publiques",
+      pt: "Relações Públicas",
+      en: "Public Relations",
+      fr: "Relations Publiques",
     },
     description: {
       pt: "Distribuição rápida de documentos oficiais, convites, materiais de eventos e comunicação corporativa para empresas e instituições.",
@@ -31,9 +31,9 @@ export const services = [
     id: "3",
     image: "https://mercadoeconsumo.com.br/wp-content/smush-webp/2020/10/Delivery-Center-1024x678.jpeg.webp",
     name: {
-      pt: "🚀 Entregas Diversas",
-      en: "🚀 General Deliveries",
-      fr: "🚀 Livraisons Diverses",
+      pt: "Entregas Diversas",
+      en: "General Deliveries",
+      fr: "Livraisons Diverses",
     },
     description: {
       pt: "Entregas rápidas e seguras de objetos pessoais e corporativos, com foco na agilidade e conveniência.",
@@ -45,9 +45,9 @@ export const services = [
     id: "4",
     image: "https://www.melissas.com/cdn/shop/products/image-of-organic-mixed-fruit-only-box-southern-california-delivery-fruit-28569055363116.jpg?v=1626304328",
     name: {
-      pt: "🧪 Transporte de Material Biológico",
-      en: "🧪 Biological Material Transport",
-      fr: "🧪 Transport de Matériel Biologique",
+      pt: "Transporte de Material Biológico",
+      en: "Biological Material Transport",
+      fr: "Transport de Matériel Biologique",
     },
     description: {
       pt: "Protocolos rigorosos para transporte seguro de amostras biológicas, essenciais para clínicas, hospitais e laboratórios.",
@@ -59,9 +59,9 @@ export const services = [
     id: "5",
     image: "https://static.wixstatic.com/media/0204e8_8392b5e7c77d4c06afdc75090c05f035~mv2.jpg/v1/fill/w_560,h_290,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/0204e8_8392b5e7c77d4c06afdc75090c05f035~mv2.jpg",
     name: {
-      pt: "💊 Distribuição de Fármacos",
-      en: "💊 Pharmaceutical Distribution",
-      fr: "💊 Distribution de Médicaments",
+      pt: "Distribuição de Fármacos",
+      en: "Pharmaceutical Distribution",
+      fr: "Distribution de Médicaments",
     },
     description: {
       pt: "Entrega de medicamentos e produtos de saúde com agilidade, atendendo farmácias, hospitais e clientes finais.",
@@ -73,9 +73,9 @@ export const services = [
     id: "6",
     image: "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
     name: {
-      pt: "🚛 Cargas e Transporte Logístico",
-      en: "🚛 Cargo & Logistics Transport",
-      fr: "🚛 Transport Logistique et de Charges",
+      pt: "Cargas e Transporte Logístico",
+      en: "Cargo & Logistics Transport",
+      fr: "Transport Logistique et de Charges",
     },
     description: {
       pt: "Transporte de cargas para empresas com soluções logísticas personalizadas e escaláveis.",

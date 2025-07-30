@@ -24,13 +24,19 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white sm:px-32 px-2">
+    <footer className=" relative bg-black text-white sm:px-32 px-2">
+      <div
+        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-5"
+        style={{
+          backgroundImage: "url('/images/background.png')",
+        }}
+      ></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-2 rounded-lg">
+              <div className=" p-2 rounded-lg">
                 <Truck className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold">Top Pronto</span>
@@ -76,19 +82,19 @@ export const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">{t("contact.title")}</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4 text-blue-400" />
+                <Phone className="w-4 h-4 " />
                 <span className="text-gray-300 text-sm">
                   {contactInfo.phone}
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="w-4 h-4 text-blue-400" />
+                <Mail className="w-4 h-4 " />
                 <span className="text-gray-300 text-sm">
                   {contactInfo.email}
                 </span>
               </div>
               <div className="flex items-start space-x-3">
-                <MapPin className="w-4 h-4 text-blue-400 mt-0.5" />
+                <MapPin className="w-4 h-4  mt-0.5" />
                 <span className="text-gray-300 text-sm">
                   {contactInfo.address[currentLanguage]}
                 </span>
