@@ -11,6 +11,12 @@ export interface Service {
     en: string;
     fr: string;
   };
+  importance: {
+    pt: string[];
+    en: string[];
+    fr: string[];
+  };
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   image: string;
 }
 

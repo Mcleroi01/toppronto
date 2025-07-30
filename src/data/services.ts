@@ -14,6 +14,26 @@ export const services = [
       fr: "La gestion de stock de TOPRONTO est essentielle pour les entreprises qui souhaitent contrôler efficacement leurs marchandises, en évitant pertes et excès.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Reduz custos operacionais com armazenagem",
+        "Garante que os produtos certos estejam disponíveis no momento certo",
+        "Facilita o processo de reposição e previsão de demanda",
+        "Ajuda empresas a focarem no seu negócio principal enquanto nós cuidamos da logística"
+      ],
+      en: [
+        "Reduces storage operational costs",
+        "Ensures the right products are available at the right time",
+        "Facilitates the restocking and demand forecasting process",
+        "Helps companies focus on their core business while we handle logistics"
+      ],
+      fr: [
+        "Réduit les coûts opérationnels de stockage",
+        "Garantit que les bons produits soient disponibles au bon moment",
+        "Facilite le processus de réapprovisionnement et de prévision de la demande",
+        "Aide les entreprises à se concentrer sur leur activité principale pendant que nous gérons la logistique"
+      ]
+    },
   },
   {
     id: "2",
@@ -29,6 +49,23 @@ export const services = [
       fr: "Distribution rapide de documents officiels, invitations, matériels d'événements et communication d'entreprise.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Fortalece a comunicação entre empresas e clientes",
+        "Garante que mensagens e documentos sejam entregues com agilidade e segurança",
+        "Apoia campanhas e eventos, assegurando que toda a logística de distribuição ocorra sem falhas"
+      ],
+      en: [
+        "Strengthens communication between companies and clients",
+        "Ensures that messages and documents are delivered quickly and securely",
+        "Supports campaigns and events, ensuring that all distribution logistics occur without failures"
+      ],
+      fr: [
+        "Renforce la communication entre les entreprises et les clients",
+        "Garantit que les messages et documents soient livrés rapidement et en sécurité",
+        "Soutient les campagnes et événements, en assurant que toute la logistique de distribution se déroule sans failles"
+      ]
+    },
   },
   {
     id: "3",
@@ -44,6 +81,23 @@ export const services = [
       fr: "Livraisons rapides et sécurisées d'objets personnels et professionnels, avec un accent sur la rapidité et la commodité.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Proporciona conveniência para clientes individuais e empresas",
+        "Ajuda empresas a manterem prazos de entrega competitivos",
+        "Melhora a experiência do cliente final com agilidade e confiança"
+      ],
+      en: [
+        "Provides convenience for individual customers and businesses",
+        "Helps businesses maintain competitive delivery deadlines",
+        "Improves the final customer experience with agility and confidence"
+      ],
+      fr: [
+        "Offre une commodité aux clients individuels et aux entreprises",
+        "Aide les entreprises à maintenir des délais de livraison compétitifs",
+        "Améliore l'expérience du client final avec agilité et confiance"
+      ]
+    },
   },
   {
     id: "4",
@@ -59,6 +113,23 @@ export const services = [
       fr: "Protocoles stricts pour le transport sécurisé de matériel biologique, essentiel pour les cliniques, hôpitaux et laboratoires.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Atende a laboratórios, hospitais e clínicas que dependem de transporte seguro e rápido",
+        "Evita contaminações e mantém a integridade do material, essencial para diagnósticos corretos",
+        "Contribui para salvar vidas, oferecendo um serviço confiável para o setor de saúde"
+      ],
+      en: [
+        "Serves laboratories, hospitals, and clinics that depend on fast and secure transport",
+        "Prevents contamination and maintains material integrity, essential for accurate diagnoses",
+        "Contributes to saving lives by providing reliable service to the healthcare sector"
+      ],
+      fr: [
+        "Sert les laboratoires, hôpitaux et cliniques qui dépendent d'un transport rapide et sécurisé",
+        "Évite les contaminations et maintient l'intégrité du matériel, essentiel pour des diagnostics précis",
+        "Contribue à sauver des vies en offrant un service fiable au secteur de la santé"
+      ]
+    },
   },
   {
     id: "5",
@@ -74,6 +145,23 @@ export const services = [
       fr: "Livraison rapide de médicaments et de produits de santé aux pharmacies, hôpitaux et clients finaux.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Garante que medicamentos cheguem rapidamente aos locais onde são necessários",
+        "Facilita a vida de clientes que precisam de medicamentos com urgência",
+        "Contribui para a eficiência da cadeia de abastecimento farmacêutico"
+      ],
+      en: [
+        "Ensures that medications reach the places where they are needed quickly",
+        "Makes life easier for customers who need medications urgently",
+        "Contributes to the efficiency of the pharmaceutical supply chain"
+      ],
+      fr: [
+        "Garantit que les médicaments arrivent rapidement là où ils sont nécessaires",
+        "Facilite la vie des clients qui ont besoin de médicaments d'urgence",
+        "Contribute à l'efficacité de la chaîne d'approvisionnement pharmaceutique"
+      ]
+    },
   },
   {
     id: "6",
@@ -89,5 +177,22 @@ export const services = [
       fr: "Transport de marchandises pour les entreprises avec des solutions logistiques personnalisées et évolutives.",
     },
     icon: Shield,
+    importance: {
+      pt: [
+        "Apoia empresas que necessitam enviar produtos em grande escala",
+        "Melhora a eficiência logística, reduzindo custos e prazos",
+        "Oferece soluções personalizadas de transporte, atendendo diferentes segmentos do mercado"
+      ],
+      en: [
+        "Supports companies that need to send products on a large scale",
+        "Improves logistics efficiency, reducing costs and deadlines",
+        "Offers customized transport solutions, serving different market segments"
+      ],
+      fr: [
+        "Soutient les entreprises qui doivent envoyer des produits à grande échelle",
+        "Améliore l'efficacité logistique, en réduisant les coûts et les délais",
+        "Offre des solutions de transport personnalisées, en servant différents segments de marché"
+      ]
+    },
   },
 ];
