@@ -9,12 +9,13 @@
   "hero": {
     "title": "Entrega Rápida e Confiável em Angola",
     "subtitle": "Top Pronto - Seu parceiro de confiança para entregas de produtos farmacêuticos, imobiliários, alimentares e muito mais.",
-    "cta": "Solicitar Entrega",
+    "cta": "Descubra nossos serviços",
     "phone": "Ligar Agora"
   },
   "services": {
     "title": "Nossos Serviços",
     "subtitle": "Oferecemos soluções completas de entrega para diversos setores",
+    "cta": "Solicitar um orçamento",
     "pharmaceutical": {
       "title": "Produtos Farmacêuticos",
       "description": "Entrega segura e rápida de medicamentos e produtos de saúde com controle de temperatura."
@@ -38,7 +39,8 @@
     "description": "A Top Pronto é uma empresa angolana especializada em serviços de entrega rápida e confiável. Com anos de experiência no mercado, oferecemos soluções personalizadas para diversos setores, garantindo a satisfação dos nossos clientes.",
     "mission": "Nossa missão é conectar pessoas e empresas através de serviços de entrega eficientes e seguros.",
     "vision": "Ser a empresa líder em serviços de entrega em Angola, reconhecida pela excelência e inovação.",
-    "values": "Compromisso, Rapidez, Segurança, Confiabilidade"
+    "values": "Compromisso, Rapidez, Segurança, Confiabilidade",
+    "cta": "Junte-se à nossa equipe"
   },
   "careers": {
     "title": "Carreiras",
@@ -49,7 +51,8 @@
     "benefits": "Benefícios",
     "location": "Localização",
     "type": "Tipo",
-    "posted": "Publicado em"
+    "posted": "Publicado em",
+    "cta": "Contate-nos"
   },
   "contact": {
     "title": "Entre em Contacto",
@@ -58,6 +61,7 @@
     "email": "Email",
     "address": "Endereço",
     "hours": "Horário de Funcionamento",
+    "cta": "Voltar para o início",
     "form": {
       "name": "Nome",
       "email": "Email",
