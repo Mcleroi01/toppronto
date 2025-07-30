@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { LanguageSelector } from "../common/LanguageSelector";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Utilitaire pour gérer les images par route
 const backgroundImages: Record<string, string> = {
@@ -12,7 +13,8 @@ const backgroundImages: Record<string, string> = {
   "/about":
     "https://www.lalamove.com/hubfs/Lalamove%20Website%202020/Deliver_Care/img_delivercare_banner_v1.png",
   "/careers": "https://www.lalamove.com/hubfs/Banner%20Photo.jpg",
-  "/contact": "/images/headers/contact-bg.jpg",
+  "/contact":
+    "https://www.skycostanera.cl/sites/sky/files/2022-12/banner_galeria-mobile.jpg",
 };
 
 export const Header: React.FC = () => {
@@ -90,119 +92,164 @@ export const Header: React.FC = () => {
             {location.pathname === "/" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("hero.title", "Livraison rapide et fiable à Luanda")}
+                  {t("hero.title", "Entrega Rápida e Confiável em Luanda")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
                     "hero.subtitle",
-                    "Votre partenaire de confiance pour toutes vos livraisons en Angola."
+                    "Seu parceiro de confiança para todas as entregas em Angola."
                   )}
                 </p>
                 <Link
                   to="/services"
                   className="inline-flex items-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors group shadow"
                 >
-                  {t("hero.cta", "Découvrir nos services")}
+                  {t("hero.cta", "Descubra nossos serviços")}
                 </Link>
               </div>
             )}
             {location.pathname === "/services" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("services.title", "Nos Services")}
+                  {t("services.title", "Nossos Serviços")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
                     "services.subtitle",
-                    "Découvrez toutes nos solutions de livraison adaptées à vos besoins."
+                    "Descubra todas as nossas soluções de entrega adaptadas às suas necessidades."
                   )}
                 </p>
                 <Link
                   to="/contact"
                   className="inline-flex items-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors group shadow"
                 >
-                  {t("services.cta", "Demander un devis")}
+                  {t("services.cta", "Solicitar um orçamento")}
                 </Link>
               </div>
             )}
             {location.pathname === "/about" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("about.title", "À propos de Top Pronto")}
+                  {t("about.title", "Sobre a Top Pronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
                     "about.subtitle",
-                    "Une équipe passionnée au service de votre logistique."
+                    "Uma equipe apaixonada ao serviço da sua logística."
                   )}
                 </p>
                 <Link
                   to="/careers"
                   className="inline-flex items-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors group shadow"
                 >
-                  {t("about.cta", "Rejoindre notre équipe")}
+                  {t("about.cta", "Junte-se à nossa equipe")}
                 </Link>
               </div>
             )}
             {location.pathname === "/careers" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("careers.title", "Rejoignez Top Pronto")}
+                  {t("careers.title", "Junte-se à Top Pronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
                     "careers.subtitle",
-                    "Découvrez nos opportunités et postulez dès aujourd'hui."
+                    "Descubra nossas oportunidades e candidate-se hoje mesmo."
                   )}
                 </p>
                 <Link
                   to="/contact"
                   className="inline-flex items-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors group shadow"
                 >
-                  {t("careers.cta", "Nous contacter")}
+                  {t("careers.cta", "Contate-nos")}
                 </Link>
               </div>
             )}
             {location.pathname === "/contact" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("contact.title", "Contactez-nous")}
+                  {t("contact.title", "Contate-nos")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
                     "contact.subtitle",
-                    "Notre équipe est à votre écoute pour toutes vos demandes."
+                    "Nossa equipe está à disposição para todas as suas solicitações."
                   )}
                 </p>
                 <Link
                   to="/"
                   className="inline-flex items-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors group shadow"
                 >
-                  {t("contact.cta", "Retour à l'accueil")}
+                  {t("contact.cta", "Voltar para o início")}
                 </Link>
               </div>
             )}
           </div>
 
           {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="md:hidden bg-black/80 rounded-xl py-4 px-6 mt-2 space-y-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-2 rounded-md text-base font-medium transition-colors ${
-                    isActive(item.href)
-                      ? "text-yellow-400 bg-white/20"
-                      : "text-white hover:text-yellow-400 hover:bg-white/10"
-                  }`}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="md:hidden fixed top-0 left-0 right-0 bottom-0 bg-black/80 z-50"
+              >
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ duration: 0.3 }}
+                  className="h-full w-3/4 bg-white shadow-xl rounded-l-2xl p-6 overflow-y-auto"
                 >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          )}
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {t("nav.menu", "Menu")}
+                    </h2>
+                    <button
+                      onClick={() => setIsMenuOpen(false)}
+                      className="p-2 hover:bg-gray-100 rounded-full"
+                    >
+                      <X className="w-6 h-6 text-gray-600" />
+                    </button>
+                  </div>
+                  
+                  <nav className="space-y-2">
+                    {navigation.map((item, index) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <Link
+                          to={item.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${
+                            isActive(item.href)
+                              ? "bg-yellow-50 text-yellow-700"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          <span className="text-lg font-medium">{item.name}</span>
+                          {isActive(item.href) && (
+                            <span className="ml-auto text-yellow-500">
+                              <ArrowRight className="w-5 h-5" />
+                            </span>
+                          )}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </nav>
+
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <LanguageSelector />
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </header>
     </>

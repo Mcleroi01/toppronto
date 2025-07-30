@@ -15,6 +15,14 @@ export const jobPositions: JobPosition[] = [
     },
     location: 'Luanda, Angola',
     type: 'full-time',
+    experienceLevel: 'mid',
+    salaryRange: {
+      pt: '150.000 - 250.000 AOA mensais',
+      en: '150,000 - 250,000 AOA monthly',
+      fr: '150 000 - 250 000 AOA mensuels'
+    },
+    postedDate: '2024-01-15',
+    deadline: '2024-02-15',
     description: {
       pt: 'Procuramos motoristas experientes para integrar nossa equipe de entrega. Responsável por transportar produtos de forma segura e pontual.',
       en: 'We are looking for experienced drivers to join our delivery team. Responsible for transporting products safely and on time.',
@@ -51,7 +59,7 @@ export const jobPositions: JobPosition[] = [
         'Competitive salary',
         'Health insurance',
         'Fuel provided',
-        'Growth opportunities'
+        'Opportunities for growth'
       ],
       fr: [
         'Salaire compétitif',
@@ -59,68 +67,142 @@ export const jobPositions: JobPosition[] = [
         'Carburant fourni',
         'Opportunités de croissance'
       ]
-    },
-    postedDate: '2024-01-15'
+    }
   },
   {
-    id: 'customer-service',
+    id: 'warehouse-manager',
     title: {
-      pt: 'Atendimento ao Cliente',
-      en: 'Customer Service Representative',
-      fr: 'Représentant Service Client'
+      pt: 'Gerente de Armazém',
+      en: 'Warehouse Manager',
+      fr: 'Gestionnaire de Stock'
     },
     department: {
-      pt: 'Atendimento',
-      en: 'Customer Service',
-      fr: 'Service Client'
+      pt: 'Logística',
+      en: 'Logistics',
+      fr: 'Logistique'
     },
     location: 'Luanda, Angola',
     type: 'full-time',
+    experienceLevel: 'senior',
+    salaryRange: {
+      pt: '200.000 - 400.000 AOA mensais',
+      en: '200,000 - 400,000 AOA monthly',
+      fr: '200 000 - 400 000 AOA mensuels'
+    },
+    postedDate: '2024-01-01',
+    deadline: '2024-03-01',
     description: {
-      pt: 'Buscamos profissional para atendimento ao cliente, responsável por receber pedidos e fornecer suporte aos clientes.',
-      en: 'We are looking for a customer service professional, responsible for receiving orders and providing customer support.',
-      fr: 'Nous recherchons un professionnel du service client, responsable de recevoir les commandes et de fournir un support client.'
+      pt: 'Responsável pela gestão eficiente do armazém e supervisão da equipe.',
+      en: 'Responsible for efficient warehouse management and team supervision.',
+      fr: 'Responsable de la gestion efficace du stock et de la supervision de l\'équipe.'
     },
     requirements: {
       pt: [
-        'Ensino médio completo',
-        'Experiência em atendimento ao cliente',
-        'Fluência em português e inglês',
-        'Habilidades de comunicação'
+        'Experiência mínima de 5 anos',
+        'Formação em Logística ou Gestão',
+        'Excelentes habilidades de liderança',
+        'Conhecimento de sistemas de gestão de estoque'
       ],
       en: [
-        'High school diploma',
-        'Customer service experience',
-        'Fluency in Portuguese and English',
-        'Communication skills'
+        'Minimum 5 years experience',
+        'Logistics or Management degree',
+        'Excellent leadership skills',
+        'Knowledge of inventory management systems'
       ],
       fr: [
-        'Diplôme d\'études secondaires',
-        'Expérience en service client',
-        'Maîtrise du portugais et de l\'anglais',
-        'Compétences en communication'
+        'Expérience minimum de 5 ans',
+        'Formation en Logistique ou Gestion',
+        'Excellentes compétences de leadership',
+        'Connaissance des systèmes de gestion de stock'
       ]
     },
     benefits: {
       pt: [
-        'Salário base + comissões',
-        'Plano de saúde',
-        'Vale alimentação',
-        'Formação contínua'
+        'Salário competitivo',
+        'Seguro de saúde',
+        'Bônus de produtividade',
+        'Vale alimentação'
       ],
       en: [
-        'Base salary + commissions',
-        'Health plan',
-        'Meal vouchers',
-        'Continuous training'
+        'Competitive salary',
+        'Health insurance',
+        'Productivity bonus',
+        'Meal allowance'
       ],
       fr: [
-        'Salaire de base + commissions',
-        'Plan de santé',
-        'Tickets restaurant',
-        'Formation continue'
+        'Salaire compétitif',
+        'Assurance santé',
+        'Bonus de productivité',
+        'Ticket restaurant'
+      ]
+    }
+  },
+  {
+    id: 'customer-service',
+    title: {
+      pt: 'Atendente de Clientes',
+      en: 'Customer Service Representative',
+      fr: 'Agent de Service Client'
+    },
+    department: {
+      pt: 'Atendimento ao Cliente',
+      en: 'Customer Service',
+      fr: 'Service Client'
+    },
+    location: 'Luanda, Angola',
+    type: 'part-time',
+    experienceLevel: 'entry',
+    salaryRange: {
+      pt: '100.000 - 150.000 AOA mensais',
+      en: '100,000 - 150,000 AOA monthly',
+      fr: '100 000 - 150 000 AOA mensuels'
+    },
+    postedDate: '2024-01-20',
+    deadline: '2024-02-28',
+    description: {
+      pt: 'Responsável por atender e auxiliar clientes por telefone e chat.',
+      en: 'Responsible for assisting customers via phone and chat.',
+      fr: 'Responsable d\'assister les clients par téléphone et chat.'
+    },
+    requirements: {
+      pt: [
+        'Experiência com atendimento ao cliente',
+        'Excelente comunicação',
+        'Disponibilidade para trabalhar em turnos',
+        'Fluência em português'
+      ],
+      en: [
+        'Customer service experience',
+        'Excellent communication',
+        'Availability for shift work',
+        'Fluency in Portuguese'
+      ],
+      fr: [
+        'Expérience en service client',
+        'Excellent communication',
+        'Disponibilité pour travailler en équipes',
+        'Fluence en portugais'
       ]
     },
-    postedDate: '2024-01-10'
+    benefits: {
+      pt: [
+        'Salário competitivo',
+        'Seguro de saúde',
+        'Horários flexíveis',
+        'Treinamento profissional'
+      ],
+      en: [
+        'Competitive salary',
+        'Health insurance',
+        'Flexible hours',
+        'Professional training'
+      ],
+      fr: [
+        'Salaire compétitif',
+        'Assurance santé',
+        'Horaires flexibles',
+        'Formation professionnelle'
+      ]
+    }
   }
 ];

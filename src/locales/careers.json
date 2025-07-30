@@ -1,0 +1,62 @@
+{
+  "title": {
+    "pt": "Carreiras",
+    "en": "Careers",
+    "fr": "Carrières"
+  },
+  "subtitle": {
+    "pt": "Descubra oportunidades de carreira conosco",
+    "en": "Discover career opportunities with us",
+    "fr": "Découvrez les opportunités de carrière avec nous"
+  },
+  "yearsOfExperience": {
+    "pt": "Anos de experiência",
+    "en": "Years of experience",
+    "fr": "Années d'expérience"
+  },
+  "requirements": {
+    "pt": "Requisitos",
+    "en": "Requirements",
+    "fr": "Exigences"
+  },
+  "applyNow": {
+    "pt": "Candidatar-se agora",
+    "en": "Apply now",
+    "fr": "Postuler maintenant"
+  },
+  "jobsFound": {
+    "pt": "vagas encontradas",
+    "en": "jobs found",
+    "fr": "postes trouvés"
+  },
+  "filterBy": {
+    "pt": "Filtrar por",
+    "en": "Filter by",
+    "fr": "Filtrer par"
+  },
+  "allTypes": {
+    "pt": "Todos os tipos",
+    "en": "All types",
+    "fr": "Tous les types"
+  },
+  "fullTime": {
+    "pt": "Tempo Integral",
+    "en": "Full Time",
+    "fr": "Temps Plein"
+  },
+  "partTime": {
+    "pt": "Meio Período",
+    "en": "Part Time",
+    "fr": "Temps Partiel"
+  },
+  "contract": {
+    "pt": "Contrato",
+    "en": "Contract",
+    "fr": "Contrat"
+  },
+  "searchJobs": {
+    "pt": "Pesquisar vagas",
+    "en": "Search jobs",
+    "fr": "Rechercher postes"
+  }
+}

@@ -133,11 +133,11 @@ export const Home: React.FC = () => {
         pos += reverse ? -speed : speed;
         // Pour le sens inverse, il faut aussi ajuster scrollLeft
         if (reverse) {
-          if (pos <= 0) pos = el.scrollWidth / 2;
-          el.scrollLeft = pos;
+          if (pos <= 0 && el && el.scrollWidth) pos = el.scrollWidth / 2;
+          if (el) el.scrollLeft = pos;
         } else {
-          if (pos >= el.scrollWidth / 2) pos = 0;
-          el.scrollLeft = pos;
+          if (pos >= (el?.scrollWidth || 0) / 2 && el) pos = 0;
+          if (el) el.scrollLeft = pos;
         }
         frame = requestAnimationFrame(animate);
       }
