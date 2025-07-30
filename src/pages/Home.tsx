@@ -357,49 +357,54 @@ export const Home: React.FC = () => {
                     : "text-green-900 hover:bg-yellow-200"
                 }`}
               >
-                {cat.name[currentLanguage].length > 15
-                  ? cat.name[currentLanguage].slice(0, 14) + "…"
-                  : cat.name[currentLanguage]}
+                {cat.name && cat.name[currentLanguage]
+                  ? cat.name[currentLanguage].length > 15
+                    ? cat.name[currentLanguage].slice(0, 14) + "…"
+                    : cat.name[currentLanguage]
+                  : ""}
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
           <div className="grid grid-cols-1 gap-8 mb-4">
-            {[services[tab]].map((service, idx) => (
-              <motion.div
-                key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="flex flex-col md:flex-row w-full overflow-hidden "
-              >
-                <div className="flex flex-col justify-between w-full md:w-1/2 mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold  mb-5">
-                      {service.name[currentLanguage]}
-                    </h3>
-                    <p className="text-gray-800 text-sm mb-4">
-                      {service.description[currentLanguage]}
-                    </p>
-                  </div>
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center text-clip w-fit"
+            {[services[tab]].map(
+              (service, idx) =>
+                service && (
+                  <motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                    className="flex flex-col md:flex-row w-full overflow-hidden "
                   >
-                    {t("services.cta", "Solicite um orçamento")}
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                </div>
+                    <div className="flex flex-col justify-between w-full md:w-1/2 mb-4">
+                      <div>
+                        <h3 className="text-xl font-bold  mb-5">
+                          {service.name[currentLanguage]}
+                        </h3>
+                        <p className="text-gray-800 text-sm mb-4">
+                          {service.description[currentLanguage]}
+                        </p>
+                      </div>
+                      <Link
+                        to="/contact"
+                        className="inline-flex items-center text-clip w-fit"
+                      >
+                        {t("services.cta", "Solicite um orçamento")}
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </div>
 
-                <img
-                  src={service.image}
-                  alt={service.name[currentLanguage]}
-                  className="w-full md:w-1/2 h-64 object-cover transition-transform duration-300 hover:scale-105"
-                />
-              </motion.div>
-            ))}
+                    <img
+                      src={service.image}
+                      alt={service.name[currentLanguage]}
+                      className="w-full md:w-1/2 h-64 object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </motion.div>
+                )
+            )}
           </div>
         </div>
       </section>

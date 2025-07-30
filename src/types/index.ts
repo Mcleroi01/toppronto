@@ -11,7 +11,6 @@ export interface Service {
     en: string;
     fr: string;
   };
-  icon: string;
   image: string;
 }
 
