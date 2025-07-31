@@ -1,80 +1,39 @@
 // Types globaux pour l'application
+export type Language = 'pt' | 'en' | 'fr';
+
+type TranslatableString = Record<Language, string>;
+type TranslatableStringArray = Record<Language, string[]>;
+
 export interface Service {
   id: string;
-  name: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
-  description: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
+  name: TranslatableString;
+  description: TranslatableString;
   image: string;
 }
 
 export interface TeamMember {
   id: string;
   name: string;
-  position: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
+  position: TranslatableString;
   image: string;
-  bio: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
+  bio: TranslatableString;
 }
 
 export interface JobPosition {
   id: string;
-  title: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
-  department: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
+  title: TranslatableString;
+  department: TranslatableString;
   location: string;
   type: 'full-time' | 'part-time' | 'contract';
-  description: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
-  requirements: {
-    pt: string[];
-    en: string[];
-    fr: string[];
-  };
-  benefits: {
-    pt: string[];
-    en: string[];
-    fr: string[];
-  };
+  description: TranslatableString;
+  requirements: TranslatableStringArray;
+  benefits: TranslatableStringArray;
   postedDate: string;
 }
 
 export interface ContactInfo {
   phone: string;
   email: string;
-  address: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
-  workingHours: {
-    pt: string;
-    en: string;
-    fr: string;
-  };
+  address: TranslatableString;
+  workingHours: TranslatableString;
 }
-
-export type Language = 'pt' | 'en' | 'fr';

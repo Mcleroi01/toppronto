@@ -107,40 +107,49 @@ export default function JobList({ currentLanguage }: JobListProps) {
               className="bg-white rounded-lg shadow-lg p-6"
             >
               <JobDetail
-                job={jobPositions.find(job => job.id === selectedJob)!}
+                job={jobPositions.find((job) => job.id === selectedJob)!}
                 onClose={handleCloseDetail}
                 currentLanguage={currentLanguage}
               />
             </motion.div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {filteredJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                   onClick={() => handleJobClick(job.id)}
+                  className="p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 bg-white transition-all cursor-pointer"
                 >
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title[currentLanguage]}</h3>
-                  <div className="flex items-center gap-4 text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {job.title[currentLanguage]}
+                  </h3>
+
+                  <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4 text-primary" />
                       <span>{job.location}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
+
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4 text-primary" />
                       <span>{job.type}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="w-4 h-4" />
+
+                    <div className="flex items-center gap-1">
+                      <Briefcase className="w-4 h-4 text-primary" />
                       <span>{job.experienceLevel}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4" />
+
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="w-4 h-4 text-primary" />
                       <span>{job.salaryRange[currentLanguage]}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(job.postedDate).toLocaleDateString('fr-FR')}</span>
+
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4 text-primary" />
+                      <span>
+                        {new Date(job.postedDate).toLocaleDateString("fr-FR")}
+                      </span>
                     </div>
                   </div>
                 </div>

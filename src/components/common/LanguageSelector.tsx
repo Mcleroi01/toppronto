@@ -1,12 +1,12 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
-import { Language } from '../../types';
+import { LanguageKey } from '../../types';
 
 const languages = [
-  { code: 'pt' as Language, name: 'Português', flag: '🇦🇴' },
-  { code: 'en' as Language, name: 'English', flag: '🇺🇸' },
-  { code: 'fr' as Language, name: 'Français', flag: '🇫🇷' }
+  { code: 'pt' as LanguageKey, name: 'Português', flag: '🇦🇴' },
+  { code: 'en' as LanguageKey, name: 'English', flag: '🇺🇸' },
+  { code: 'fr' as LanguageKey, name: 'Français', flag: '🇫🇷' }
 ];
 
 export const LanguageSelector: React.FC = () => {

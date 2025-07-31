@@ -301,11 +301,11 @@ export const Home: React.FC = () => {
           }}
         ></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-green-900 mb-20 ">
+          <h2 className="text-3xl md:text-4xl font-bold  mb-10 ">
             {t("vehicles.title", "A nossa frota de veículos")}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12 place-items-center">
             {vehicles.map((veh, idx) => (
               <motion.div
                 key={veh.label[currentLanguage]}
@@ -323,7 +323,7 @@ export const Home: React.FC = () => {
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 "
                   />
                 </div>
-                <h3 className="text-xl font-bold text-green-900 mb-2 mt-8">
+                <h3 className="text-xl font-bold text-green-900 mb-2 mt-10">
                   {veh.label[currentLanguage]}
                 </h3>
                 <p className="text-blue-900 text-sm">
