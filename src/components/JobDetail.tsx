@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ApplyModal } from './ApplyModal';
 
 interface JobDetailProps {
   job: any;
@@ -9,6 +10,7 @@ interface JobDetailProps {
 }
 
 export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLanguage }) => {
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
@@ -77,10 +79,19 @@ export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLangu
           </ul>
         </div>
 
-        <button className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <button 
+          onClick={() => setIsApplyModalOpen(true)}
+          className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+        >
           Apply Now
           <ArrowRight className="ml-2 w-4 h-4" />
         </button>
+
+        <ApplyModal 
+          isOpen={isApplyModalOpen}
+          onClose={() => setIsApplyModalOpen(false)}
+          jobTitle={job.title[currentLanguage]}
+        />
       </div>
     </div>
   );

@@ -8,7 +8,7 @@
   },
   "hero": {
     "title": "Fast and Reliable Delivery in Angola",
-    "subtitle": "Top Pronto - Your trusted partner for pharmaceutical, real estate, food deliveries and more.",
+    "subtitle": "Topronto - Your trusted partner for pharmaceutical, real estate, food deliveries and more.",
     "cta": "Request Delivery",
     "phone": "Call Now"
   },
@@ -33,9 +33,9 @@
     }
   },
   "about": {
-    "title": "About Top Pronto",
+    "title": "About Topronto",
     "subtitle": "Leading the delivery market in Angola",
-    "description": "Top Pronto is an Angolan company specialized in fast and reliable delivery services. With years of experience in the market, we offer customized solutions for various sectors, ensuring customer satisfaction.",
+    "description": "Topronto is an Angolan company specialized in fast and reliable delivery services. With years of experience in the market, we offer customized solutions for various sectors, ensuring customer satisfaction.",
     "mission": "Our mission is to connect people and companies through efficient and secure delivery services.",
     "vision": "To be the leading delivery service company in Angola, recognized for excellence and innovation.",
     "values": "Commitment, Speed, Security, Reliability"
@@ -43,7 +43,7 @@
   "careers": {
     "title": "Careers",
     "subtitle": "Join our team",
-    "description": "We are always looking for talent to be part of the Top Pronto family. Discover available opportunities.",
+    "description": "We are always looking for talent to be part of the Topronto family. Discover available opportunities.",
     "apply": "Apply",
     "requirements": "Requirements",
     "benefits": "Benefits",
@@ -66,10 +66,30 @@
       "send": "Send Message"
     }
   },
+  "apply": {
+    "title": "Apply for",
+    "success": "Your application has been submitted successfully!",
+    "error": "An error occurred while submitting your application. Please try again.",
+    "requiredFiles": "Please upload both CV and ID card.",
+    "optional": "Optional",
+    "form": {
+      "name": "Full Name",
+      "email": "Email",
+      "cv": "CV (PDF, DOC, DOCX)",
+      "motivation": "Motivation Letter",
+      "portfolio": "Portfolio Link",
+      "idCard": "ID Card Copy (PDF, JPG, PNG)",
+      "submit": "Submit Application"
+    }
+  },
   "footer": {
-    "description": "Top Pronto - Your trusted partner for deliveries in Angola.",
+    "description": "Topronto - Your trusted partner for deliveries in Angola.",
     "quickLinks": "Quick Links",
     "followUs": "Follow Us",
     "rights": "All rights reserved."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "submitting": "Submitting..."
   }
 }

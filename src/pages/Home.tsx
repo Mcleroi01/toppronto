@@ -226,8 +226,8 @@ export const Home: React.FC = () => {
             backgroundImage: "url('/images/background.png')",
           }}
         ></div>
-        <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className=" sm:px-32 px-2">
+          <div className="">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
@@ -240,7 +240,7 @@ export const Home: React.FC = () => {
                 <img
                   src={feature.image}
                   alt={feature.title[currentLanguage]}
-                  className=" object-cover rounded-xl mb-6 shadow transition-transform duration-300 hover:scale-105"
+                  className=" w-40 h-40 object-cover rounded-xl mb-6 shadow transition-transform duration-300 hover:scale-105"
                 />
 
                 <h3 className="text-lg font-bold text-green-900 mb-2">
@@ -256,7 +256,7 @@ export const Home: React.FC = () => {
       </section>
       {/* Banier Section */}
       <section className="pb-16">
-        <div className="relative bg-green-900 text-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row items-center p-0 ">
+        <div className="relative bg-green-900 text-white  overflow-hidden flex flex-col md:flex-row items-center p-0 ">
           {/* Image illustrative à gauche sur desktop, en haut sur mobile */}
 
           <div
@@ -266,7 +266,7 @@ export const Home: React.FC = () => {
             }}
           ></div>
 
-          <div className="p-8 flex-1 flex flex-col items-start justify-center">
+          <div className=" sm:px-32 px-2 flex-1 flex flex-col items-start justify-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               {t("home.banner.title", "Entrega rápida e fiável")}
             </h2>

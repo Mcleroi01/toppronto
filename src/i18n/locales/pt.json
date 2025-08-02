@@ -8,7 +8,7 @@
   },
   "hero": {
     "title": "Entrega Rápida e Confiável em Angola",
-    "subtitle": "Top Pronto - Seu parceiro de confiança para entregas de produtos farmacêuticos, imobiliários, alimentares e muito mais.",
+    "subtitle": "Topronto - Seu parceiro de confiança para entregas de produtos farmacêuticos, imobiliários, alimentares e muito mais.",
     "cta": "Descubra nossos serviços",
     "phone": "Ligar Agora"
   },
@@ -34,9 +34,9 @@
     }
   },
   "about": {
-    "title": "Sobre a Top Pronto",
+    "title": "Sobre a Topronto",
     "subtitle": "Liderando o mercado de entregas em Angola",
-    "description": "A Top Pronto é uma empresa angolana especializada em serviços de entrega rápida e confiável. Com anos de experiência no mercado, oferecemos soluções personalizadas para diversos setores, garantindo a satisfação dos nossos clientes.",
+    "description": "A Topronto é uma empresa angolana especialisée em serviços de entrega rápida e confiável. Com anos de experiência no mercado, oferecemos soluções personalizadas para diversos setores, garantindo a satisfação dos nossos clientes.",
     "mission": "Nossa missão é conectar pessoas e empresas através de serviços de entrega eficientes e seguros.",
     "vision": "Ser a empresa líder em serviços de entrega em Angola, reconhecida pela excelência e inovação.",
     "values": "Compromisso, Rapidez, Segurança, Confiabilidade",
@@ -45,7 +45,7 @@
   "careers": {
     "title": "Carreiras",
     "subtitle": "Junte-se à nossa equipe",
-    "description": "Estamos sempre à procura de talentos para fazer parte da família Top Pronto. Descubra as oportunidades disponíveis.",
+    "description": "Estamos sempre à procura de talentos para fazer parte da família Topronto. Descubra as oportunidades disponíveis.",
     "apply": "Candidatar-se",
     "requirements": "Requisitos",
     "benefits": "Benefícios",
@@ -70,8 +70,24 @@
       "send": "Enviar Mensagem"
     }
   },
+  "apply": {
+    "title": "Candidatar-se a",
+    "success": "A sua candidatura foi submetida com sucesso!",
+    "error": "Ocorreu um erro ao enviar a sua candidatura. Por favor, tente novamente.",
+    "requiredFiles": "Por favor, faça upload do seu CV e do seu bilhete de identidade.",
+    "optional": "Opcional",
+    "form": {
+      "name": "Nome Completo",
+      "email": "Email",
+      "cv": "Currículo (PDF, DOC, DOCX)",
+      "motivation": "Carta de Motivação",
+      "portfolio": "Link do Portfólio",
+      "idCard": "Cópia do Bilhete de Identidade (PDF, JPG, PNG)",
+      "submit": "Enviar Candidatura"
+    }
+  },
   "footer": {
-    "description": "Top Pronto - Seu parceiro de confiança para entregas em Angola.",
+    "description": "Topronto - Seu parceiro de confiança para entregas em Angola.",
     "quickLinks": "Links Rápidos",
     "followUs": "Siga-nos",
     "rights": "Todos os direitos reservados."

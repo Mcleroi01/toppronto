@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
         <Link to="/" className="flex items-center space-x-3">
           <img
             src="/images/logo.png"
-            alt="Top Pronto Logo"
+            alt="Topronto Logo"
             className="h-14 w-auto rounded-lg"
           />
         </Link>

@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
               <div className=" p-2 rounded-lg">
                 <Truck className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold">Top Pronto</span>
+              <span className="text-2xl font-bold">Topronto</span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               {t("footer.description")}
@@ -113,7 +113,7 @@ export const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2024 Top Pronto. {t("footer.rights")}
+            © 2024 Topronto. {t("footer.rights")}
           </p>
         </div>
       </div>

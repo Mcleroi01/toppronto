@@ -49,7 +49,7 @@ export const Header: React.FC = () => {
             <Link to="/" className="flex items-center space-x-3">
               <img
                 src="/images/logo.png" // Mettez le bon chemin de votre logo
-                alt="Top Pronto Logo"
+                alt="Topronto Logo"
                 className="h-20 w-auto rounded-lg"
               />
             </Link>
@@ -130,7 +130,7 @@ export const Header: React.FC = () => {
             {location.pathname === "/about" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("about.title", "Sobre a Top Pronto")}
+                  {t("about.title", "Sobre a Topronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(
@@ -149,7 +149,7 @@ export const Header: React.FC = () => {
             {location.pathname === "/careers" && (
               <div>
                 <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
-                  {t("careers.title", "Junte-se à Top Pronto")}
+                  {t("careers.title", "Junte-se à Topronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
                   {t(

@@ -67,7 +67,7 @@ export default function ServiceSection({
         </div>
 
         {/* Content section */}
-        <div className="p-6 flex flex-col justify-center space-y-6">
+        <div className="p-6 flex flex-col space-y-6">
           {/* Title with icon */}
           <div className="flex items-center gap-3">
             <Icon className="w-8 h-8 text-green-600 shrink-0" />

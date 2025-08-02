@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { MapPin, Clock, Calendar, Briefcase, DollarSign, Filter } from 'lucide-react';
 import { jobPositions } from '../data/jobs';
 import { JobDetail } from './JobDetail';
-import { JobPosition } from '../types';
 import { ModalFilters } from './ModalFilters';
 
 interface JobListProps {
