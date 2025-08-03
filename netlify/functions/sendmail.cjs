@@ -59,7 +59,7 @@ function parseForm(event) {
     try {
       const bodyBuffer = event.isBase64Encoded
         ? Buffer.from(event.body, 'base64')
-        : Buffer.from(event.body);
+        : Buffer.from(event.body, 'latin1');
 
       const req = Readable.from(bodyBuffer);
       req.headers = { 'content-type': contentType };
@@ -102,13 +102,12 @@ module.exports.handler = async (event) => {
   const allowedOrigins = [
     'http://localhost:8888',
     'http://localhost:3000',
-    'https://toppronto.netlify.app',
-    'https://toppronto.netlify.app/'
+    'https://toppronto.netlify.app'
   ];
-  const origin = event.headers.origin || event.headers.Origin || '';
-  const isAllowedOrigin = allowedOrigins.some(allowedOrigin => 
-    origin.toLowerCase().startsWith(allowedOrigin.toLowerCase())
-  );
+  const origin = event.headers.origin || '';
+  // Normalize origin by removing trailing slash for comparison
+  const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+  const isAllowedOrigin = allowedOrigins.includes(normalizedOrigin);
 
   const headers = {
     'Content-Type': 'application/json',
