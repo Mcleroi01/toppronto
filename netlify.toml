@@ -20,6 +20,13 @@
     # Configuration du proxy pour rediriger les requêtes API vers le port de Vite
     "/api/*" = { from = "/api/*", to = "http://localhost:5173/api/:splat" }
 
+# Redirection pour les fonctions Netlify
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Redirection pour l'API (au cas où)
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
