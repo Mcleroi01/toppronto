@@ -59,7 +59,7 @@ function parseForm(event) {
     try {
       const bodyBuffer = event.isBase64Encoded
         ? Buffer.from(event.body, 'base64')
-        : Buffer.from(event.body);
+        : Buffer.from(event.body, 'latin1');
 
       const req = Readable.from(bodyBuffer);
       req.headers = { 'content-type': contentType };
