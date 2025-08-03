@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const { IncomingForm } = require('formidable');
+const { Readable } = require('stream');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -10,65 +10,80 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-const { Readable } = require('stream');
-
-// Fonction pour parser le formulaire avec formidable (version simplifiée et robuste)
+// Fonction utilitaire pour parser le formulaire multipart
 function parseForm(event) {
   return new Promise((resolve, reject) => {
-    const form = new IncomingForm({
-      uploadDir: UPLOAD_DIR,
-      maxFileSize: 10 * 1024 * 1024, // 10MB
-      multiples: true,
-      keepExtensions: true,
-    });
+    if (!event.body || !event.headers || !event.headers['content-type']) {
+      return reject(new Error('Invalid request format'));
+    }
 
+    const boundary = event.headers['content-type'].split('boundary=')[1];
+    if (!boundary) {
+      return reject(new Error('No boundary found in content-type'));
+    }
+
+    const body = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
+    const boundaryStr = `--${boundary}`;
+    const parts = [];
+    let start = body.indexOf(boundaryStr) + boundaryStr.length;
+    
+    // Découper correctement les parties du formulaire multipart
+    while (true) {
+      const end = body.indexOf(boundaryStr, start);
+      if (end === -1) break;
+      
+      const part = body.slice(start, end).toString('binary');
+      if (part.trim()) {
+        parts.push(part);
+      }
+      start = end + boundaryStr.length;
+    }
+    
     const fields = {};
     const files = [];
 
-    form.on('field', (field, value) => {
-      fields[field] = Array.isArray(value) ? value[0] : value;
-    });
-
-    form.on('file', (field, file) => {
-      if (file.originalFilename && file.originalFilename.trim() !== '') {
+    for (const part of parts) {
+      // Séparer les en-têtes du contenu
+      const headerEnd = part.indexOf('\r\n\r\n');
+      if (headerEnd === -1) continue;
+      
+      const headers = part.slice(0, headerEnd).toString('utf8');
+      const content = part.slice(headerEnd + 4, -2); // -2 pour enlever le \r\n final
+      
+      // Extraire le nom du champ et le nom du fichier
+      const nameMatch = headers.match(/name="([^"]+)"/);
+      if (!nameMatch) continue;
+      
+      const name = nameMatch[1];
+      const filenameMatch = headers.match(/filename="([^"]+)"/);
+      
+      if (filenameMatch) {
+        // C'est un fichier
+        const filename = filenameMatch[1];
+        const filePath = path.join(UPLOAD_DIR, `${Date.now()}-${filename}`);
+        
+        // Écrire le contenu binaire du fichier
+        fs.writeFileSync(filePath, content, 'binary');
+        
+        // Vérifier que le fichier a bien été écrit
+        const stats = fs.statSync(filePath);
+        
         files.push({
-          fieldname: field,
-          filename: file.originalFilename,
-          path: file.filepath,
-          mimetype: file.mimetype,
-          size: file.size,
+          fieldName: name,
+          filename: filename,
+          path: filePath,
+          mimetype: (headers.match(/Content-Type: ([^\r\n]+)/i) || [])[1] || 'application/octet-stream',
+          size: stats.size
         });
+        
+        console.log(`Fichier enregistré: ${filePath}, Taille: ${stats.size} octets`);
+      } else {
+        // C'est un champ de formulaire normal
+        fields[name] = content.toString('utf8').trim();
       }
-    });
-
-    form.on('error', (err) => {
-      logError('Erreur lors du parsing du formulaire', err);
-      reject(err);
-    });
-
-    form.on('end', () => {
-      resolve({ fields, files });
-    });
-
-    const contentType = event.headers['content-type'] || event.headers['Content-Type'];
-    if (!contentType) {
-      return reject(new Error('Le header Content-Type est manquant.'));
     }
 
-    // Simuler l'objet `req` attendu par form.parse() en créant un Readable stream
-    try {
-      const bodyBuffer = event.isBase64Encoded
-        ? Buffer.from(event.body, 'base64')
-        : Buffer.from(event.body, 'latin1');
-
-      const req = Readable.from(bodyBuffer);
-      req.headers = { 'content-type': contentType };
-
-      form.parse(req);
-    } catch (err) {
-      logError('Erreur lors de la préparation du parsing', err);
-      reject(err);
-    }
+    resolve({ fields, files });
   });
 }
 
@@ -96,18 +111,99 @@ const logError = (message, error) => {
   }
 };
 
+// Fonction pour envoyer l'email (séparée pour le traitement en arrière-plan)
+async function sendEmail(fields, files) {
+  try {
+    console.log('Traitement en arrière-plan démarré pour:', fields.email);
+    
+    const transporter = createTransporter();
+    
+    // Créer les pièces jointes en lisant le contenu des fichiers
+    const attachments = await Promise.all(files.map(async (file) => {
+      try {
+        const fileContent = await fs.promises.readFile(file.path);
+        return {
+          filename: file.filename,
+          content: fileContent,
+          contentType: file.mimetype,
+          encoding: 'base64'
+        };
+      } catch (error) {
+        console.error(`Erreur lors de la lecture du fichier ${file.path}:`, error);
+        return null;
+      }
+    }));
+    
+    // Filtrer les pièces jointes valides
+    const validAttachments = attachments.filter(attachment => attachment !== null);
+    
+    const mailOptions = {
+      from: `"${fields.name}" <${
+        process.env.EMAIL_FROM || process.env.EMAIL_USER
+      }>`,
+      replyTo: fields.email,
+      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+      subject: `Nova candidatura: ${fields.name} - ${
+        fields.jobTitle || "Sans intitulé"
+      }`,
+      text: `Nova inscrição recebida :\n\nNome: ${fields.name}\nEmail: ${
+        fields.email
+      }\nPoste: ${fields.jobTitle || "Non spécifié"}\n\nMotivação:\n${
+        fields.motivation
+      }\n\nPortfolio: ${fields.portfolio || "Non fourni"}`,
+      html: `
+        <h1>Nova inscrição recebida</h1>
+        <p><strong>Nome:</strong> ${fields.name}</p>
+        <p><strong>Email:</strong> ${fields.email}</p>
+        <p><strong>Correio:</strong> ${fields.jobTitle || "Non spécifié"}</p>
+        <h3>Motivação :</h3>
+        <p>${fields.motivation.replace(/\n/g, "<br>")}</p>
+        <p><strong>Portfólio:</strong> ${
+          fields.portfolio
+            ? `<a href="${fields.portfolio}">${fields.portfolio}</a>`
+            : "Não quatro"
+        }</p>
+      `,
+      attachments: validAttachments,
+    };
+
+    console.log('Envoi de l\'email en cours...');
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email envoyé avec succès, ID:', info.messageId);
+    
+    // Nettoyage des fichiers temporaires
+    for (const file of files) {
+      try {
+        if (file.path && fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      } catch (err) {
+        logError('Erreur lors de la suppression du fichier temporaire', err);
+      }
+    }
+    
+  } catch (error) {
+    logError('Erreur lors de l\'envoi de l\'email en arrière-plan', error);
+  }
+}
+
 // Export CommonJS pour la compatibilité Netlify
 module.exports.handler = async (event) => {
+  console.log('Début du traitement de la requête');
+  
   // Configuration CORS
   const allowedOrigins = [
     'http://localhost:8888',
     'http://localhost:3000',
-    'https://toppronto.netlify.app'
+    'http://localhost:5174', // Ajout du port de développement Vite
+    'https://toppronto.netlify.app',
+    'https://toppronto.netlify.app/'
   ];
-  const origin = event.headers.origin || '';
-  // Normalize origin by removing trailing slash for comparison
-  const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
-  const isAllowedOrigin = allowedOrigins.includes(normalizedOrigin);
+  
+  const origin = event.headers.origin || event.headers.Origin || '';
+  const isAllowedOrigin = allowedOrigins.some(allowedOrigin => 
+    origin.toLowerCase().startsWith(allowedOrigin.toLowerCase())
+  );
 
   const headers = {
     'Content-Type': 'application/json',
@@ -116,6 +212,8 @@ module.exports.handler = async (event) => {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Credentials': 'true'
   };
+  
+  console.log('En-têtes CORS configurés');
 
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -139,12 +237,18 @@ module.exports.handler = async (event) => {
   };
 
   try {
+    console.log('Méthode HTTP:', event.httpMethod);
+    
     if (event.httpMethod !== 'POST') {
+      console.log('Méthode non autorisée, seules les requêtes POST sont acceptées');
       return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
 
+    console.log('Début du parsing du formulaire');
     const { fields, files } = await parseForm(event);
     filesToCleanup = files;
+    console.log('Formulaire parsé avec succès, champs reçus:', Object.keys(fields).join(', '));
+    console.log('Fichiers reçus:', files.map(f => f.filename).join(', '));
 
     const requiredFields = ['name', 'email', 'motivation'];
     const missingFields = requiredFields.filter(field => !fields[field]);
@@ -154,40 +258,35 @@ module.exports.handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ success: false, error: errorMsg }) };
     }
 
-    const attachments = files.map(file => ({
-      filename: file.filename,
-      path: file.path,
-      contentType: file.mimetype,
-    }));
-
-    const transporter = createTransporter();
-    const mailOptions = {
-      from: `"${fields.name}" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-      replyTo: fields.email,
-      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
-      subject: `Nouvelle candidature: ${fields.name} - ${fields.jobTitle || 'Sans intitulé'}`,
-      text: `Nouvelle candidature reçue :\n\nNom: ${fields.name}\nEmail: ${fields.email}\nPoste: ${fields.jobTitle || 'Non spécifié'}\n\nMotivation:\n${fields.motivation}\n\nPortfolio: ${fields.portfolio || 'Non fourni'}`,
-      html: `
-        <h1>Nouvelle candidature reçue</h1>
-        <p><strong>Nom:</strong> ${fields.name}</p>
-        <p><strong>Email:</strong> ${fields.email}</p>
-        <p><strong>Poste:</strong> ${fields.jobTitle || 'Non spécifié'}</p>
-        <h3>Motivation :</h3>
-        <p>${fields.motivation.replace(/\n/g, '<br>')}</p>
-        <p><strong>Portfolio:</strong> ${fields.portfolio ? `<a href="${fields.portfolio}">${fields.portfolio}</a>` : 'Non fourni'}</p>
-      `,
-      attachments,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log('Email envoyé avec succès');
-
-    cleanupFiles();
-
+    // Vérifier les variables d'environnement
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error('Variables d\'environnement manquantes pour l\'envoi d\'email');
+      return { 
+        statusCode: 200, 
+        headers, 
+        body: JSON.stringify({ 
+          success: false, 
+          message: 'Votre candidature a bien été reçue. Nous la traiterons dans les plus brefs délais.' 
+        }) 
+      };
+    }
+    
+    // Démarrer l'envoi d'email en arrière-plan
+    // Utiliser setImmediate pour ne pas bloquer la réponse
+    setImmediate(() => {
+      sendEmail(fields, files).catch(error => {
+        console.error('Erreur dans le traitement en arrière-plan:', error);
+      });
+    });
+    
+    // Répondre immédiatement au client
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ success: true, message: 'Votre candidature a bien été envoyée !' })
+      body: JSON.stringify({ 
+        success: true, 
+        message: 'Votre candidature a bien été envoyée ! Vous recevrez bientôt un email de confirmation.' 
+      })
     };
 
   } catch (err) {
