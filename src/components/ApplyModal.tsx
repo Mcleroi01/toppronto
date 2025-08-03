@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+
+const MySwal = withReactContent(Swal);
 
 interface FormData {
   name: string;
@@ -28,8 +33,8 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
     cv: null,
     idCard: null,
   });
+  // État pour suivre la soumission en cours
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -43,20 +48,79 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
     }
   };
 
+  // Afficher les notifications avec SweetAlert2
+  const showAlert = (success: boolean, message: string) => {
+    MySwal.fire({
+      title: success ? (
+        <div className="flex items-center gap-2 text-green-600">
+          <CheckCircle className="w-6 h-6" />
+          <span>{t('apply.successTitle', 'Succès !')}</span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 text-red-600">
+          <XCircle className="w-6 h-6" />
+          <span>{t('apply.errorTitle', 'Erreur')}</span>
+        </div>
+      ),
+      text: message,
+      icon: success ? 'success' : 'error',
+      confirmButtonText: t('common.ok', 'OK'),
+      confirmButtonColor: success ? '#10B981' : '#EF4444',
+      customClass: {
+        popup: 'rounded-xl shadow-xl',
+        confirmButton: 'px-4 py-2 rounded-lg font-medium',
+      },
+      buttonsStyling: false,
+      showClass: {
+        popup: 'animate-fade-in-up animate-duration-300',
+      },
+      hideClass: {
+        popup: 'animate-fade-out-down animate-duration-200',
+      },
+    });
+  };
+
+  // Afficher un message de confirmation avant soumission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Vérifier que les fichiers requis sont présents
     if (!formData.cv || !formData.idCard) {
-      setSubmitStatus({
-        success: false,
-        message: t('apply.requiredFiles', 'Please upload both CV and ID card.')
-      });
+      showAlert(false, t('apply.requiredFiles', 'Veuillez télécharger votre CV et votre pièce d\'identité.'));
       return;
     }
 
+    const { value: confirm } = await MySwal.fire({
+      title: t('apply.confirmTitle', 'Confirmar inscrição'),
+      text: t('apply.confirmText', 'Tem a certeza de que pretende enviar a sua candidatura?'),
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: t('common.yes', 'Sim, enviar'),
+      cancelButtonText: t('common.cancel', 'Cancelar'),
+      confirmButtonColor: '#10B981',
+      cancelButtonColor: '#6B7280',
+      reverseButtons: true,
+      customClass: {
+        popup: 'rounded-xl shadow-xl',
+        confirmButton: 'px-4 py-2 rounded-lg font-medium',
+        cancelButton: 'px-4 py-2 rounded-lg font-medium mr-2',
+      },
+      buttonsStyling: false,
+    });
+
+    if (!confirm) return;
+
     setIsSubmitting(true);
-    setSubmitStatus(null);
+
+    // Afficher un indicateur de chargement
+    MySwal.fire({
+      title: t('apply.sending', 'Enviando...'),
+      html: t('apply.pleaseWait', 'Por favor aguarde enquanto enviamos a sua candidatura.'),
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
     try {
       const formDataToSend = new FormData();
@@ -76,7 +140,6 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
       const response = await fetch('/.netlify/functions/sendmail', {
         method: 'POST',
         body: formDataToSend,
-        // Ne pas définir Content-Type, laisse le navigateur gérer la boundary
       });
 
       let responseData;
@@ -95,6 +158,28 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
         throw new Error(errorMessage);
       }
 
+      // Fermer tous les SweetAlert ouverts
+      MySwal.close();
+
+      // Afficher le message de succès
+      await MySwal.fire({
+        title: (
+          <div className="flex items-center gap-2 text-green-600">
+            <CheckCircle className="w-6 h-6" />
+            <span>{t('apply.successTitle', 'Inscrição enviada!')}</span>
+          </div>
+        ),
+        text: t('apply.success', 'A sua inscrição foi recebida. Entraremos em contacto em breve.'),
+        icon: 'success',
+        confirmButtonText: t('common.great', 'Parfait !'),
+        confirmButtonColor: '#10B981',
+        customClass: {
+          popup: 'rounded-xl shadow-xl',
+          confirmButton: 'px-4 py-2 rounded-lg font-medium',
+        },
+        buttonsStyling: false,
+      });
+
       // Réinitialiser le formulaire en cas de succès
       setFormData({
         name: '',
@@ -105,30 +190,37 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
         idCard: null
       });
 
-      setSubmitStatus({
-        success: true,
-        message: t('apply.success', 'Votre candidature a bien été envoyée !')
-      });
+      // Fermer la modale
+      onClose();
 
-      // Fermer la modale après 3 secondes
-      setTimeout(() => {
-        setSubmitStatus(null);
-        onClose();
-      }, 3000);
     } catch (error) {
       console.error('Error submitting form:', error);
       let errorMessage = t('apply.error', 'Une erreur est survenue lors de l\'envoi de votre candidature. Veuillez réessayer.');
 
       // Améliorer les messages d'erreur
       if (error instanceof TypeError) {
-        errorMessage = t('apply.error', 'Erreur réseau. Veuillez vérifier votre connexion internet et réessayer.');
+        errorMessage = t('apply.networkError', 'Erreur réseau. Veuillez vérifier votre connexion internet et réessayer.');
       } else if (error instanceof Error) {
         errorMessage = error.message || errorMessage;
       }
       
-      setSubmitStatus({
-        success: false,
-        message: errorMessage
+      // Afficher l'erreur avec SweetAlert
+      MySwal.fire({
+        title: (
+          <div className="flex items-center gap-2 text-red-600">
+            <XCircle className="w-6 h-6" />
+            <span>{t('apply.errorTitle', 'Erreur')}</span>
+          </div>
+        ),
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: t('common.understand', 'J\'ai compris'),
+        confirmButtonColor: '#EF4444',
+        customClass: {
+          popup: 'rounded-xl shadow-xl',
+          confirmButton: 'px-4 py-2 rounded-lg font-medium',
+        },
+        buttonsStyling: false,
       });
     } finally {
       setIsSubmitting(false);
@@ -156,12 +248,6 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
             {t('apply.title', 'Apply for')} <span className="text-green-600">{jobTitle}</span>
           </h2>
         </div>
-        
-        {submitStatus && (
-          <div className={`mb-4 p-4 rounded-md ${submitStatus.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-            {submitStatus.message}
-          </div>
-        )}
         
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="mb-4">
