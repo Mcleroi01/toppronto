@@ -9,12 +9,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const backgroundImages: Record<string, string> = {
   "/": "https://www.lalamove.com/hubfs/Banner%20Photo.jpg",
   "/services":
-    "https://www.lalamove.com/hubfs/HK_fb_ad_DriverHero_20240529_1920x650%20%282%29.jpg",
+    "/images/headers/cargo.jpg",
   "/about":
-    "https://www.lalamove.com/hubfs/Lalamove%20Website%202020/Deliver_Care/img_delivercare_banner_v1.png",
-  "/careers": "https://www.lalamove.com/hubfs/Banner%20Photo.jpg",
+    "/images/headers/archive.jpg",
+  "/careers": "/images/headers/bot.jpg",
   "/contact":
-    "https://www.skycostanera.cl/sites/sky/files/2022-12/banner_galeria-mobile.jpg",
+    "/images/headers/ville.jpg",
 };
 
 export const Header: React.FC = () => {

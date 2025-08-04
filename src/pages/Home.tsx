@@ -105,14 +105,16 @@ export const Home: React.FC = () => {
 
   // Liste des logos clients (ajoute/remplace les chemins selon tes besoins)
   const clientLogos = [
-    "https://pngimg.com/d/walt_disney_PNG45.png",
-    "https://www.logoai.com/oss/icons/2021/12/02/EoLJeYhT6YPfd26.png",
-    "https://www.logoai.com/oss/icons/2021/12/02/SU8HhT2n6tL-p-_.png",
-    "https://images.vexels.com/media/users/3/142789/isolated/lists/2bfb04ad814c4995f0c537c68db5cd0b-multicolor-swirls-circle-logo.png",
-    "https://static.vecteezy.com/system/resources/thumbnails/038/516/357/small/ai-generated-eagle-logo-design-in-black-style-on-transparant-background-png.png",
-    "https://cdn.freebiesupply.com/images/large/2x/burger-king-logo-png-transparent.png",
-    "https://www.freeiconspng.com/uploads/blank-logo-design-for-brand-13.png",
-    "https://cdn.pixabay.com/photo/2022/08/22/02/05/logo-7402513_1280.png",
+    "/images/clientLogos/appysaude.jpg",
+    "/images/clientLogos/gouverno.jpg",
+    "/images/clientLogos/lua.jpg",
+    "/images/clientLogos/masfamu.jpg",
+    "/images/clientLogos/plus.jpg",
+    "/images/clientLogos/princefarma.jpg",
+    "/images/clientLogos/sagrada.jpg",
+    "/images/clientLogos/shalina.jpg",
+    "/images/clientLogos/truecare.jpg",
+    "/images/clientLogos/zip.jpg",
   ];
 
   // Animation slide horizontale auto (marquee)
@@ -218,44 +220,97 @@ export const Home: React.FC = () => {
 
   return (
     <div className="space-y-24">
-      {/* Features Section */}
-      <section className="py-16 relative">
-        <div
-          className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-5"
-          style={{
-            backgroundImage: "url('/images/background.png')",
-          }}
+      {/* Features Section - Améliorée */}
+      <section className="py-20 relative overflow-hidden sm:mx-32 mx-2">
+        {/* Fond décoratif */}
+        <div className="absolute inset-0  opacity-70 -z-10"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-5 -z-10"
+          style={{ backgroundImage: "url('/images/pattern.svg')" }}
         ></div>
-        <div className=" sm:px-32 px-2">
-          <div className="">
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* En-tête de section */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-12 max-w-3xl"
+          >
+            <span className="inline-block px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full mb-4">
+              {currentLanguage === 'pt' ? 'Nossos Serviços' : 'Our Services'}
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              {currentLanguage === 'pt' 
+                ? 'Soluções Completas para o Seu Negócio' 
+                : 'Complete Solutions for Your Business'}
+            </h2>
+            <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6"></div>
+            <p className="text-lg text-gray-600">
+              {currentLanguage === 'pt'
+                ? 'Oferecemos as melhores soluções para impulsionar o crescimento do seu negócio com tecnologia de ponta e suporte especializado.'
+                : 'We offer the best solutions to boost your business growth with cutting-edge technology and expert support.'}
+            </p>
+          </motion.div>
+
+          {/* Grille des fonctionnalités */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {features.map((feature, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className=" flex flex-col p-8"
+                whileInView={{ 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { 
+                    duration: 0.6, 
+                    delay: (idx % 2) * 0.1 + Math.floor(idx / 2) * 0.1 
+                  } 
+                }}
+                viewport={{ once: true, margin: "-100px" }}
+                whileHover={{ y: -5 }}
+                className="group relative bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
               >
-                <img
-                  src={feature.image}
-                  alt={feature.title[currentLanguage]}
-                  className=" w-40 h-40 object-cover rounded-xl mb-6 shadow transition-transform duration-300 hover:scale-105"
-                />
-
-                <h3 className="text-lg font-bold text-green-900 mb-2">
-                  {feature.title[currentLanguage]}
-                </h3>
-                <p className="text-blue-900  text-sm">
-                  {feature.description[currentLanguage]}
-                </p>
+                <div className="p-8">
+                  <div className="flex flex-col md:flex-row items-start">
+                    {/* Icône ou image */}
+                    <div className="flex-shrink-0 mb-6 md:mb-0 md:mr-6 w-20 h-20 md:w-24 md:h-24 rounded-xl bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+                      <img 
+                        src={feature.image} 
+                        alt={feature.title[currentLanguage]}
+                        className="w-12 h-12 md:w-14 md:h-14 object-contain"
+                      />
+                    </div>
+                    
+                    {/* Contenu texte */}
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">
+                        {feature.title[currentLanguage]}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed mb-4">
+                        {feature.description[currentLanguage]}
+                      </p>
+                      
+                      <div className="flex items-center text-green-700 font-medium group-hover:text-green-800 transition-colors">
+                        <span className="mr-2">
+                          {currentLanguage === 'pt' ? 'Saiba mais' : 'Learn more'}
+                        </span>
+                        <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Effet de survol */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
       {/* Banier Section */}
-      <section className="pb-16">
+      <section className="">
         <div className="relative bg-green-900 text-white  overflow-hidden flex flex-col md:flex-row items-center p-0 ">
           {/* Image illustrative à gauche sur desktop, en haut sur mobile */}
 
