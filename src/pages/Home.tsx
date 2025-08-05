@@ -181,7 +181,7 @@ export const Home: React.FC = () => {
     return (
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto ">
-          <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-12">
+          <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-12 px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {t(
                 "clients.title",
@@ -410,7 +410,7 @@ export const Home: React.FC = () => {
           }}
         />
 
-        <div className="max-w-7xl sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32  py-16 md:py-24">
+        <div className="max-w-7xl sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32  py-16 px-4 md:py-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             {/* Contenu texte */}
             <div className="relative z-10">
@@ -1026,7 +1026,7 @@ export const Home: React.FC = () => {
 
       {/* Seção Depoimentos */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+        <div className="max-w-7xl mx-auto sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4">
           <div className=" mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               {getTranslatedText(

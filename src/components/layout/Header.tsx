@@ -48,9 +48,9 @@ export const Header: React.FC = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
               <img
-                src="/images/logo.png" // Mettez le bon chemin de votre logo
+                src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
                 alt="Topronto Logo"
-                className="h-20 w-auto rounded-lg"
+                className=" h-32 w-auto rounded-lg"
               />
             </Link>
 

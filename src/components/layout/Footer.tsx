@@ -1,26 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Truck, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react';
-import { contactInfo } from '../../data/contact';
-import { useLanguage } from '../../hooks/useLanguage';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
+import { contactInfo } from "../../data/contact";
+import { useLanguage } from "../../hooks/useLanguage";
 
 export const Footer: React.FC = () => {
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
 
   const quickLinks = [
-    { name: t('nav.home'), href: '/' },
-    { name: t('nav.services'), href: '/services' },
-    { name: t('nav.about'), href: '/about' },
-    { name: t('nav.careers'), href: '/careers' },
-    { name: t('nav.contact'), href: '/contact' }
+    { name: t("nav.home"), href: "/" },
+    { name: t("nav.services"), href: "/services" },
+    { name: t("nav.about"), href: "/about" },
+    { name: t("nav.careers"), href: "/careers" },
+    { name: t("nav.contact"), href: "/contact" },
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' }
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
   return (
@@ -35,12 +42,16 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className=" p-2 rounded-lg">
-                <Truck className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold">Topronto</span>
-            </div>
+           
+              {/* Logo */}
+              <Link to="/" className="flex items-center space-x-3">
+                <img
+                  src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
+                  alt="Topronto Logo"
+                  className=" h-32 w-auto rounded-lg"
+                />
+              </Link>
+           
             <p className="text-gray-300 text-sm leading-relaxed">
               {t("footer.description")}
             </p>
