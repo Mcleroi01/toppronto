@@ -137,7 +137,7 @@ const faqs = {
   return (
     <div className="space-y-24">
       {/* About the Company Section */}
-      <section className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-6 pt-16">
+      <section className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-6 pt-16 px-4">
         <div className=" px-4 sm:px-6 lg:px-8">
           <div className=" mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -245,7 +245,7 @@ const faqs = {
       </section>
 
       {/* Features Section - Améliorée */}
-      <section className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+      <section className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4">
         {/* Fond décoratif */}
         <div className="absolute inset-0  -z-10"></div>
         <div
@@ -374,7 +374,7 @@ const faqs = {
 
       {/* FAQ Section */}
       <FAQAccordion faqs={faqs} currentLanguage={currentLanguage} />
- {/* Section Téléchargez notre application - Améliorée */}
+      {/* Section Téléchargez notre application - Améliorée */}
       <section className="py-20 relative overflow-hidden ">
         {/* Éléments décoratifs */}
         <div className="absolute inset-0 opacity-10">
@@ -383,7 +383,7 @@ const faqs = {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
         </div>
 
-        <div className="max-w-6xl sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-6xl sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4 sm:px-6 px-4 lg:px-8 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Illustration téléphone/app avec animation flottante */}
             <motion.div

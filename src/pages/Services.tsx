@@ -302,7 +302,7 @@ export default function Services() {
   return (
     <div className="space-y-24">
       {/* Hero Section */}
-      <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-6 py-16">
+      <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-6 px-4 py-16">
         <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl md:text-6xl mb-6">
           {currentLanguage === "pt" && "Nossos Serviços"}
           {currentLanguage === "en" && "Our Services"}
@@ -320,7 +320,7 @@ export default function Services() {
       </div>
 
       {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4">
         {services.map((service, idx) => (
           <motion.div
             key={idx}

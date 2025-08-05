@@ -27,7 +27,7 @@ export const FAQAccordion: React.FC<FAQAccordionProps> = ({ faqs, currentLanguag
   const currentFAQs = faqs[currentLanguage as keyof typeof faqs] || [];
 
   return (
-    <div className="mb-16 sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mt-16">
+    <div className="mb-16 sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mt-16 px-4">
       <h2 className="text-3xl font-bold  mb-6">
         {currentLanguage === "pt" && "Perguntas Frequentes"}
         {currentLanguage === "en" && "Frequently Asked Questions"}
