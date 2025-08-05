@@ -25,9 +25,21 @@ export const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    {
+      icon: Facebook,
+      href: "https://www.facebook.com/share/1C8grqcLz8/",
+      label: "Facebook",
+    },
+    {
+      icon: Instagram,
+      href: "https://www.instagram.com/topronto24h?igsh=MTU2ZGVwOHBvZjM0Nw==",
+      label: "Instagram",
+    },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/company/topronto/",
+      label: "LinkedIn",
+    },
   ];
 
   return (

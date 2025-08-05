@@ -1,12 +1,12 @@
 import { ContactInfo } from '../types';
 
 export const contactInfo: ContactInfo = {
-  phone: '+244 923 456 789',
-  email: 'info@toppronto.ao',
+  phone: '+244 929 302 094',
+  email: 'topronto@geral.ao',
   address: {
-    pt: 'Rua Principal, Bairro Maianga, Luanda, Angola',
-    en: 'Main Street, Maianga District, Luanda, Angola',
-    fr: 'Rue Principale, Quartier Maianga, Luanda, Angola'
+    pt: 'Morro bento, rua do kikagil, casa 341, Luanda, Angola',
+    en: 'Morro bento, rua do kikagil, casa 341, Luanda, Angola',
+    fr: 'Morro bento, rua do kikagil, casa 341, Luanda, Angola'
   },
   workingHours: {
     pt: 'Segunda a Sexta: 8h00 - 18h00 | Sábado: 8h00 - 14h00',

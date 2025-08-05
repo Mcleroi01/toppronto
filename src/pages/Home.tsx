@@ -31,6 +31,7 @@ export const Home: React.FC = () => {
 
   const features = [
     {
+      icon: Bike,
       title: {
         pt: "Entrega Rápida",
         en: "Fast Delivery",
@@ -897,132 +898,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Section FAQ */}
-      {/* <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
-          <div className="mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-              {getTranslatedText(
-                {
-                  pt: "Perguntas Frequentes",
-                  en: "Frequently Asked Questions",
-                  fr: "Questions Fréquemment Posées",
-                },
-                currentLanguage
-              )}
-            </h2>
-            <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-3xl">
-              {getTranslatedText(
-                {
-                  pt: "Encontre respostas para as perguntas mais comuns sobre nossos serviços.",
-                  en: "Find answers to the most common questions about our services.",
-                  fr: "Trouvez des réponses aux questions les plus courantes sur nos services.",
-                },
-                currentLanguage
-              )}
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-4">
-            {[
-              {
-                question: {
-                  pt: "Como faço para rastrear minha encomenda?",
-                  en: "How do I track my order?",
-                  fr: "Comment puis-je suivre ma commande ?",
-                },
-                answer: {
-                  pt: "Você pode rastrear sua encomenda em tempo real através do link de rastreamento enviado para seu e-mail ou acessando nossa área do cliente.",
-                  en: "You can track your order in real-time using the tracking link sent to your email or by accessing our customer area.",
-                  fr: "Vous pouvez suivre votre commande en temps réel grâce au lien de suivi envoyé par e-mail ou en accédant à votre espace client.",
-                },
-              },
-              {
-                question: {
-                  pt: "Quais são os prazos de entrega?",
-                  en: "What are the delivery times?",
-                  fr: "Quels sont les délais de livraison ?",
-                },
-                answer: {
-                  pt: "Os prazos variam conforme a localidade e o tipo de serviço escolhido. Em média, as entregas são realizadas em 24-48h úteis na região metropolitana.",
-                  en: "Delivery times vary depending on the location and type of service chosen. On average, deliveries are made within 24-48 business days in the metropolitan area.",
-                  fr: "Les délais varient en fonction de la localisation et du type de service choisi. En moyenne, les livraisons sont effectuées sous 24-48h ouvrables en zone métropolitaine.",
-                },
-              },
-              {
-                question: {
-                  pt: "Quais são as formas de pagamento aceitas?",
-                  en: "What payment methods do you accept?",
-                  fr: "Quels sont les moyens de paiement acceptés ?",
-                },
-                answer: {
-                  pt: "Aceitamos cartões de crédito/débito, transferência bancária, MB Way e pagamento na entrega (apenas em algumas localidades).",
-                  en: "We accept credit/debit cards, bank transfer, MB Way, and cash on delivery (only in some locations).",
-                  fr: "Nous acceptons les cartes de crédit/débit, virement bancaire, MB Way et paiement à la livraison (uniquement dans certaines localités).",
-                },
-              },
-              {
-                question: {
-                  pt: "Como faço para devolver um produto?",
-                  en: "How do I return a product?",
-                  fr: "Comment puis-je retourner un produit ?",
-                },
-                answer: {
-                  pt: "Entre em contato com nosso suporte dentro de 14 dias úteis para solicitar a devolução. Consulte nossa política de devolução para mais detalhes.",
-                  en: "Contact our support within 14 business days to request a return. Please check our return policy for more details.",
-                  fr: "Contactez notre service client sous 14 jours ouvrés pour demander un retour. Consultez notre politique de retour pour plus de détails.",
-                },
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg overflow-hidden"
-              >
-                <button
-                  className="w-full px-6 py-4 text-left flex justify-between items-center bg-white hover:bg-gray-50 transition-colors"
-                  onClick={() => {
-                    // Gérer l'ouverture/fermeture de l'accordéon
-                    setFaqOpen((prev) => (prev === index ? null : index));
-                  }}
-                >
-                  <span className="font-medium text-gray-900">
-                    {typeof item.question === "object"
-                      ? item.question[currentLanguage]
-                      : item.question}
-                  </span>
-                  <svg
-                    className={`w-5 h-5 text-green-600 transform transition-transform ${
-                      faqOpen === index ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                <div
-                  className={`px-6 pb-4 pt-0 bg-white overflow-hidden transition-all duration-300 ${
-                    faqOpen === index ? "max-h-96" : "max-h-0"
-                  }`}
-                >
-                  <div className="text-gray-600">
-                    {typeof item.answer === "object"
-                      ? item.answer[currentLanguage]
-                      : item.answer}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
+      
 
       {/* Seção Depoimentos */}
       <section className="py-16 bg-gray-50">

@@ -132,21 +132,21 @@ export const Contact: React.FC = () => {
                 <p className="font-semibold">
                   {t("contact.phone", "Telefone")}
                 </p>
-                <p>+244 923 456 789</p>
+                <p>+244 929 302 094</p>
               </div>
             </div>
             <div className="flex items-start gap-4 mt-4">
               <Mail className="text-green-600" />
               <div>
                 <p className="font-semibold">{t("contact.email", "Email")}</p>
-                <p>contato@kilumbu.ao</p>
+                <p>topronto@geral.ao</p>
               </div>
             </div>
             <div className="flex items-start gap-4 mt-4">
               <MapPin className="text-green-600" />
               <div>
                 <p className="font-semibold">
-                  {t("contact.address", "Endereço")}
+                  Morro bento, rua do kikagil, casa 341, Luanda, Angola
                 </p>
                 <p>Luanda, Angola</p>
               </div>
