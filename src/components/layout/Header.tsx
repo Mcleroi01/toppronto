@@ -37,7 +37,7 @@ export const Header: React.FC = () => {
   return (
     <>
       <header
-        className=" relative h-screen sm:px-32 px-2 text-white bg-cover bg-center bg-no-repeat overflow-hidden"
+        className=" relative h-screen sm:px-4 lg:px-8 xl:px-16 2xl:px-32 text-white bg-cover bg-center bg-no-repeat overflow-hidden"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Overlay foncé pour lisibilité */}
@@ -214,7 +214,7 @@ export const Header: React.FC = () => {
                       <X className="w-6 h-6 text-gray-600" />
                     </button>
                   </div>
-                  
+
                   <nav className="space-y-2">
                     {navigation.map((item, index) => (
                       <motion.div
@@ -232,7 +232,9 @@ export const Header: React.FC = () => {
                               : "text-gray-700 hover:bg-gray-50"
                           }`}
                         >
-                          <span className="text-lg font-medium">{item.name}</span>
+                          <span className="text-lg font-medium">
+                            {item.name}
+                          </span>
                           {isActive(item.href) && (
                             <span className="ml-auto text-yellow-500">
                               <ArrowRight className="w-5 h-5" />

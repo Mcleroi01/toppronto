@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className=" relative bg-black text-white sm:px-32 px-2">
+    <footer className=" relative bg-black text-white sm:px-4 lg:px-8 xl:px-16 2xl:px-32">
       <div
         className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-5"
         style={{
