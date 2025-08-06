@@ -2,7 +2,7 @@ import { Shield, Users, Bike, Car, Truck } from "lucide-react";
 export const services = [
   {
     id: "1",
-    image: "https://cdn.prod.website-files.com/6193d546dfb64eec20323f4a/66fee6767ff2debfc1a93c45_Mouvement-de-stocks.png",
+    image: "/images/services/stock.jpg",
     name: {
       pt: "Gestão de Stock",
       en: "Stock Management",
@@ -17,7 +17,7 @@ export const services = [
   },
   {
     id: "2",
-    image: "https://portalviana.sieg.co.ao/sites/default/files/2023-07/news-500x280-delivery_0.png",
+    image: "/images/services/public-relations.jpg",
     name: {
       pt: "Relações Públicas",
       en: "Public Relations",
@@ -32,7 +32,7 @@ export const services = [
   },
   {
     id: "3",
-    image: "https://mercadoeconsumo.com.br/wp-content/smush-webp/2020/10/Delivery-Center-1024x678.jpeg.webp",
+    image: "/images/services/various-deliveries.jpg",
     name: {
       pt: "Entregas Diversas",
       en: "General Deliveries",
@@ -47,7 +47,7 @@ export const services = [
   },
   {
     id: "4",
-    image: "https://www.melissas.com/cdn/shop/products/image-of-organic-mixed-fruit-only-box-southern-california-delivery-fruit-28569055363116.jpg?v=1626304328",
+    image: "/images/services/biological-transport.jpg",
     name: {
       pt: "Transporte de Material Biológico",
       en: "Biological Material Transport",
@@ -62,7 +62,7 @@ export const services = [
   },
   {
     id: "5",
-    image: "https://static.wixstatic.com/media/0204e8_8392b5e7c77d4c06afdc75090c05f035~mv2.jpg/v1/fill/w_560,h_290,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/0204e8_8392b5e7c77d4c06afdc75090c05f035~mv2.jpg",
+    image: "/images/services/pharmaceutical-distribution.jpg",
     name: {
       pt: "Distribuição de Fármacos",
       en: "Pharmaceutical Distribution",
@@ -77,7 +77,7 @@ export const services = [
   },
   {
     id: "6",
-    image: "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+    image: "/images/services/cargo-and-logistics.jpg",
     name: {
       pt: "Cargas e Transporte Logístico",
       en: "Cargo & Logistics Transport",

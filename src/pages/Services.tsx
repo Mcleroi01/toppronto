@@ -390,6 +390,114 @@ export default function Services() {
         ))}
       </div>
 
+      {/* Pricing Section */}
+      <section className="relative bg-gradient-to-r from-green-800 to-green-700 text-white overflow-hidden py-16">
+        {/* Decorative background effect */}
+        <div
+          className="absolute inset-0 opacity-5 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/images/background.png')",
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {currentLanguage === "pt" && "Nossos Preços e Tarifas"}
+              {currentLanguage === "en" && "Our Prices and Rates"}
+              {currentLanguage === "fr" && "Nos Tarifs et Prix"}
+            </h2>
+            <div className="w-20 h-1.5 bg-yellow-500 rounded-full mx-auto mb-6"></div>
+            <p className="text-lg text-green-100 max-w-3xl mx-auto">
+              {currentLanguage === "pt" &&
+                "Consulte nossa tabela de preços completa para todos os nossos serviços de entrega e logística."}
+              {currentLanguage === "en" &&
+                "Check out our complete price list for all our delivery and logistics services."}
+              {currentLanguage === "fr" &&
+                "Consultez notre liste de prix complète pour tous nos services de livraison et logistique."}
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">
+                  {currentLanguage === "pt" && "Tabela de Preços"}
+                  {currentLanguage === "en" && "Price List"}
+                  {currentLanguage === "fr" && "Liste des Prix"}
+                </h3>
+                <p className="mb-6 text-green-100">
+                  {currentLanguage === "pt" &&
+                    "Faça o download da nossa tabela de preços completa em formato PDF para visualizar todas as nossas tarifas e opções de serviço."}
+                  {currentLanguage === "en" &&
+                    "Download our complete price list in PDF format to view all our rates and service options."}
+                  {currentLanguage === "fr" &&
+                    "Téléchargez notre liste de prix complète au format PDF pour voir tous nos tarifs et options de service."}
+                </p>
+                <a
+                  href="/pdf/tarifas-topronto.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-green-900 bg-yellow-500 hover:bg-yellow-400 transition-colors duration-300"
+                >
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  {currentLanguage === "pt" && "Baixar Tabela de Preços"}
+                  {currentLanguage === "en" && "Download Price List"}
+                  {currentLanguage === "fr" && "Télécharger la Liste des Prix"}
+                </a>
+                <p className="mt-3 text-sm text-green-200">
+                  {currentLanguage === "pt" &&
+                    "Formato PDF - Atualizado em Agosto 2025"}
+                  {currentLanguage === "en" &&
+                    "PDF Format - Updated August 2025"}
+                  {currentLanguage === "fr" &&
+                    "Format PDF - Mis à jour en Août 2025"}
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <div className="relative w-48 h-48 md:w-64 md:h-64 bg-white/20 rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-24 h-24 text-white/50"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  <div className="absolute bottom-4 text-center px-2">
+                    <p className="text-sm font-medium">
+                      {currentLanguage === "pt" && "Tabela de Preços"}
+                      {currentLanguage === "en" && "Price List"}
+                      {currentLanguage === "fr" && "Liste des Prix"}
+                    </p>
+                    <p className="text-xs opacity-75">PDF • 346 Ko</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <FAQAccordion faqs={faqs} currentLanguage={currentLanguage} />
 
@@ -418,7 +526,7 @@ export default function Services() {
 
       {/* Section Contactez-nous */}
       <section className="">
-        <div className="relative px-4 text-center bg-green-900 text-white  shadow-2xl overflow-hidden py-16">
+        <div className="relative px-4 text-center bg-gradient-to-r from-green-800 to-green-700 text-white  shadow-2xl overflow-hidden py-16">
           {/* Image de fond avec effet blend et blur */}
           <div
             className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-5"

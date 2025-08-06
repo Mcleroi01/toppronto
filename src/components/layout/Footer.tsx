@@ -8,6 +8,7 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Heart,
 } from "lucide-react";
 import { contactInfo } from "../../data/contact";
 import { useLanguage } from "../../hooks/useLanguage";
@@ -54,16 +55,15 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-           
-              {/* Logo */}
-              <Link to="/" className="flex items-center space-x-3">
-                <img
-                  src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
-                  alt="Topronto Logo"
-                  className=" h-32 w-auto rounded-lg"
-                />
-              </Link>
-           
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3">
+              <img
+                src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
+                alt="Topronto Logo"
+                className=" h-32 w-auto rounded-lg"
+              />
+            </Link>
+
             <p className="text-gray-300 text-sm leading-relaxed">
               {t("footer.description")}
             </p>
@@ -135,8 +135,24 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400 text-sm">
-            © 2024 Topronto. {t("footer.rights")}
+          <p className="text-gray-400 text-sm flex flex-col items-center gap-1 md:flex-row md:justify-center md:gap-2">
+            © 2025 Topronto. {t("footer.rights")}
+            <span className="flex items-center gap-1 mt-1 md:mt-0">
+              {t("footer.dev", "Desenvolvido com")}
+              <Heart
+                className="inline w-4 h-4 text-red-500 mx-1"
+                fill="currentColor"
+              />
+              {t("footer.by", "por")}
+              <a
+                href="https://www.linkedin.com/in/mcleroi01"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-400 hover:underline ml-1"
+              >
+                mcleroi01
+              </a>
+            </span>
           </p>
         </div>
       </div>

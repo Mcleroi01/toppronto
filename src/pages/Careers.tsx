@@ -15,8 +15,8 @@ export const Careers: React.FC = () => {
       </div>
 
       {/* Section Contactez-nous */}
-      <section className="pb-16">
-        <div className="relative px-4 text-center bg-green-900 text-white rounded-3xl shadow-2xl overflow-hidden py-16">
+      <section className="">
+        <div className="relative px-4 text-center bg-gradient-to-r from-green-800 to-green-700 text-white rounded-3xl shadow-2xl overflow-hidden py-16">
           {/* Image de fond avec effet blend et blur */}
           <div
             className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-5"
