@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   ArrowRight,
   Shield,
@@ -78,52 +78,96 @@ export const Home: React.FC = () => {
       image:
         "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
     },
+
   ];
 
-  const vehicles = [
-    {
-      icon: Bike,
-      label: {
-        fr: "Moto",
-        en: "Motorbike",
-        pt: "Moto",
-      },
-      desc: {
-        fr: "Idéal pour les petits colis et livraisons urgentes.",
-        en: "Ideal for small parcels and urgent deliveries.",
-        pt: "Ideal para pequenas encomendas e entregas urgentes.",
-      },
-      image: "/images/walker.png",
+const vehicles = [
+  {
+    icon: Bike,
+    label: {
+      fr: "Moto",
+      en: "Motorbike",
+      pt: "Moto",
     },
-    {
-      icon: Car,
-      label: {
-        fr: "Voiture",
-        en: "Car",
-        pt: "Carro",
-      },
-      desc: {
-        fr: "Pour les livraisons rapides et flexibles en ville.",
-        en: "For fast and flexible city deliveries.",
-        pt: "Para entregas rápidas e flexíveis na cidade.",
-      },
-      image: "/images/Motorcycle .png",
+    desc: {
+      fr: "Idéal pour les petits colis et livraisons urgentes.",
+      en: "Ideal for small parcels and urgent deliveries.",
+      pt: "Ideal para pequenas encomendas e entregas urgentes.",
     },
-    {
-      icon: Truck,
-      label: {
-        fr: "Camion",
-        en: "Truck",
-        pt: "Camião",
-      },
-      desc: {
-        fr: "Pour les gros volumes et la logistique professionnelle.",
-        en: "For large volumes and professional logistics.",
-        pt: "Para grandes volumes e logística profissional.",
-      },
-      image: "/images/van.png",
+    image: "/images/vehicules/bike.png",
+  },
+  {
+    icon: Car,
+    label: {
+      fr: "Voiture citadine",
+      en: "City car",
+      pt: "Carro urbano",
     },
-  ];
+    desc: {
+      fr: "Parfait pour les livraisons rapides en milieu urbain.",
+      en: "Perfect for fast urban deliveries.",
+      pt: "Perfeito para entregas rápidas em áreas urbanas.",
+    },
+    image: "/images/vehicules/city-car.jpg",
+  },
+  {
+    icon: Car,
+    label: {
+      fr: "Voiture utilitaire",
+      en: "Utility car",
+      pt: "Carro utilitário",
+    },
+    desc: {
+      fr: "Polyvalente pour les colis de taille moyenne.",
+      en: "Versatile for medium-sized parcels.",
+      pt: "Versátil para encomendas de tamanho médio.",
+    },
+    image: "/images/vehicules/utility-car.png",
+  },
+  {
+    icon: Truck,
+    label: {
+      fr: "Fourgonnette",
+      en: "Van",
+      pt: "Carrinha",
+    },
+    desc: {
+      fr: "Idéale pour les livraisons volumineuses en zone urbaine.",
+      en: "Ideal for bulky deliveries in urban areas.",
+      pt: "Ideal para entregas volumosas em áreas urbanas.",
+    },
+    image: "/images/vehicules/van.png",
+  },
+  {
+    icon: Truck,
+    label: {
+      fr: "Pickup",
+      en: "Pickup",
+      pt: "Pickup",
+    },
+    desc: {
+      fr: "Parfait pour les charges lourdes ou les zones rurales.",
+      en: "Perfect for heavy loads or rural areas.",
+      pt: "Perfeito para cargas pesadas ou zonas rurais.",
+    },
+    image: "/images/vehicules/pickup.jpg",
+  },
+  {
+    icon: Truck,
+    label: {
+      fr: "Camion",
+      en: "Truck",
+      pt: "Camião",
+    },
+    desc: {
+      fr: "Pour les gros volumes et la logistique professionnelle.",
+      en: "For large volumes and professional logistics.",
+      pt: "Para grandes volumes e logística profissional.",
+    },
+    image: "/images/vehicules/truck.png",
+  },
+];
+
 
   // Liste des logos clients (ajoute/remplace les chemins selon tes besoins)
   const clientLogos = [
@@ -271,12 +315,16 @@ export const Home: React.FC = () => {
     );
   };
 
+  // Création d'une référence pour la section des services
+  const servicesRef = useRef(null);
+  const isInView = useInView(servicesRef, { once: true, amount: 0.1 });
+
   return (
     <div className="space-y-24">
       {/* Features Section - Améliorée */}
-      <section className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+      <section ref={servicesRef} className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
         {/* Fond décoratif */}
-        <div className="absolute inset-0  -z-10"></div>
+        <div className="absolute inset-0 -z-10"></div>
         <div
           className="absolute inset-0 bg-cover bg-center opacity-5 -z-10"
           style={{ backgroundImage: "url('/images/pattern.svg')" }}
@@ -286,10 +334,9 @@ export const Home: React.FC = () => {
           {/* En-tête de section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-16 "
+            className="mb-16"
           >
             <span className="inline-block px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-full mb-4">
               {getTranslatedText(
@@ -328,17 +375,16 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {features.map((feature, idx) => (
               <motion.div
-                key={idx}
+                key={`feature-${feature.title.pt}`}
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{
+                animate={isInView ? {
                   opacity: 1,
                   y: 0,
                   transition: {
                     duration: 0.6,
                     delay: idx * 0.1,
                   },
-                }}
-                viewport={{ once: true, margin: "-100px" }}
+                } : { opacity: 0, y: 30 }}
                 whileHover={{ y: -5 }}
                 className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
               >
