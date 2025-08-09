@@ -5,7 +5,7 @@ import { Menu, X, ArrowRight, XCircle } from "lucide-react";
 import { LanguageSelector } from "../common/LanguageSelector";
 import { motion, AnimatePresence } from "framer-motion";
 import { DriversForm } from "../drivers/DriversForm";
-import { EnterpriseForm } from "../enterprise/EnterpriseForm";
+import EnterpriseForm from "../enterprise/EnterpriseForm";
 
 // Utilitaire pour gérer les images par route
 const backgroundImages: Record<string, string> = {
@@ -522,18 +522,18 @@ export const Header: React.FC = () => {
       <AnimatePresence>
         {isDriverModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
               className="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             >
-              <div className="sticky top-0 bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-xl flex justify-between items-center">
+              <div className=" bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-xl flex justify-between items-center">
                 <h3 className="text-xl font-bold">
                   {t("drivers.form.title", "Cadastre-se como motorista")}
                 </h3>
-                <button 
+                <button
                   onClick={() => {
                     setIsDriverModalOpen(false);
                     setSubmitSuccess(false);
@@ -543,19 +543,32 @@ export const Header: React.FC = () => {
                   <XCircle className="w-6 h-6" />
                 </button>
               </div>
-              <div className="p-6">
+              <div className="p-2">
                 {submitSuccess ? (
                   <div className="text-center py-8">
                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="h-6 w-6 text-green-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </div>
                     <h3 className="mt-3 text-lg font-medium text-gray-900">
-                      {t('drivers.form.success.title', 'Inscrição enviada!')}
+                      {t("drivers.form.success.title", "Inscrição enviada!")}
                     </h3>
                     <p className="mt-2 text-sm text-gray-500">
-                      {t('drivers.form.success.message', 'Obrigado pelo seu interesse. Entraremos em contato em breve!')}
+                      {t(
+                        "drivers.form.success.message",
+                        "Obrigado pelo seu interesse. Entraremos em contato em breve!"
+                      )}
                     </p>
                     <button
                       type="button"
@@ -565,12 +578,12 @@ export const Header: React.FC = () => {
                         setSubmitSuccess(false);
                       }}
                     >
-                      {t('common.close', 'Fechar')}
+                      {t("common.close", "Fechar")}
                     </button>
                   </div>
                 ) : (
-                  <DriversForm 
-                    currentLanguage={i18n.language as 'pt' | 'en' | 'fr'}
+                  <DriversForm
+                    currentLanguage={i18n.language as "pt" | "en" | "fr"}
                     onSubmit={handleDriverSubmit}
                     isSubmitting={isSubmitting}
                     submitSuccess={submitSuccess}
@@ -586,18 +599,18 @@ export const Header: React.FC = () => {
       <AnimatePresence>
         {isEnterpriseModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
               className="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             >
-              <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-xl flex justify-between items-center">
+              <div className=" bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-xl flex justify-between items-center">
                 <h3 className="text-xl font-bold">
                   {t("enterprise.form.title", "Solicite uma proposta")}
                 </h3>
-                <button 
+                <button
                   onClick={() => {
                     setIsEnterpriseModalOpen(false);
                     setSubmitSuccess(false);
@@ -611,15 +624,31 @@ export const Header: React.FC = () => {
                 {submitSuccess ? (
                   <div className="text-center py-8">
                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="h-6 w-6 text-green-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </div>
                     <h3 className="mt-3 text-lg font-medium text-gray-900">
-                      {t('enterprise.form.success.title', 'Solicitação enviada!')}
+                      {t(
+                        "enterprise.form.success.title",
+                        "Solicitação enviada!"
+                      )}
                     </h3>
                     <p className="mt-2 text-sm text-gray-500">
-                      {t('enterprise.form.success.message', 'Obrigado pelo seu interesse. Nossa equipe entrará em contato em breve!')}
+                      {t(
+                        "enterprise.form.success.message",
+                        "Obrigado pelo seu interesse. Nossa equipe entrará em contato em breve!"
+                      )}
                     </p>
                     <button
                       type="button"
@@ -629,19 +658,19 @@ export const Header: React.FC = () => {
                         setSubmitSuccess(false);
                       }}
                     >
-                      {t('common.close', 'Fechar')}
+                      {t("common.close", "Fechar")}
                     </button>
                   </div>
                 ) : (
-                  <EnterpriseForm 
-                    currentLanguage={i18n.language as 'pt' | 'en' | 'fr'}
+                  <EnterpriseForm
+                    currentLanguage={i18n.language as "pt" | "en" | "fr"}
                     onSuccess={() => {
                       setSubmitSuccess(true);
-                      // Fermer automatiquement après 3 secondes
+                      // Fermer automatiquement après 2 secondes
                       setTimeout(() => {
-                        setIsEnterpriseModalOpen(false);
                         setSubmitSuccess(false);
-                      }, 3000);
+                        setIsEnterpriseModalOpen(false);
+                      }, 2000);
                     }}
                   />
                 )}

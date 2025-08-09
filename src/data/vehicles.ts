@@ -12,6 +12,10 @@ export interface Vehicle {
   desc: TranslationObject;
   image: string;
   features?: (string | TranslationObject)[];
+  limite: string;
+  Tamanho?: string;
+  Ideal?: string;
+  volume?: string;
 }
 
 export const vehicles: Vehicle[] = [
@@ -29,8 +33,12 @@ export const vehicles: Vehicle[] = [
       pt: "Ideal para pequenas encomendas e entregas urgentes.",
     },
     image: "/images/vehicules/bike.png",
+    limite: "20 kg",
+    Tamanho: "35 × 40 × 35 cm ",
+    Ideal: "documentos, flores, pacotes pequenos e delivery de comida. ",
   },
   {
+    type: 'city-car',
     icon: Car,
     label: {
       fr: "Voiture citadine",
@@ -43,6 +51,9 @@ export const vehicles: Vehicle[] = [
       pt: "Perfeito para entregas rápidas em áreas urbanas.",
     },
     image: "/images/vehicules/city-car.jpg",
+    limite: "50 kg",
+    Ideal: "documents, colis légers, et petits meubles.",
+    volume: "200 litros ",
   },
   {
     type: 'utility-car',
@@ -58,8 +69,30 @@ export const vehicles: Vehicle[] = [
       pt: "Versátil para encomendas de tamanho médio.",
     },
     image: "/images/vehicules/utility-car.png",
+    limite: "100 kg",
+    Ideal: "meubles, électroménagers, et colis volumineux.",
+    volume: "400 litros ",
   },
   {
+    type: 'hiace',
+    icon: Car,
+    label: {
+      fr: "Hiace",
+      en: "Hiace",
+      pt: "Hiace",
+    },
+    desc: {
+      fr: "Idéal pour les charges lourdes et les terrains accidentés.",
+      en: "Ideal for heavy loads and rough terrain.",
+      pt: "Ideal para cargas pesadas e terrenos acidentados.",
+    },
+    image: "/images/vehicules/van.png",
+    limite: "200 kg",
+    Ideal: "meubles, électroménagers, et colis volumineux.",
+    volume: "800 litros ",
+  },
+  {
+    type: 'van',
     icon: Truck,
     label: {
       fr: "Fourgonnette",
@@ -67,26 +100,14 @@ export const vehicles: Vehicle[] = [
       pt: "Carrinha",
     },
     desc: {
-      fr: "Idéale pour les livraisons volumineuses en zone urbaine.",
-      en: "Ideal for bulky deliveries in urban areas.",
-      pt: "Ideal para entregas volumosas em áreas urbanas.",
-    },
-    image: "/images/vehicules/van.png",
-  },
-  {
-    type: 'pickup',
-    icon: Truck,
-    label: {
-      fr: "Pickup",
-      en: "Pickup",
-      pt: "Pickup",
-    },
-    desc: {
       fr: "Parfait pour les charges lourdes ou les zones rurales.",
       en: "Perfect for heavy loads or rural areas.",
       pt: "Perfeito para cargas pesadas ou zonas rurais.",
     },
     image: "/images/vehicules/pickup.jpg",
+    limite: "300 kg",
+    Ideal: "meubles, électroménagers, et colis volumineux.",
+    volume: "1000 litros ",
   },
   {
     type: 'truck',
@@ -102,5 +123,8 @@ export const vehicles: Vehicle[] = [
       pt: "Para grandes volumes e logística profissional.",
     },
     image: "/images/vehicules/truck.png",
+    limite: "500 kg",
+    Ideal: "grandes quantités, équipements lourds, et déménagements.",
+    volume: "2000 litros ",
   },
 ];

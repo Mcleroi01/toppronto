@@ -7,13 +7,13 @@ import { getStorage } from "firebase/storage";
 
 // Configuration Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBUpr_46vZPxcv1xN73ITOf70cs41lnixM",
-  authDomain: "topronto-9ae6f.firebaseapp.com",
-  projectId: "topronto-9ae6f",
-  storageBucket: "topronto-9ae6f.appspot.com", // J'ai corrigé le storageBucket
-  messagingSenderId: "182475170035",
-  appId: "1:182475170035:web:4f54a90026d85d24635786",
-  measurementId: "G-S2X8M8MFPL"
+  apiKey: "AIzaSyDzjcboW8jzXXfQIKSJYumGCoPn_GGc8o4",
+  authDomain: "topronto-dc780.firebaseapp.com",
+  projectId: "topronto-dc780",
+  storageBucket: "topronto-dc780.firebasestorage.app",
+  messagingSenderId: "651238498180",
+  appId: "1:651238498180:web:8ab2b149806577fb0c07d1",
+  measurementId: "G-FJJVJHPMRW"
 };
 
 // Initialisation de Firebase

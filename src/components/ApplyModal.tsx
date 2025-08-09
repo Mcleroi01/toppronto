@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
-
-const MySwal = withReactContent(Swal);
-
-interface FormData {
-  name: string;
-  email: string;
-  motivation: string;
-  portfolio: string;
-  cv: File | null;
-  idCard: File | null;
-}
-
+import { submitJobApplication, type JobApplicationData } from '@/services/supabase/careerService';
 
 interface ApplyModalProps {
   isOpen: boolean;
@@ -23,28 +11,59 @@ interface ApplyModalProps {
   jobTitle: string;
 }
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  experience_years: number | '';
+  motivation: string;
+  portfolio: string;
+  cv: File | null;
+  idCard: File | null;
+  message?: string;
+}
+
+const MySwal = withReactContent(Swal);
+
 export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitle }) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
+    phone: '',
+    experience_years: '',
     motivation: '',
     portfolio: '',
     cv: null,
     idCard: null,
+    message: '',
   });
   // État pour suivre la soumission en cours
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
+  const handleCvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData(prev => ({
+        ...prev,
+        cv: e.target.files?.[0] || null
+      }));
+    }
+  };
+
+  const handleIdCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData(prev => ({
+        ...prev,
+        idCard: e.target.files?.[0] || null
+      }));
     }
   };
 
@@ -81,22 +100,43 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
   };
 
   // Afficher un message de confirmation avant soumission
+  const validateForm = (): boolean => {
+    // Vérifier les champs requis
+    if (!formData.name || !formData.email || !formData.phone || !formData.experience_years || !formData.motivation) {
+      showAlert(false, t('apply.requiredFields', 'Veuillez remplir tous les champs obligatoires.'));
+      return false;
+    }
+
+    // Vérifier les fichiers
+    if (!formData.cv || !formData.idCard) {
+      showAlert(false, t('apply.requiredFiles', 'Veuillez télécharger votre CV et votre pièce d\'identité.'));
+      return false;
+    }
+
+    // Valider l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showAlert(false, t('apply.invalidEmail', 'Veuillez entrer une adresse email valide.'));
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Vérifier que les fichiers requis sont présents
-    if (!formData.cv || !formData.idCard) {
-      showAlert(false, t('apply.requiredFiles', 'Veuillez télécharger votre CV et votre pièce d\'identité.'));
+    if (!validateForm()) {
       return;
     }
 
     const { value: confirm } = await MySwal.fire({
-      title: t('apply.confirmTitle', 'Confirmar inscrição'),
-      text: t('apply.confirmText', 'Tem a certeza de que pretende enviar a sua candidatura?'),
+      title: t('apply.confirmTitle', 'Confirmer la candidature'),
+      text: t('apply.confirmText', 'Êtes-vous sûr de vouloir soumettre votre candidature ?'),
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: t('common.yes', 'Sim, enviar'),
-      cancelButtonText: t('common.cancel', 'Cancelar'),
+      confirmButtonText: t('common.yes', 'Oui, envoyer'),
+      cancelButtonText: t('common.cancel', 'Annuler'),
       confirmButtonColor: '#10B981',
       cancelButtonColor: '#6B7280',
       reverseButtons: true,
@@ -110,12 +150,9 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
 
     if (!confirm) return;
 
-    setIsSubmitting(true);
-
-    // Afficher un indicateur de chargement
     MySwal.fire({
-      title: t('apply.sending', 'Enviando...'),
-      html: t('apply.pleaseWait', 'Por favor aguarde enquanto enviamos a sua candidatura.'),
+      title: t('apply.sending', 'Envoi en cours...'),
+      html: t('apply.pleaseWait', 'Veuillez patienter pendant l\'envoi de votre candidature.'),
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -123,105 +160,61 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
     });
 
     try {
-      const formDataToSend = new FormData();
+      const applicationData: JobApplicationData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        experience_years: formData.experience_years,
+        motivation: formData.motivation,
+        portfolio: formData.portfolio,
+        message: formData.message,
+        jobTitle: jobTitle,
+        cv: formData.cv!,
+        idCard: formData.idCard!
+      };
 
-      // Ajouter les champs texte
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('motivation', formData.motivation);
-      formDataToSend.append('portfolio', formData.portfolio);
-      formDataToSend.append('jobTitle', jobTitle);
+      await submitJobApplication(applicationData);
 
-      // Ajouter les fichiers
-      if (formData.cv) formDataToSend.append('cv', formData.cv);
-      if (formData.idCard) formDataToSend.append('idCard', formData.idCard);
+      Swal.close();
 
-      // Envoyer à la fonction Netlify
-      const response = await fetch('/.netlify/functions/sendmail', {
-        method: 'POST',
-        body: formDataToSend,
-      });
-
-      let responseData;
-      try {
-        const responseText = await response.text();
-        responseData = responseText ? JSON.parse(responseText) : {};
-      } catch (e) {
-        console.error('Erreur de parsing de la réponse:', e);
-        throw new Error('Réponse invalide du serveur');
-      }
-
-      if (!response.ok) {
-        const errorMessage = responseData.error || 
-                           responseData.message || 
-                           `Erreur ${response.status} lors de la soumission du formulaire`;
-        throw new Error(errorMessage);
-      }
-
-      // Fermer tous les SweetAlert ouverts
-      MySwal.close();
-
-      // Afficher le message de succès
-      await MySwal.fire({
-        title: (
-          <div className="flex items-center gap-2 text-green-600">
-            <CheckCircle className="w-6 h-6" />
-            <span>{t('apply.successTitle', 'Inscrição enviada!')}</span>
-          </div>
-        ),
-        text: t('apply.success', 'A sua inscrição foi recebida. Entraremos em contacto em breve.'),
-        icon: 'success',
-        confirmButtonText: t('common.great', 'Parfait !'),
-        confirmButtonColor: '#10B981',
-        customClass: {
-          popup: 'rounded-xl shadow-xl',
-          confirmButton: 'px-4 py-2 rounded-lg font-medium',
-        },
-        buttonsStyling: false,
-      });
-
-      // Réinitialiser le formulaire en cas de succès
+      // Réinitialiser le formulaire
       setFormData({
         name: '',
         email: '',
-        cv: null,
+        phone: '',
+        experience_years: '',
         motivation: '',
         portfolio: '',
-        idCard: null
+        cv: null,
+        idCard: null,
+        message: '',
       });
 
-      // Fermer la modale
-      onClose();
+      showAlert(true, t('apply.successMessage', 'Votre candidature a été envoyée avec succès !'));
 
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (error) {
       console.error('Error submitting form:', error);
-      let errorMessage = t('apply.error', 'Une erreur est survenue lors de l\'envoi de votre candidature. Veuillez réessayer.');
-
-      // Améliorer les messages d'erreur
-      if (error instanceof TypeError) {
-        errorMessage = t('apply.networkError', 'Erreur réseau. Veuillez vérifier votre connexion internet et réessayer.');
-      } else if (error instanceof Error) {
-        errorMessage = error.message || errorMessage;
+      
+      let errorMessage = t('apply.submissionError', 'Une erreur est survenue lors de la soumission du formulaire. Veuillez réessayer.');
+      
+      if (error instanceof Error) {
+        // Traduire les messages d'erreur courants
+        if (error.message.includes('téléchargement du fichier')) {
+          errorMessage = t('apply.uploadError', 'Erreur lors du téléchargement des fichiers. Veuillez vérifier les formats et tailles.');
+        } else if (error.message.includes('taille maximale')) {
+          errorMessage = t('apply.fileTooLarge', 'Un ou plusieurs fichiers dépassent la taille maximale de 5MB.');
+        } else if (error.message.includes('Type de fichier non supporté')) {
+          errorMessage = t('apply.invalidFileType', 'Format de fichier non supporté. Formats acceptés : PDF, DOC, DOCX, JPG, PNG.');
+        } else {
+          errorMessage = error.message;
+        }
       }
       
-      // Afficher l'erreur avec SweetAlert
-      MySwal.fire({
-        title: (
-          <div className="flex items-center gap-2 text-red-600">
-            <XCircle className="w-6 h-6" />
-            <span>{t('apply.errorTitle', 'Erreur')}</span>
-          </div>
-        ),
-        text: errorMessage,
-        icon: 'error',
-        confirmButtonText: t('common.understand', 'J\'ai compris'),
-        confirmButtonColor: '#EF4444',
-        customClass: {
-          popup: 'rounded-xl shadow-xl',
-          confirmButton: 'px-4 py-2 rounded-lg font-medium',
-        },
-        buttonsStyling: false,
-      });
+      showAlert(false, errorMessage);
+      Swal.close();
     } finally {
       setIsSubmitting(false);
     }
@@ -265,15 +258,48 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
               disabled={isSubmitting}
             />
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t('apply.form.email', 'Email')}
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+                disabled={isSubmitting}
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                {t('apply.form.phone', 'Phone Number')}
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+                disabled={isSubmitting}
+              />
+            </div>
+          </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              {t('apply.form.email', 'Email')}
+            <label htmlFor="experience_years" className="block text-sm font-medium text-gray-700">
+              {t('apply.form.experience', 'Years of Experience')}
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type="number"
+              id="experience_years"
+              name="experience_years"
+              min="0"
+              value={formData.experience_years}
               onChange={handleInputChange}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               required
@@ -289,7 +315,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
               id="cv"
               name="cv"
               accept=".pdf,.doc,.docx"
-              onChange={handleFileChange}
+              onChange={handleCvChange}
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               required
               disabled={isSubmitting}
@@ -308,6 +334,22 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               required
               disabled={isSubmitting}
+              placeholder={t('apply.form.motivationPlaceholder', 'Tell us why you are the perfect candidate for this position...')}
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+              {t('apply.form.additionalInfo', 'Additional Information')} ({t('apply.optional', 'Optional')})
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message || ''}
+              onChange={handleInputChange}
+              rows={3}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              disabled={isSubmitting}
+              placeholder={t('apply.form.additionalInfoPlaceholder', 'Any additional information you would like to share with us...')}
             ></textarea>
           </div>
           <div className="mb-4">
@@ -333,7 +375,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
               id="idCard"
               name="idCard"
               accept=".pdf,.jpg,.jpeg,.png"
-              onChange={handleFileChange}
+              onChange={handleIdCardChange}
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               required
               disabled={isSubmitting}

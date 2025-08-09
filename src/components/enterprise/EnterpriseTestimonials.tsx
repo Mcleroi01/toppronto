@@ -87,20 +87,26 @@ export const EnterpriseTestimonials: React.FC<EnterpriseTestimonialsProps> = ({ 
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {getTranslatedText({
-              pt: 'O que nossos clientes dizem',
-              en: 'What our clients say',
-              fr: 'Ce que disent nos clients'
-            }, currentLanguage)}
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            {getTranslatedText(
+              {
+                pt: "O que nossos clientes dizem",
+                en: "What our clients say",
+                fr: "Ce que disent nos clients",
+              },
+              currentLanguage
+            )}
           </h2>
           <div className="w-20 h-1.5 bg-green-600 rounded-full mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            {getTranslatedText({
-              pt: 'Empresas que confiam em nossos serviços de entrega',
-              en: 'Businesses that trust our delivery services',
-              fr: 'Entreprises qui font confiance à nos services de livraison'
-            }, currentLanguage)}
+            {getTranslatedText(
+              {
+                pt: "Empresas que confiam em nossos serviços de entrega",
+                en: "Businesses that trust our delivery services",
+                fr: "Entreprises qui font confiance à nos services de livraison",
+              },
+              currentLanguage
+            )}
           </p>
         </div>
 
@@ -114,22 +120,23 @@ export const EnterpriseTestimonials: React.FC<EnterpriseTestimonialsProps> = ({ 
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="flex mb-4">
-                {renderStars(testimonial.rating)}
-              </div>
-              
+              <div className="flex mb-4">{renderStars(testimonial.rating)}</div>
+
               <blockquote className="text-gray-700 italic mb-6">
                 "{getTranslatedText(testimonial.quote, currentLanguage)}"
               </blockquote>
-              
+
               <div className="flex items-center">
                 <div className="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xl mr-4">
                   {testimonial.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                  <p className="font-semibold text-gray-900">
+                    {testimonial.name}
+                  </p>
                   <p className="text-sm text-gray-600">
-                    {getTranslatedText(testimonial.role, currentLanguage)} • {testimonial.company}
+                    {getTranslatedText(testimonial.role, currentLanguage)} •{" "}
+                    {testimonial.company}
                   </p>
                 </div>
               </div>

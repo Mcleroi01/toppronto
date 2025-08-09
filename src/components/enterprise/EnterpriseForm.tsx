@@ -1,11 +1,10 @@
-import React, { useState, FormEvent } from 'react';
-import { motion } from 'framer-motion';
+import { useState, FormEvent, FC } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { getTranslatedText } from '../../utils/translations';
-// Vehicle types are now managed directly in the form options
-import { createEnterprise } from '../../services/enterpriseService';
+import { createEnterprise } from '../../services/supabase/enterpriseService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { vehicles } from '../../data/vehicles';
 
 type Language = 'pt' | 'en' | 'fr';
 
@@ -30,57 +29,18 @@ interface FormData {
 
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
-const formOptions = {
-  contactMethods: [
-    { value: 'email', label: { pt: 'E-mail', en: 'Email', fr: 'E-mail' } },
-    { value: 'phone', label: { pt: 'Telefone', en: 'Phone', fr: 'Téléphone' } },
-    { value: 'whatsapp', label: { pt: 'WhatsApp', en: 'WhatsApp', fr: 'WhatsApp' } },
-  ],
-  cities: [
-    { value: 'luanda', label: { pt: 'Luanda', en: 'Luanda', fr: 'Luanda' } },
-    { value: 'benguela', label: { pt: 'Benguela', en: 'Benguela', fr: 'Benguela' } },
-    { value: 'lubango', label: { pt: 'Lubango', en: 'Lubango', fr: 'Lubango' } },
-    { value: 'outra', label: { pt: 'Outra cidade', en: 'Other city', fr: 'Autre ville' } },
-  ],
-  industries: [
-    { value: 'retail', label: { pt: 'Varejo', en: 'Retail', fr: 'Commerce de détail' } },
-    { value: 'food', label: { pt: 'Alimentação', en: 'Food', fr: 'Alimentation' } },
-    { value: 'ecommerce', label: { pt: 'E-commerce', en: 'E-commerce', fr: 'Commerce électronique' } },
-    { value: 'health', label: { pt: 'Saúde', en: 'Healthcare', fr: 'Santé' } },
-    { value: 'other', label: { pt: 'Outro', en: 'Other', fr: 'Autre' } },
-  ],
-  vehicleTypes: [
-    { value: 'moto', label: { pt: 'Moto', en: 'Motorbike', fr: 'Moto' } },
-    { value: 'carro', label: { pt: 'Carro', en: 'Car', fr: 'Voiture' } },
-    { value: 'van', label: { pt: 'Van', en: 'Van', fr: 'Fourgonnette' } },
-    { value: 'caminhao', label: { pt: 'Caminhão', en: 'Truck', fr: 'Camion' } },
-    { value: 'diversos', label: { pt: 'Diversos', en: 'Various', fr: 'Divers' } },
-  ],
-  monthlyDeliveries: [
-    { value: '1-10', label: { pt: '1-10/mês', en: '1-10/month', fr: '1-10/mois' } },
-    { value: '11-50', label: { pt: '11-50/mês', en: '11-50/month', fr: '11-50/mois' } },
-    { value: '51-200', label: { pt: '51-200/mês', en: '51-200/month', fr: '51-200/mois' } },
-    { value: '200+', label: { pt: '+200/mês', en: '200+/month', fr: '+200/mois' } },
-  ],
-  orderPreferences: [
-    { value: 'app', label: { pt: 'Aplicativo', en: 'Mobile App', fr: 'Application mobile' } },
-    { value: 'website', label: { pt: 'Website', en: 'Website', fr: 'Site web' } },
-    { value: 'api', label: { pt: 'Integração via API', en: 'API Integration', fr: 'Intégration API' } },
-    { value: 'whatsapp', label: { pt: 'WhatsApp', en: 'WhatsApp', fr: 'WhatsApp' } },
-  ]
-};
-
 interface EnterpriseFormProps {
   currentLanguage: Language;
   onSuccess?: () => void;
 }
 
-export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
+const EnterpriseForm: FC<EnterpriseFormProps> = ({
   currentLanguage,
   onSuccess
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [vehicleModalOpen, setVehicleModalOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -98,6 +58,45 @@ export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
   });
   
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+  const formOptions = {
+    contactMethods: [
+      { value: 'email', label: { pt: 'E-mail', en: 'Email', fr: 'E-mail' } },
+      { value: 'phone', label: { pt: 'Telefone', en: 'Phone', fr: 'Téléphone' } },
+      { value: 'whatsapp', label: { pt: 'WhatsApp', en: 'WhatsApp', fr: 'WhatsApp' } },
+    ],
+    cities: [
+      { value: 'luanda', label: { pt: 'Luanda', en: 'Luanda', fr: 'Luanda' } },
+      { value: 'benguela', label: { pt: 'Benguela', en: 'Benguela', fr: 'Benguela' } },
+      { value: 'lubango', label: { pt: 'Lubango', en: 'Lubango', fr: 'Lubango' } },
+      { value: 'outra', label: { pt: 'Outra cidade', en: 'Other city', fr: 'Autre ville' } },
+    ],
+    industries: [
+      { value: 'retail', label: { pt: 'Varejo', en: 'Retail', fr: 'Commerce de détail' } },
+      { value: 'food', label: { pt: 'Alimentação', en: 'Food', fr: 'Alimentation' } },
+      { value: 'ecommerce', label: { pt: 'E-commerce', en: 'E-commerce', fr: 'Commerce électronique' } },
+      { value: 'health', label: { pt: 'Saúde', en: 'Healthcare', fr: 'Santé' } },
+      { value: 'other', label: { pt: 'Outro', en: 'Other', fr: 'Autre' } },
+    ],
+    vehicleTypes: [
+      { value: 'moto', label: { pt: 'Moto', en: 'Motorcycle', fr: 'Moto' } },
+      { value: 'carro', label: { pt: 'Carro', en: 'Car', fr: 'Voiture' } },
+      { value: 'bicicleta', label: { pt: 'Bicicleta', en: 'Bicycle', fr: 'Vélo' } },
+      { value: 'caminhao', label: { pt: 'Caminhão', en: 'Truck', fr: 'Camion' } },
+    ],
+    monthlyDeliveries: [
+      { value: '1-50', label: { pt: '1-50', en: '1-50', fr: '1-50' } },
+      { value: '51-200', label: { pt: '51-200', en: '51-200', fr: '51-200' } },
+      { value: '201-500', label: { pt: '201-500', en: '201-500', fr: '201-500' } },
+      { value: '500+', label: { pt: '500+', en: '500+', fr: '500+' } },
+    ],
+    orderPreferences: [
+      { value: 'web', label: { pt: 'Site Web', en: 'Website', fr: 'Site Web' } },
+      { value: 'app', label: { pt: 'Aplicativo', en: 'Mobile App', fr: 'Application mobile' } },
+      { value: 'telefone', label: { pt: 'Telefone', en: 'Phone', fr: 'Téléphone' } },
+      { value: 'outro', label: { pt: 'Outro', en: 'Other', fr: 'Autre' } },
+    ]
+  };
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
@@ -185,12 +184,21 @@ export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleVehicleSelect = (vehicleType: string) => {
+    setFormData(prev => ({
+      ...prev,
+      vehicleType
+    }));
+    setVehicleModalOpen(false);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -200,73 +208,67 @@ export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Prepare data for enterprise service
       const enterpriseData = {
         name: formData.companyName,
         email: formData.email,
         phone: formData.phone,
-        contactPerson: `${formData.firstName} ${formData.lastName}`,
+        contact_person: `${formData.firstName} ${formData.lastName}`,
         position: formData.position,
-        contactMethod: formData.contactMethod,
+        contact_method: formData.contactMethod,
         city: formData.city,
         industry: formData.industry,
-        vehicleType: formData.vehicleType,
-        monthlyDeliveries: formData.monthlyDeliveries,
-        orderPreference: formData.orderPreference,
+        vehicle_type: formData.vehicleType,
+        monthly_deliveries: formData.monthlyDeliveries,
+        order_preference: formData.orderPreference,
         message: formData.message,
-        status: 'new' as const,
       };
 
-      await createEnterprise(enterpriseData);
+      const response = await createEnterprise(enterpriseData);
       
-      // Show success message
-      toast.success(
-        getTranslatedText({
-          pt: 'Solicitação enviada com sucesso!',
-          en: 'Request submitted successfully!',
-          fr: 'Demande envoyée avec succès !',
-        }, currentLanguage),
-        {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        }
-      );
-
+      const successMessage = response?.id
+        ? getTranslatedText({
+            pt: `✅ Solicitação #${response.id} enviada com sucesso!`,
+            en: `✅ Request #${response.id} submitted successfully!`,
+            fr: `✅ Demande #${response.id} envoyée avec succès !`,
+          }, currentLanguage)
+        : getTranslatedText({
+            pt: '✅ Solicitação enviada com sucesso!',
+            en: '✅ Request submitted successfully!',
+            fr: '✅ Demande envoyée avec succès !',
+          }, currentLanguage);
+      
+      toast.success(successMessage);
       setSubmitSuccess(true);
-      if (onSuccess) onSuccess();
       
-    } catch (error) {
+      if (onSuccess) {
+        setTimeout(() => onSuccess(), 2000);
+      }
+      
+    } catch (error: any) {
       console.error('Error submitting form:', error);
       
-      toast.error(
-        getTranslatedText({
-          pt: 'Erro ao enviar o formulário. Por favor, tente novamente.',
-          en: 'Error submitting the form. Please try again.',
-          fr: 'Erreur lors de la soumission du formulaire. Veuillez réessayer.',
-        }, currentLanguage),
-        {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        }
-      );
+      let errorMessage = getTranslatedText({
+        pt: '❌ Erro ao enviar o formulário. Por favor, tente novamente.',
+        en: '❌ Error submitting the form. Please try again.',
+        fr: '❌ Erreur lors de la soumission du formulaire. Veuillez réessayer.',
+      }, currentLanguage);
+      
+      if (error?.message) {
+        errorMessage = `${errorMessage} (${error.message})`;
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Vehicle type is now selected directly from the dropdown
-
   if (submitSuccess) {
     return (
       <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
+        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+          <CheckCircle className="h-8 w-8 text-green-600" />
+        </div>
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
         <h3 className="text-2xl font-bold text-gray-900 mb-4">
           {getTranslatedText({
@@ -523,38 +525,108 @@ export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
           </div>
 
           <div>
-            <label htmlFor="vehicleType" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               {getTranslatedText({
                 pt: 'Tipo de Veículo',
                 en: 'Vehicle Type',
                 fr: 'Type de véhicule'
               }, currentLanguage)} *
             </label>
-            <select
-              id="vehicleType"
-              name="vehicleType"
-              value={formData.vehicleType}
-              onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formErrors.vehicleType ? 'border-red-500' : 'border-gray-300'}`}
-              disabled={isSubmitting}
+            <button
+              type="button"
+              onClick={() => setVehicleModalOpen(true)}
+              className={`w-full px-4 py-2 border rounded-lg text-left flex items-center justify-between ${formErrors.vehicleType ? 'border-red-500' : 'border-gray-300'}`}
             >
-              <option value="">
-                {getTranslatedText({
-                  pt: 'Selecione...',
-                  en: 'Select...',
-                  fr: 'Sélectionnez...'
-                }, currentLanguage)}
-              </option>
-              {formOptions.vehicleTypes.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {getTranslatedText(type.label, currentLanguage)}
-                </option>
-              ))}
-            </select>
+              {formData.vehicleType ? (
+                <div className="flex items-center">
+                  {vehicles.find(v => v.type === formData.vehicleType) && (
+                    <img 
+                      src={vehicles.find(v => v.type === formData.vehicleType)?.image} 
+                      alt={getTranslatedText(vehicles.find(v => v.type === formData.vehicleType)?.label || { pt: '', en: '', fr: '' }, currentLanguage)}
+                      className="w-8 h-8 mr-3 object-contain"
+                    />
+                  )}
+                  <span>
+                    {getTranslatedText(
+                      vehicles.find(v => v.type === formData.vehicleType)?.label || { pt: '', en: '', fr: '' },
+                      currentLanguage
+                    )}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-gray-500">
+                  {getTranslatedText({
+                    pt: 'Selecione um veículo...',
+                    en: 'Select a vehicle...',
+                    fr: 'Sélectionnez un véhicule...'
+                  }, currentLanguage)}
+                </span>
+              )}
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
             {formErrors.vehicleType && (
               <p className="mt-1 text-sm text-red-600">{formErrors.vehicleType}</p>
             )}
           </div>
+
+          {/* Modal de sélection du véhicule */}
+          {vehicleModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">
+                      {getTranslatedText(
+                        { pt: "Selecione o tipo de veículo", en: "Select vehicle type", fr: "Sélectionnez le type de véhicule" },
+                        currentLanguage
+                      )}
+                    </h3>
+                    <button
+                      onClick={() => setVehicleModalOpen(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    {vehicles.map((vehicle) => (
+                      <button
+                        key={vehicle.type}
+                        type="button"
+                        onClick={() => handleVehicleSelect(vehicle.type)}
+                        className={`w-full flex items-start p-4 border rounded-xl text-left transition-all ${
+                          formData.vehicleType === vehicle.type
+                            ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                            : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+                        }`}
+                      >
+                        <div className="flex-shrink-0 w-16 h-16 bg-white rounded-lg overflow-hidden mr-4">
+                          <img 
+                            src={vehicle.image} 
+                            alt={getTranslatedText(vehicle.label, currentLanguage)} 
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900">
+                            {getTranslatedText(vehicle.label, currentLanguage)}
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-500">
+                            {getTranslatedText(vehicle.desc, currentLanguage)}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -677,3 +749,5 @@ export const EnterpriseForm: React.FC<EnterpriseFormProps> = ({
     </div>
   );
 };
+
+export default EnterpriseForm;

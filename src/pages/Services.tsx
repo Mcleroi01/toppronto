@@ -357,10 +357,10 @@ export default function Services() {
                 </div>
 
                 {/* Title and Description */}
-                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
+                <h3 className="text-2xl font-bold text-yellow-400 mb-3 group-hover:text-green-300 transition-colors">
                   {service.title[currentLanguage as keyof typeof service.title]}
                 </h3>
-                <p className="text-gray-200 leading-relaxed mb-6">
+                <p className="text-gray-100 font-bold leading-relaxed mb-6">
                   {
                     service.description[
                       currentLanguage as keyof typeof service.description
@@ -432,7 +432,7 @@ export default function Services() {
           ></div>
 
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl text-yellow-400 font-bold mb-4">
               {currentLanguage === "pt" &&
                 "Pronto para otimizar sua logística?"}
               {currentLanguage === "en" && "Ready to optimize your logistics?"}

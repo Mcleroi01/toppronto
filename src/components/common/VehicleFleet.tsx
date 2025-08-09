@@ -77,7 +77,7 @@ export const VehicleFleet: React.FC<VehicleFleetProps> = ({
                   />
                 </div>
 
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {vehicle.label[currentLanguage]}
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Clock, Calendar, Briefcase, DollarSign, Filter } from 'lucide-react';
-import { jobPositions } from '../data/jobs';
+import { MapPin, Clock, Calendar, Briefcase, DollarSign, Filter, Loader2 } from 'lucide-react';
 import { JobDetail } from './JobDetail';
 import { ModalFilters } from './ModalFilters';
+import { getJobOffers, type JobOffer, type JobFilters } from '@/services/supabase/jobService';
 
 interface JobListProps {
   currentLanguage: 'pt' | 'en' | 'fr';
 }
 
 export interface FilterOptions {
-  type: '' | 'full-time' | 'part-time' | 'contract';
+  type: Array<'full-time' | 'part-time' | 'contract'>;
   location: string;
   department: string;
   experience: '' | 'entry' | 'mid' | 'senior';
@@ -23,36 +23,103 @@ export interface FilterChangeHandler {
   (field: keyof FilterOptions, value: string): void;
 }
 
+// Fonction utilitaire pour formater la date
+const formatDate = (dateString: string, locale: string = 'fr-FR') => {
+  return new Date(dateString).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 export default function JobList({ currentLanguage }: JobListProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [jobs, setJobs] = useState<JobOffer[]>([]);
   const [filters, setFilters] = useState<FilterOptions>({
-    type: '',
+    type: [],
     location: '',
     department: '',
     experience: '',
     salary: '',
     datePosted: ''
   });
-  const [selectedJob, setSelectedJob] = useState<string | null>(null);
+  const [selectedJob, setSelectedJob] = useState<JobOffer | null>(null);
 
-  const filteredJobs = jobPositions.filter(job => {
-    const matchesSearch = job.title[currentLanguage]?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        job.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = !filters.type || job.type === filters.type;
-    const matchesLocation = !filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase());
-    const matchesDepartment = !filters.department || job.department[currentLanguage].toLowerCase().includes(filters.department.toLowerCase());
-    const matchesExperience = !filters.experience || job.experienceLevel === filters.experience;
-    const matchesSalary = !filters.salary || (
-      filters.salary === 'low' && parseInt(job.salaryRange[currentLanguage].split(' ')[0].replace(/[^0-9]/g, '')) < 150000 ||
-      filters.salary === 'medium' && parseInt(job.salaryRange[currentLanguage].split(' ')[0].replace(/[^0-9]/g, '')) >= 150000 && parseInt(job.salaryRange[currentLanguage].split(' ')[0].replace(/[^0-9]/g, '')) <= 300000 ||
-      filters.salary === 'high' && parseInt(job.salaryRange[currentLanguage].split(' ')[0].replace(/[^0-9]/g, '')) > 300000
-    );
-    const matchesDate = !filters.datePosted || (
-      filters.datePosted === '1d' && new Date(job.postedDate) >= new Date(Date.now() - 24 * 60 * 60 * 1000) ||
-      filters.datePosted === '7d' && new Date(job.postedDate) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) ||
-      filters.datePosted === '30d' && new Date(job.postedDate) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    );
-    return matchesSearch && matchesType && matchesLocation && matchesDepartment && matchesExperience && matchesSalary && matchesDate;
+  // Fetch jobs from Supabase
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Convert our filter format to the Supabase filter format
+        const supabaseFilters: JobFilters = {
+          is_active: true,
+          search: searchQuery || undefined,
+          location: filters.location || undefined,
+          employment_type: filters.type.length > 0 ? filters.type : undefined
+        };
+
+        const jobs = await getJobOffers(supabaseFilters);
+        
+        if (jobs === null) {
+          throw new Error('Failed to fetch jobs');
+        }
+        
+        setJobs(jobs);
+      } catch (err) {
+        console.error('Error loading jobs:', err);
+        setError('Failed to load job offers. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, [searchQuery, filters]);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const jobOffers = await getJobOffers();
+        setJobs(jobOffers);
+      } catch (error) {
+        setError('Error fetching job offers');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
+
+  const filteredJobs = jobs.filter(job => {
+    if (!job.is_active) return false;
+    
+    // Filter by job type
+    const matchesType = filters.type.length === 0 || 
+      filters.type.includes(job.employment_type as any);
+
+    // Filter by location (handled by Supabase)
+    
+    // Filter by experience
+    const matchesExperience = !filters.experience;
+
+    // Filter by salary (if available in the future)
+    const matchesSalary = !filters.salary;
+
+    // Filter by date posted
+    const now = new Date();
+    const jobDate = new Date(job.created_at);
+    const daysAgo = (now.getTime() - jobDate.getTime()) / (1000 * 60 * 60 * 24);
+    
+    const matchesDate = !filters.datePosted ||
+      (filters.datePosted === '1d' && daysAgo <= 1) ||
+      (filters.datePosted === '7d' && daysAgo <= 7) ||
+      (filters.datePosted === '30d' && daysAgo <= 30);
+
+    return matchesType && matchesExperience && matchesSalary && matchesDate;
   });
 
   const handleFilterChange = (field: keyof FilterOptions, value: string) => {
@@ -63,7 +130,10 @@ export default function JobList({ currentLanguage }: JobListProps) {
   };
 
   const handleJobClick = (jobId: string) => {
-    setSelectedJob(jobId);
+    const jobToSelect = jobs.find((job) => job.id === jobId);
+    if (jobToSelect) {
+      setSelectedJob(jobToSelect);
+    }
   };
 
   const handleCloseDetail = () => {
@@ -98,7 +168,15 @@ export default function JobList({ currentLanguage }: JobListProps) {
           </button>
         </div>
         <div className="relative">
-          {selectedJob ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="animate-spin h-8 w-8 text-blue-600" />
+            </div>
+          ) : error ? (
+            <div className="text-red-600 p-4 bg-red-50 rounded-lg">
+              {error}
+            </div>
+          ) : selectedJob ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -106,11 +184,31 @@ export default function JobList({ currentLanguage }: JobListProps) {
               className="bg-white rounded-lg shadow-lg p-6"
             >
               <JobDetail
-                job={jobPositions.find((job) => job.id === selectedJob)!}
+                job={selectedJob}
                 onClose={handleCloseDetail}
                 currentLanguage={currentLanguage}
               />
             </motion.div>
+          ) : filteredJobs.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-blue-50 mb-4">
+                <Briefcase className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {currentLanguage === 'en' 
+                  ? 'No job offers found' 
+                  : currentLanguage === 'pt' 
+                    ? 'Nenhuma vaga encontrada' 
+                    : 'Aucune offre d\'emploi trouvée'}
+              </h3>
+              <p className="text-gray-500">
+                {currentLanguage === 'en'
+                  ? 'Try adjusting your search or filter criteria'
+                  : currentLanguage === 'pt'
+                    ? 'Tente ajustar sua pesquisa ou critérios de filtro'
+                    : 'Essayez d\'ajuster votre recherche ou vos critères de filtrage'}
+              </p>
+            </div>
           ) : (
             <div className="space-y-6">
               {filteredJobs.map((job) => (
@@ -119,9 +217,14 @@ export default function JobList({ currentLanguage }: JobListProps) {
                   onClick={() => handleJobClick(job.id)}
                   className="p-6 rounded-2xl shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 bg-white transition-all cursor-pointer"
                 >
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    {job.title[currentLanguage]}
-                  </h3>
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      {job.title}
+                    </h3>
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {job.employment_type}
+                    </span>
+                  </div>
 
                   <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
@@ -131,23 +234,18 @@ export default function JobList({ currentLanguage }: JobListProps) {
 
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4 text-primary" />
-                      <span>{job.type}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      <Briefcase className="w-4 h-4 text-primary" />
-                      <span>{job.experienceLevel}</span>
+                      <span>{job.employment_type}</span>
                     </div>
 
                     <div className="flex items-center gap-1">
                       <DollarSign className="w-4 h-4 text-primary" />
-                      <span>{job.salaryRange[currentLanguage]}</span>
+                      <span>{job.salary_range}</span>
                     </div>
 
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4 text-primary" />
                       <span>
-                        {new Date(job.postedDate).toLocaleDateString("fr-FR")}
+                        {new Date(job.created_at).toLocaleDateString("fr-FR")}
                       </span>
                     </div>
                   </div>

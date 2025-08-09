@@ -21,77 +21,84 @@ export const DriversMain: React.FC<DriversMainProps> = () => {
   const features = [
     {
       title: {
-        pt: 'Ganhe Mais',
-        en: 'Earn More',
-        fr: 'Gagnez Plus'
+        pt: "Ganhe Mais",
+        en: "Earn More",
+        fr: "Gagnez Plus",
       },
       description: {
-        pt: 'Ganhe dinheiro extra com flexibilidade de horários e bônus semanais.',
-        en: 'Earn extra money with flexible hours and weekly bonuses.',
-        fr: 'Gagnez de l\'argent supplémentaire avec des horaires flexibles et des bonus hebdomadaires.'
+        pt: "Ganhe dinheiro extra com flexibilidade de horários e bônus semanais.",
+        en: "Earn extra money with flexible hours and weekly bonuses.",
+        fr: "Gagnez de l'argent supplémentaire avec des horaires flexibles et des bonus hebdomadaires.",
       },
       icon: <FaMoneyBillWave />,
-      backgroundImage: '/images/drivers/earn-more.jpg'
+      backgroundImage:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwL5ulI4O4TPVtUOLT-qWqWemgG6De7FRKig&s",
     },
     {
       title: {
-        pt: 'Horários Flexíveis',
-        en: 'Flexible Hours',
-        fr: 'Horaires Flexibles'
+        pt: "Horários Flexíveis",
+        en: "Flexible Hours",
+        fr: "Horaires Flexibles",
       },
       description: {
-        pt: 'Escolha quando e onde trabalhar, de acordo com sua disponibilidade.',
-        en: 'Choose when and where to work according to your availability.',
-        fr: 'Choisissez quand et où travailler selon votre disponibilité.'
+        pt: "Escolha quando e onde trabalhar, de acordo com sua disponibilidade.",
+        en: "Choose when and where to work according to your availability.",
+        fr: "Choisissez quand et où travailler selon votre disponibilité.",
       },
       icon: <FaClock />,
-      backgroundImage: '/images/drivers/flexible-hours.jpg'
+      backgroundImage:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzBl4MbUpR3H8MmZDkKuluaPc855sXGwvEUQ&s",
     },
     {
       title: {
-        pt: 'Suporte Dedicado',
-        en: 'Dedicated Support',
-        fr: 'Support Dédié'
+        pt: "Suporte Dedicado",
+        en: "Dedicated Support",
+        fr: "Support Dédié",
       },
       description: {
-        pt: 'Equipe de suporte disponível 24/7 para ajudar com qualquer necessidade.',
-        en: 'Support team available 24/7 to help with any needs.',
-        fr: 'Équipe de support disponible 24/7 pour vous aider.'
+        pt: "Equipe de suporte disponível 24/7 para ajudar com qualquer necessidade.",
+        en: "Support team available 24/7 to help with any needs.",
+        fr: "Équipe de support disponible 24/7 pour vous aider.",
       },
       icon: <FaHeadset />,
-      backgroundImage: '/images/drivers/support.jpg'
+      backgroundImage:
+        "https://www.shutterstock.com/image-photo/image-business-contract-on-background-600nw-120064627.jpg",
     },
     {
       title: {
-        pt: 'Segurança Garantida',
-        en: 'Guaranteed Safety',
-        fr: 'Sécurité Garantie'
+        pt: "Segurança Garantida",
+        en: "Guaranteed Safety",
+        fr: "Sécurité Garantie",
       },
       description: {
-        pt: 'Sistema de avaliação e verificação para garantir a segurança de todos.',
-        en: 'Rating and verification system to ensure everyone\'s safety.',
-        fr: 'Système d\'évaluation et de vérification pour assurer la sécurité de tous.'
+        pt: "Sistema de avaliação e verificação para garantir a segurança de todos.",
+        en: "Rating and verification system to ensure everyone's safety.",
+        fr: "Système d'évaluation et de vérification pour assurer la sécurité de tous.",
       },
       icon: <FaShieldAlt />,
-      backgroundImage: '/images/drivers/safety.jpg'
-    }
+      backgroundImage:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHeByunQiEJscADYVwL83vhwf0GVZD6f-wjA&s",
+    },
   ];
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white">
+    <section
+      ref={ref}
+      className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white"
+    >
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="max-w-6xl mx-auto mb-16"
         >
           <span className="inline-block px-4 py-2 text-sm font-semibold text-green-700 bg-green-100 rounded-full mb-4">
             {getTranslatedText(
               {
                 pt: "Oportunidade Única",
                 en: "Unique Opportunity",
-                fr: "Opportunité Unique"
+                fr: "Opportunité Unique",
               },
               currentLanguage
             )}
@@ -101,17 +108,17 @@ export const DriversMain: React.FC<DriversMainProps> = () => {
               {
                 pt: "Torne-se um Motorista Parceiro",
                 en: "Become a Partner Driver",
-                fr: "Devenez Chauffeur Partenaire"
+                fr: "Devenez Chauffeur Partenaire",
               },
               currentLanguage
             )}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 ">
             {getTranslatedText(
               {
                 pt: "Junte-se à nossa rede de motoristas e comece a ganhar dinheiro com flexibilidade e segurança.",
                 en: "Join our network of drivers and start earning money with flexibility and security.",
-                fr: "Rejoignez notre réseau de chauffeurs et commencez à gagner de l'argent avec flexibilité et sécurité."
+                fr: "Rejoignez notre réseau de chauffeurs et commencez à gagner de l'argent avec flexibilité et sécurité.",
               },
               currentLanguage
             )}
@@ -127,30 +134,34 @@ export const DriversMain: React.FC<DriversMainProps> = () => {
               transition={{ duration: 0.5, delay: index * 0.15 }}
               className="group relative h-96 rounded-2xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-2xl"
             >
-              <div 
+              <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ 
+                style={{
                   backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7)), url('${feature.backgroundImage}')`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                
+
                 <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
                   <div className="w-14 h-14 flex items-center justify-center bg-green-500 text-white rounded-xl mb-4">
-                    {React.cloneElement(feature.icon, { className: 'w-6 h-6' })}
+                    {React.cloneElement(feature.icon, { className: "w-6 h-6" })}
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">
+                  <h3 className="text-2xl text-yellow-400 font-bold mb-2">
                     {getTranslatedText(feature.title, currentLanguage)}
                   </h3>
-                  <p className="text-gray-200 mb-6">
+                  <p className="text-gray-200 font-bold mb-6">
                     {getTranslatedText(feature.description, currentLanguage)}
                   </p>
                   <div className="flex items-center text-green-300 font-medium">
                     <span className="mr-2">
                       {getTranslatedText(
-                        { pt: 'Saiba mais', en: 'Learn more', fr: 'En savoir plus' },
+                        {
+                          pt: "Saiba mais",
+                          en: "Learn more",
+                          fr: "En savoir plus",
+                        },
                         currentLanguage
                       )}
                     </span>
@@ -174,9 +185,9 @@ export const DriversMain: React.FC<DriversMainProps> = () => {
           >
             {getTranslatedText(
               {
-                pt: 'Comece a dirigir agora',
-                en: 'Start driving now',
-                fr: 'Commencez à conduire maintenant'
+                pt: "Comece a dirigir agora",
+                en: "Start driving now",
+                fr: "Commencez à conduire maintenant",
               },
               currentLanguage
             )}

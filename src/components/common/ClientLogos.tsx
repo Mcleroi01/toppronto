@@ -87,30 +87,38 @@ const ClientLogos: React.FC<ClientLogosProps> = ({ className = '' }) => {
   return (
     <section className={`py-12 bg-white ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            {getTranslatedText({
-              pt: 'Nossos Clientes',
-              en: 'Our Clients',
-              fr: 'Nos Clients'
-            }, currentLanguage)}
+        <div className="mb-8  sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+          <h2 className="text-4xl md:text-5xl  font-bold text-gray-900">
+            {getTranslatedText(
+              {
+                pt: "Nossos Clientes",
+                en: "Our Clients",
+                fr: "Nos Clients",
+              },
+              currentLanguage
+            )}
           </h2>
-          <div className="w-16 h-1 bg-green-600 mx-auto my-4"></div>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            {getTranslatedText({
-              pt: 'Empresas que confiam em nossos serviços',
-              en: 'Companies that trust our services',
-              fr: 'Entreprises qui font confiance à nos services'
-            }, currentLanguage)}
+          <div className="w-16 h-1 bg-green-600 my-4"></div>
+          <p className="text-gray-600 ">
+            {getTranslatedText(
+              {
+                pt: "Empresas que confiam em nossos serviços",
+                en: "Companies that trust our services",
+                fr: "Entreprises qui font confiance à nos services",
+              },
+              currentLanguage
+            )}
           </p>
         </div>
 
-        <div 
+        <div
           ref={rowRef}
           className="overflow-hidden w-full py-6 cursor-grab active:cursor-grabbing"
           style={{
-            maskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)'
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%)",
           }}
         >
           <div className="flex gap-8 md:gap-12 w-max">
@@ -119,15 +127,18 @@ const ClientLogos: React.FC<ClientLogosProps> = ({ className = '' }) => {
                 key={i}
                 className="flex-shrink-0 flex items-center justify-center h-16 md:h-20 w-32 md:w-40"
                 whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 <img
                   src={src}
-                  alt={getTranslatedText({
-                    pt: `Logo do cliente ${i % clientLogos.length + 1}`,
-                    en: `Client logo ${i % clientLogos.length + 1}`,
-                    fr: `Logo du client ${i % clientLogos.length + 1}`
-                  }, currentLanguage)}
+                  alt={getTranslatedText(
+                    {
+                      pt: `Logo do cliente ${(i % clientLogos.length) + 1}`,
+                      en: `Client logo ${(i % clientLogos.length) + 1}`,
+                      fr: `Logo du client ${(i % clientLogos.length) + 1}`,
+                    },
+                    currentLanguage
+                  )}
                   className="h-full w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100"
                   loading="lazy"
                 />

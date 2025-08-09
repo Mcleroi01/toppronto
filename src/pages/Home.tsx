@@ -77,10 +77,7 @@ export const Home: React.FC = () => {
     },
 
   ];
-
-
   
-
   // Création d'une référence pour la section des services
   const servicesRef = useRef(null);
   const isInView = useInView(servicesRef, { once: true, amount: 0.1 });
@@ -186,10 +183,10 @@ export const Home: React.FC = () => {
                     </div>
 
                     {/* Titre et description */}
-                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
+                    <h3 className="text-2xl font-bold text-yellow-400 mb-3 group-hover:text-green-300 transition-colors">
                       {feature.title[currentLanguage]}
                     </h3>
-                    <p className="text-gray-200 leading-relaxed mb-6">
+                    <p className="text-gray-200 font-semibold leading-relaxed mb-6">
                       {feature.description[currentLanguage]}
                     </p>
                   </div>
@@ -239,7 +236,7 @@ export const Home: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                <h1 className="text-4xl text-yellow-400 md:text-5xl font-bold leading-tight mb-6">
                   {getTranslatedText(
                     {
                       pt: "Entrega Rápida e Confiável em Luanda",
@@ -635,7 +632,7 @@ export const Home: React.FC = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4">
           <div className=" mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               {getTranslatedText(
                 {
                   pt: "O que nossos clientes dizem",
@@ -792,7 +789,7 @@ export const Home: React.FC = () => {
           ></div>
 
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-6 drop-shadow-lg">
+            <h2 className="text-4xl md:text-5xl md:text-4xl font-bold text-yellow-400 mb-6 drop-shadow-lg">
               {t("contact.title", "Contactez-nous")}
             </h2>
             <p className="text-lg mb-8 drop-shadow">

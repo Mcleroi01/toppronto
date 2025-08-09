@@ -2,23 +2,9 @@ import React, { useState } from "react";
 import { vehicles } from "../../data/vehicles";
 import { getTranslatedText } from "../../utils/translations";
 import { toast } from "react-toastify";
+import { createDriver } from "../../services/supabase/driverService";
 
-// List of major Angolan cities
-const angolanCities = [
-  { value: "luanda", label: { pt: "Luanda", en: "Luanda", fr: "Luanda" } },
-  { value: "huambo", label: { pt: "Huambo", en: "Huambo", fr: "Huambo" } },
-  { value: "lobito", label: { pt: "Lobito", en: "Lobito", fr: "Lobito" } },
-  { value: "benguela", label: { pt: "Benguela", en: "Benguela", fr: "Benguela" } },
-  { value: "lubango", label: { pt: "Lubango", en: "Lubango", fr: "Lubango" } },
-  { value: "malanje", label: { pt: "Malanje", en: "Malanje", fr: "Malanje" } },
-  { value: "namibe", label: { pt: "Namibe", en: "Namibe", fr: "Namibe" } },
-  { value: "saurimo", label: { pt: "Saurimo", en: "Saurimo", fr: "Saurimo" } },
-  { value: "cabinda", label: { pt: "Cabinda", en: "Cabinda", fr: "Cabinda" } },
-  { value: "uige", label: { pt: "Uíge", en: "Uíge", fr: "Uíge" } },
-  { value: "soyo", label: { pt: "Soyo", en: "Soyo", fr: "Soyo" } },
-  { value: "menongue", label: { pt: "Menongue", en: "Menongue", fr: "Menongue" } },
-];
-
+// Déplacer la déclaration de type en haut du fichier
 type Language = 'pt' | 'en' | 'fr';
 
 type FormData = {
@@ -36,17 +22,33 @@ type FormData = {
 
 interface DriversFormProps {
   currentLanguage: Language;
-  onSubmit: (formData: FormData) => Promise<void>;
-  isSubmitting: boolean;
-  submitSuccess: boolean;
+  onSubmitSuccess?: () => void;
 }
+
+// List of major Angolan cities
+const Cities = [
+  { value: "luanda", label: { pt: "Luanda", en: "Luanda", fr: "Luanda" } },
+  { value: "huambo", label: { pt: "Huambo", en: "Huambo", fr: "Huambo" } },
+  { value: "lobito", label: { pt: "Lobito", en: "Lobito", fr: "Lobito" } },
+  { value: "benguela", label: { pt: "Benguela", en: "Benguela", fr: "Benguela" } },
+  { value: "lubango", label: { pt: "Lubango", en: "Lubango", fr: "Lubango" } },
+  { value: "malanje", label: { pt: "Malanje", en: "Malanje", fr: "Malanje" } },
+  { value: "namibe", label: { pt: "Namibe", en: "Namibe", fr: "Namibe" } },
+  { value: "saurimo", label: { pt: "Saurimo", en: "Saurimo", fr: "Saurimo" } },
+  { value: "cabinda", label: { pt: "Cabinda", en: "Cabinda", fr: "Cabinda" } },
+  { value: "uige", label: { pt: "Uíge", en: "Uíge", fr: "Uíge" } },
+  { value: "soyo", label: { pt: "Soyo", en: "Soyo", fr: "Soyo" } },
+  { value: "menongue", label: { pt: "Menongue", en: "Menongue", fr: "Menongue" } },
+];
 
 export const DriversForm: React.FC<DriversFormProps> = ({
   currentLanguage,
-  onSubmit,
-  isSubmitting,
-  
+  onSubmitSuccess,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [formErrors, setFormErrors] = useState<Partial<FormData>>({});
+  const [vehicleModalOpen, setVehicleModalOpen] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -59,15 +61,21 @@ export const DriversForm: React.FC<DriversFormProps> = ({
     experienceYears: 0,
     message: ""
   });
-  const [vehicleModalOpen, setVehicleModalOpen] = useState(false);
-  const [formErrors, setFormErrors] = useState<Partial<FormData>>({});
 
-  const selectedVehicle = vehicles.find(
-    (v) => v.type === formData.vehicleType
-  );
+  // Find the selected vehicle for display
+  const selectedVehicle = vehicles.find(v => v.type === formData.vehicleType);
+
+  // Gérer les changements de champ
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement | HTMLSelectElement;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
 
   const validateForm = (): boolean => {
-    const errors: Partial<Record<keyof FormData, string>> = {};
+    const errors: Record<string, string> = {};
     
     if (!formData.firstName.trim()) {
       errors.firstName = getTranslatedText(
@@ -139,13 +147,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target as HTMLInputElement | HTMLSelectElement;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+
 
   const handleVehicleSelect = (value: string) => {
     setFormData((prev) => ({
@@ -160,38 +162,54 @@ export const DriversForm: React.FC<DriversFormProps> = ({
     if (!validateForm()) return;
 
     try {
-      // Prepare driver data for submission
+      setIsSubmitting(true);
+      
+      // Préparer les données pour Supabase
       const driverData = {
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         city: formData.city,
-        hasVehicle: formData.hasVehicle,
+        has_vehicle: formData.hasVehicle,
         ...(formData.hasVehicle && { 
-          vehicleType: formData.vehicleType,
-          licenseNumber: formData.licenseNumber?.trim() 
+          vehicle_type: formData.vehicleType,
+          license_number: formData.licenseNumber?.trim() 
         }),
-        experienceYears: formData.experienceYears,
-        message: formData.message?.trim()
+        experience_years: formData.experienceYears,
+        message: formData.message?.trim(),
+        status: 'pending' as const
       };
+
+      const response = await createDriver(driverData);
       
-      await onSubmit(driverData);
+      if (response.error) {
+        throw new Error(response.error.message || 'Erreur lors de la soumission');
+      }
       
-      // Show success message
-      toast.success(
-        getTranslatedText(
-          { 
-            pt: "Inscrição enviada com sucesso!", 
-            en: "Application submitted successfully!", 
-            fr: "Candidature soumise avec succès !" 
-          },
-          currentLanguage
-        ),
-        { position: 'top-center' }
-      );
+      // Afficher le message de succès avec plus de détails
+      // Message de succès avec ID de la candidature si disponible
+      const successMessage = response.data?.[0]?.id
+        ? getTranslatedText(
+            { 
+              pt: `✅ Inscrição #${response.data[0].id} enviada com sucesso!`, 
+              en: `✅ Application #${response.data[0].id} submitted successfully!`, 
+              fr: `✅ Candidature #${response.data[0].id} soumise avec succès !` 
+            },
+            currentLanguage
+          )
+        : getTranslatedText(
+            { 
+              pt: '✅ Inscrição enviada com sucesso!', 
+              en: '✅ Application submitted successfully!', 
+              fr: '✅ Candidature soumise avec succès !' 
+            },
+            currentLanguage
+          );
       
-      // Reset form on success
+      toast.success(successMessage);
+      
+      // Réinitialiser le formulaire en cas de succès
       setFormData({
         firstName: "",
         lastName: "",
@@ -205,29 +223,125 @@ export const DriversForm: React.FC<DriversFormProps> = ({
         message: ""
       });
       
-    } catch (error) {
-      console.error("Error submitting driver application:", error);
-      toast.error(
-        getTranslatedText(
+      setSubmitSuccess(true);
+      
+      // Fermer le modal après 2 secondes et recharger la page
+      setTimeout(() => {
+        if (onSubmitSuccess) {
+          onSubmitSuccess();
+        } else {
+          window.location.reload();
+        }
+      }, 2000);
+      
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      
+      // Message d'erreur plus détaillé
+      let errorMessage: string;
+      
+      if (error.response?.data?.message) {
+        // Si l'API renvoie un message d'erreur
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        // Si c'est une erreur personnalisée avec un message
+        errorMessage = error.message;
+      } else {
+        // Message par défaut
+        errorMessage = getTranslatedText(
           { 
-            pt: "Erro ao enviar inscrição. Tente novamente mais tarde.", 
-            en: "Error submitting application. Please try again later.", 
-            fr: "Erreur lors de la soumission de la candidature. Veuillez réessayer plus tard." 
+            pt: "Erro ao enviar inscrição. Tente novamente ou entre em contato conosco.", 
+            en: "Error submitting application. Please try again or contact us.", 
+            fr: "Erreur lors de la soumission. Veuillez réessayer ou nous contacter." 
           },
           currentLanguage
-        ),
-        { position: 'top-center' }
-      );
+        );
+      }
+      
+      toast.error(errorMessage);
     } finally {
-      // The parent component is responsible for managing the isSubmitting state
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-8  space-y-6 max-w-lg mx-auto"
-    >
+    <div className="max-w-lg mx-auto">
+      {vehicleModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">
+                  {getTranslatedText(
+                    { pt: "Selecione o tipo de veículo", en: "Select vehicle type", fr: "Sélectionnez le type de véhicule" },
+                    currentLanguage
+                  )}
+                </h3>
+                <button
+                  onClick={() => setVehicleModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-4">
+                {vehicles.map((vehicle) => (
+                  <button
+                    key={vehicle.type}
+                    type="button"
+                    onClick={() => handleVehicleSelect(vehicle.type)}
+                    className={`w-full flex items-start p-4 border rounded-xl text-left transition-all ${
+                      formData.vehicleType === vehicle.type
+                        ? 'border-green-500 bg-green-50 ring-2 ring-green-200'
+                        : 'border-gray-200 hover:border-green-300 hover:shadow-md'
+                    }`}
+                  >
+                    <div className="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden mr-4 bg-white border border-gray-100">
+                      <img 
+                        src={vehicle.image} 
+                        alt={vehicle.label[currentLanguage]} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900">
+                        {vehicle.label[currentLanguage]}
+                      </h4>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {vehicle.desc[currentLanguage]}
+                      </p>
+                      {vehicle.features && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {vehicle.features.map((feature, idx) => (
+                            <span key={idx} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700">
+                              {typeof feature === 'string' ? feature : feature[currentLanguage]}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {formData.vehicleType === vehicle.type && (
+                      <div className="ml-2 flex-shrink-0 text-green-600">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-8 space-y-6 rounded-lg shadow-sm"
+      >
       <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
         {getTranslatedText(
           {
@@ -375,7 +489,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
                   currentLanguage
                 )}
               </option>
-              {angolanCities.map((city) => (
+              {Cities.map((city) => (
                 <option key={city.value} value={city.value}>
                   {city.label[currentLanguage]}
                 </option>
@@ -441,14 +555,14 @@ export const DriversForm: React.FC<DriversFormProps> = ({
                 } rounded-lg focus:ring-2 focus:ring-green-500 bg-gray-50 hover:bg-gray-100 transition`}
               >
                 {selectedVehicle ? (
-                  <>
+                  <div className="flex items-center">
                     <img
                       src={selectedVehicle.image}
                       alt={selectedVehicle.label[currentLanguage]}
-                      className="w-8 h-8 rounded-full mr-3"
+                      className="w-10 h-8 rounded mr-3 object-cover"
                     />
                     <span>{selectedVehicle.label[currentLanguage]}</span>
-                  </>
+                  </div>
                 ) : (
                   <span className="text-gray-400">
                     {getTranslatedText(
@@ -574,5 +688,6 @@ export const DriversForm: React.FC<DriversFormProps> = ({
         </button>
       </div>
     </form>
-  );
+  </div>
+);
 };

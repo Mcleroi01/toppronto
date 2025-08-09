@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Send, Loader2, CheckCircle } from "lucide-react";
-import { useLanguage } from "../hooks/useLanguage";
-import { sendContactMessage } from "../services/contactService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { sendContactMessage } from "@/services/supabase/contactService";
 
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
@@ -25,14 +24,12 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Envoyer le message via le service de contact
+      // Envoyer le message via le service de contact Supabase
       await sendContactMessage({
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
-        message: formData.message,
-        createdAt: new Date().toISOString(),
-        // Le statut est géré automatiquement par le service de contact
+        message: formData.message
       });
       
       // Réinitialiser le formulaire
@@ -40,27 +37,30 @@ export const Contact: React.FC = () => {
       setSubmitSuccess(true);
       
       // Afficher un message de succès
-      toast.success(t('contact.successMessage', 'Mensagem enviada com sucesso!'), {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } catch (error) {
+      toast.success(
+        t("contact.successMessage", "Votre message a été envoyé avec succès !"),
+        { 
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
+    } catch (error: any) {
       console.error("Erreur lors de l'envoi du message:", error);
       
-      // Afficher un message d'erreur
-      toast.error(t('contact.errorMessage', 'Une erreur est survenue. Veuillez réessayer.'), {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      // Message d'erreur plus détaillé
+      const errorMessage = error?.message || 
+        t(
+          "contact.errorMessage",
+          "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer."
+        );
+        
+      toast.error(errorMessage, {
+        position: "bottom-right",
+        autoClose: 5000
       });
     } finally {
       setIsSubmitting(false);
