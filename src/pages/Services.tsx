@@ -286,7 +286,7 @@ const faqs = {
 };
 
 export default function Services() {
-  const { t } = useTranslation();
+  useTranslation();
   const { currentLanguage } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
