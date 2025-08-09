@@ -1,17 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, useInView } from "framer-motion";
-import {
-  ArrowRight,
-  Shield,
-  Users,
-  Bike,
-  Car,
-  Truck,
-} from "lucide-react";
+import ClientLogos from "../components/common/ClientLogos";
+import { Bike, Shield, Truck, Users, ArrowRight } from "lucide-react";
 import { services } from "../data/services";
+import { vehicles } from "../data/vehicles";
 import { useLanguage } from "../hooks/useLanguage";
+import { VehicleFleet } from "../components/common/VehicleFleet";
+import PricingSection from "../components/enterprise/PricingSection";
 
 type Language = 'pt' | 'en' | 'fr';
 
@@ -81,239 +78,8 @@ export const Home: React.FC = () => {
 
   ];
 
-const vehicles = [
-  {
-    icon: Bike,
-    label: {
-      fr: "Moto",
-      en: "Motorbike",
-      pt: "Moto",
-    },
-    desc: {
-      fr: "Idéal pour les petits colis et livraisons urgentes.",
-      en: "Ideal for small parcels and urgent deliveries.",
-      pt: "Ideal para pequenas encomendas e entregas urgentes.",
-    },
-    image: "/images/vehicules/bike.png",
-  },
-  {
-    icon: Car,
-    label: {
-      fr: "Voiture citadine",
-      en: "City car",
-      pt: "Carro urbano",
-    },
-    desc: {
-      fr: "Parfait pour les livraisons rapides en milieu urbain.",
-      en: "Perfect for fast urban deliveries.",
-      pt: "Perfeito para entregas rápidas em áreas urbanas.",
-    },
-    image: "/images/vehicules/city-car.jpg",
-  },
-  {
-    icon: Car,
-    label: {
-      fr: "Voiture utilitaire",
-      en: "Utility car",
-      pt: "Carro utilitário",
-    },
-    desc: {
-      fr: "Polyvalente pour les colis de taille moyenne.",
-      en: "Versatile for medium-sized parcels.",
-      pt: "Versátil para encomendas de tamanho médio.",
-    },
-    image: "/images/vehicules/utility-car.png",
-  },
-  {
-    icon: Truck,
-    label: {
-      fr: "Fourgonnette",
-      en: "Van",
-      pt: "Carrinha",
-    },
-    desc: {
-      fr: "Idéale pour les livraisons volumineuses en zone urbaine.",
-      en: "Ideal for bulky deliveries in urban areas.",
-      pt: "Ideal para entregas volumosas em áreas urbanas.",
-    },
-    image: "/images/vehicules/van.png",
-  },
-  {
-    icon: Truck,
-    label: {
-      fr: "Pickup",
-      en: "Pickup",
-      pt: "Pickup",
-    },
-    desc: {
-      fr: "Parfait pour les charges lourdes ou les zones rurales.",
-      en: "Perfect for heavy loads or rural areas.",
-      pt: "Perfeito para cargas pesadas ou zonas rurais.",
-    },
-    image: "/images/vehicules/pickup.jpg",
-  },
-  {
-    icon: Truck,
-    label: {
-      fr: "Camion",
-      en: "Truck",
-      pt: "Camião",
-    },
-    desc: {
-      fr: "Pour les gros volumes et la logistique professionnelle.",
-      en: "For large volumes and professional logistics.",
-      pt: "Para grandes volumes e logística profissional.",
-    },
-    image: "/images/vehicules/truck.png",
-  },
-];
 
-
-  // Liste des logos clients (ajoute/remplace les chemins selon tes besoins)
-  const clientLogos = [
-    "/images/clientLogos/appysaude.jpg",
-    "/images/clientLogos/gouverno.jpg",
-    "/images/clientLogos/lua.jpg",
-    "/images/clientLogos/masfamu.jpg",
-    "/images/clientLogos/plus.jpg",
-    "/images/clientLogos/princefarma.jpg",
-    "/images/clientLogos/sagrada.jpg",
-    "/images/clientLogos/shalina.jpg",
-    "/images/clientLogos/truecare.jpg",
-    "/images/clientLogos/zip.jpg",
-  ];
-
-  // Animation slide horizontale auto (marquee)
-  function useAutoScroll(
-    ref: React.RefObject<HTMLDivElement>,
-    reverse = false
-  ) {
-    useEffect(() => {
-      const el = ref.current;
-      if (!el) return;
-      let frame: number;
-      let pos = 0;
-      const speed = 0.5; // px par frame
-
-      function animate() {
-        pos += reverse ? -speed : speed;
-        // Pour le sens inverse, il faut aussi ajuster scrollLeft
-        if (reverse) {
-          if (pos <= 0 && el && el.scrollWidth) pos = el.scrollWidth / 2;
-          if (el) el.scrollLeft = pos;
-        } else {
-          if (pos >= (el?.scrollWidth || 0) / 2 && el) pos = 0;
-          if (el) el.scrollLeft = pos;
-        }
-        frame = requestAnimationFrame(animate);
-      }
-      frame = requestAnimationFrame(animate);
-      return () => cancelAnimationFrame(frame);
-    }, [ref, reverse]);
-  }
-
-  // Section Clientes com animação de deslize
-  const ClientsSection = () => {
-    const row1 = useRef<HTMLDivElement>(null);
-    const row2 = useRef<HTMLDivElement>(null);
-
-    useAutoScroll(row1, false);
-    useAutoScroll(row2, true);
-
-    // Duplica os logos para efeito infinito
-    const logos = [...clientLogos, ...clientLogos];
-
-    return (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto ">
-          <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 mb-12 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t(
-                "clients.title",
-                {
-                  pt: "Clientes que confiam em nós",
-                  en: "Trusted by Leading Companies",
-                  fr: "Ils nous font confiance",
-                  defaultValue: "Clientes que confiam em nós",
-                }[currentLanguage] || "Clientes que confiam em nós"
-              )}
-            </h2>
-            <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6 "></div>
-            <p className="text-lg text-gray-600 max-w-2xl ">
-              {t(
-                "clients.subtitle",
-                {
-                  pt: "Empresas líderes que escolheram nossos serviços de entrega",
-                  en: "Leading companies that chose our delivery services",
-                  fr: "Des entreprises leaders qui ont choisi nos services de livraison",
-                  defaultValue:
-                    "Empresas líderes que escolheram nossos serviços de entrega",
-                }[currentLanguage] ||
-                  "Empresas líderes que escolheram nossos serviços de entrega"
-              )}
-            </p>
-          </div>
-
-          <div className="space-y-8">
-            {/* Primeira linha */}
-            <div
-              ref={row1}
-              className="overflow-hidden w-full py-4"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
-              }}
-            >
-              <div className="flex gap-8 md:gap-12 w-max animate-none">
-                {logos.map((src, i) => (
-                  <motion.div
-                    key={"row1-" + i}
-                    className="flex-shrink-0 flex items-center justify-center h-20 md:h-24 w-32 md:w-48"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <img
-                      src={src}
-                      alt={t("clients.alt", {
-                        defaultValue: `Logo do cliente ${i + 1}`,
-                        count: i + 1,
-                      })}
-                      className="h-12 md:h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
-                      loading="lazy"
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            {/* Deuxième ligne, sens inverse */}
-            <div
-              ref={row2}
-              className="overflow-hidden w-full"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
-              }}
-            >
-              <div className="flex gap-12 w-max animate-none">
-                {logos.map((src, i) => (
-                  <div
-                    key={"row2-" + i}
-                    className="flex-shrink-0 flex items-center justify-center h-24 w-48"
-                  >
-                    <img
-                      src={src}
-                      alt={`Client ${i + 1}`}
-                      className="h-16 w-auto object-contain grayscale hover:grayscale-0 transition"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  };
+  
 
   // Création d'une référence pour la section des services
   const servicesRef = useRef(null);
@@ -322,7 +88,10 @@ const vehicles = [
   return (
     <div className="space-y-24">
       {/* Features Section - Améliorée */}
-      <section ref={servicesRef} className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
+      <section
+        ref={servicesRef}
+        className="py-20 relative overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32"
+      >
         {/* Fond décoratif */}
         <div className="absolute inset-0 -z-10"></div>
         <div
@@ -377,14 +146,18 @@ const vehicles = [
               <motion.div
                 key={`feature-${feature.title.pt}`}
                 initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.6,
-                    delay: idx * 0.1,
-                  },
-                } : { opacity: 0, y: 30 }}
+                animate={
+                  isInView
+                    ? {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          duration: 0.6,
+                          delay: idx * 0.1,
+                        },
+                      }
+                    : { opacity: 0, y: 30 }
+                }
                 whileHover={{ y: -5 }}
                 className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
               >
@@ -589,97 +362,8 @@ const vehicles = [
         </div>
       </section>
 
-      <section className="relative py-20 sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            {getTranslatedText(
-              {
-                pt: "Nossa Frota de Veículos",
-                en: "Our Vehicle Fleet",
-                fr: "Notre Parc de Véhicules",
-              },
-              currentLanguage
-            )}
-          </h2>
-          <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6 "></div>
-          <p className="text-gray-600 mb-8">
-            {getTranslatedText(
-              {
-                pt: "Conheça nossa frota diversificada, pronta para atender todas as suas necessidades de entrega.",
-                en: "Discover our diverse fleet, ready to meet all your delivery needs.",
-                fr: "Découvrez notre flotte diversifiée, prête à répondre à tous vos besoins de livraison.",
-              },
-              currentLanguage
-            )}
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {vehicles.map((veh, idx) => (
-              <motion.div
-                key={veh.label[currentLanguage]}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="relative group"
-              >
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 h-full">
-                  {/* Icône du véhicule */}
-                  <div className="text-green-500 mb-4">
-                    {React.createElement(veh.icon, { className: "w-8 h-8" })}
-                  </div>
-
-                  {/* Image du véhicule */}
-                  <div className="h-40 mb-4 flex items-center justify-center">
-                    <img
-                      src={veh.image}
-                      alt={veh.label[currentLanguage]}
-                      className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {veh.label[currentLanguage]}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {veh.desc[currentLanguage]}
-                  </p>
-
-                  <div className="pt-3 border-t border-gray-100">
-                    <ul className="space-y-2">
-                      {veh.features?.map((feature, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start text-sm text-gray-700"
-                        >
-                          <svg
-                            className="w-4 h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                          <span>
-                            {typeof feature === "object"
-                              ? feature[currentLanguage]
-                              : feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Vehicle Fleet Section */}
+      <VehicleFleet vehicles={vehicles} currentLanguage={currentLanguage} />
 
       <section className="relative py-20 overflow-hidden sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
         <div
@@ -824,115 +508,10 @@ const vehicles = [
       </section>
 
       {/* Section Nos Clients */}
-      <ClientsSection />
+      <ClientLogos />
 
       {/* Pricing Section */}
-      <section className="relative bg-gradient-to-r from-green-800 to-green-700 text-white overflow-hidden py-16">
-        {/* Decorative background effect */}
-        <div
-          className="absolute inset-0 opacity-5 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/images/background.png')",
-          }}
-        />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {currentLanguage === "pt" && "Nossos Preços e Tarifas"}
-              {currentLanguage === "en" && "Our Prices and Rates"}
-              {currentLanguage === "fr" && "Nos Tarifs et Prix"}
-            </h2>
-            <div className="w-20 h-1.5 bg-yellow-500 rounded-full mx-auto mb-6"></div>
-            <p className="text-lg text-green-100 max-w-3xl mx-auto">
-              {currentLanguage === "pt" &&
-                "Consulte nossa tabela de preços completa para todos os nossos serviços de entrega e logística."}
-              {currentLanguage === "en" &&
-                "Check out our complete price list for all our delivery and logistics services."}
-              {currentLanguage === "fr" &&
-                "Consultez notre liste de prix complète pour tous nos services de livraison et logistique."}
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h3 className="text-2xl font-bold mb-4">
-                  {currentLanguage === "pt" && "Tabela de Preços"}
-                  {currentLanguage === "en" && "Price List"}
-                  {currentLanguage === "fr" && "Liste des Prix"}
-                </h3>
-                <p className="mb-6 text-green-100">
-                  {currentLanguage === "pt" &&
-                    "Faça o download da nossa tabela de preços completa em formato PDF para visualizar todas as nossas tarifas e opções de serviço."}
-                  {currentLanguage === "en" &&
-                    "Download our complete price list in PDF format to view all our rates and service options."}
-                  {currentLanguage === "fr" &&
-                    "Téléchargez notre liste de prix complète au format PDF pour voir tous nos tarifs et options de service."}
-                </p>
-                <a
-                  href="/pdf/tarifas-topronto.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-green-900 bg-yellow-500 hover:bg-yellow-400 transition-colors duration-300"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  {currentLanguage === "pt" && "Baixar Tabela de Preços"}
-                  {currentLanguage === "en" && "Download Price List"}
-                  {currentLanguage === "fr" && "Télécharger la Liste des Prix"}
-                </a>
-                <p className="mt-3 text-sm text-green-200">
-                  {currentLanguage === "pt" &&
-                    "Formato PDF - Atualizado em Agosto 2025"}
-                  {currentLanguage === "en" &&
-                    "PDF Format - Updated August 2025"}
-                  {currentLanguage === "fr" &&
-                    "Format PDF - Mis à jour en Août 2025"}
-                </p>
-              </div>
-              <div className="flex justify-center">
-                <div className="relative w-48 h-48 md:w-64 md:h-64 bg-white/20 rounded-xl flex items-center justify-center">
-                  <svg
-                    className="w-24 h-24 text-white/50"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  <div className="absolute bottom-4 text-center px-2">
-                    <p className="text-sm font-medium">
-                      {currentLanguage === "pt" && "Tabela de Preços"}
-                      {currentLanguage === "en" && "Price List"}
-                      {currentLanguage === "fr" && "Liste des Prix"}
-                    </p>
-                    <p className="text-xs opacity-75">PDF • 346 Ko</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PricingSection currentLanguage={currentLanguage} />
 
       {/* Section Téléchargez notre application - Améliorée */}
       <section className="py-20 relative overflow-hidden ">
@@ -955,7 +534,7 @@ const vehicles = [
             >
               <div className="relative z-10">
                 <img
-                  src="/images/app-mobile.png"
+                  src="/images/app.png"
                   alt={t(
                     "downloadApp.imageAlt",
                     "Aperçu de l'application mobile Topronto"

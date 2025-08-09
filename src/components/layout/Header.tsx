@@ -1,36 +1,111 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, XCircle } from "lucide-react";
 import { LanguageSelector } from "../common/LanguageSelector";
 import { motion, AnimatePresence } from "framer-motion";
+import { DriversForm } from "../drivers/DriversForm";
+import { EnterpriseForm } from "../enterprise/EnterpriseForm";
 
 // Utilitaire pour gérer les images par route
 const backgroundImages: Record<string, string> = {
-  "/": "https://www.lalamove.com/hubfs/Banner%20Photo.jpg",
-  "/services":
-    "/images/headers/cargo.jpg",
-  "/about":
-    "/images/headers/archive.jpg",
+  "/": "/images/headers/inicio.jpg",
+  "/services": "/images/headers/cargo.jpg",
+  "/about": "/images/headers/archive.jpg",
   "/careers": "/images/headers/bot.jpg",
-  "/contact":
-    "/images/headers/ville.jpg",
+  "/drivers": "/images/headers/entregador.jpg",
+  "/enterprise": "/images/headers/parceiro.jpg",
+  "/contact": "/images/headers/ville.jpg",
 };
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t } = useTranslation();
+  const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
+  const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const { t, i18n } = useTranslation();
   const location = useLocation();
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
+  const handleDriverSubmit = async (formData: any) => {
+    try {
+      setIsSubmitting(true);
+      setSubmitSuccess(false);
+      
+      // Simuler un appel API - Remplacez ceci par votre véritable logique d'envoi
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation de délai
+      
+      // Logique d'envoi réelle irait ici
+      console.log('Driver form submitted:', formData);
+      
+      // En cas de succès
+      setSubmitSuccess(true);
+      
+      // Réinitialiser le formulaire après un délai
+      setTimeout(() => {
+        setIsDriverModalOpen(false);
+        // La réinitialisation du formulaire est gérée par le composant DriversForm
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Error submitting driver form:', error);
+      setSubmitSuccess(false);
+      // Ici, vous pourriez ajouter un état d'erreur plus détaillé si nécessaire
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // La logique de soumission est maintenant gérée directement dans le composant EnterpriseForm
+  // qui appelle onSuccess en cas de réussite
+
+
 
   const navigation = [
-    { name: t("nav.home"), href: "/" },
-    { name: t("nav.services"), href: "/services" },
-    { name: t("nav.about"), href: "/about" },
-    { name: t("nav.careers"), href: "/careers" },
-    { name: t("nav.contact"), href: "/contact" },
+    {
+      name: t("nav.home"),
+      href: "/",
+      exact: true,
+    },
+    {
+      name: t("nav.services"),
+      href: "/services",
+    },
+    {
+      name: t("nav.drivers", "Motoristas"),
+      href: "/drivers",
+    },
+    {
+      name: t("nav.enterprise", "Empresas"),
+      href: "/enterprise",
+    },
+    {
+      name: t("nav.about"),
+      href: "/about",
+      submenu: [
+        { name: t("nav.about_company", "A nossa empresa"), href: "/about" },
+        { name: t("nav.careers", "Carreiras"), href: "/careers" },
+        { name: t("nav.contact", "Contato"), href: "/contact" },
+      ],
+    },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string, exact = false) => {
+    if (exact) {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path) && (path !== '/' || location.pathname === '/');
+  };
+  
+  const hasActiveSubmenu = (submenu?: Array<{href: string}>) => {
+    if (!submenu) return false;
+    return submenu.some(item => location.pathname.startsWith(item.href));
+  };
+  
+  const toggleMenu = (menu: string) => {
+    setOpenMenu(openMenu === menu ? null : menu);
+  };
   const backgroundImage =
     backgroundImages[location.pathname] || backgroundImages["/"];
 
@@ -50,40 +125,185 @@ export const Header: React.FC = () => {
               <img
                 src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
                 alt="Topronto Logo"
-                className=" h-32 w-auto rounded-lg"
+                className=" h-36 w-auto rounded-lg"
               />
             </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-6 bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">
               {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                    isActive(item.href)
-                      ? "text-yellow-400 bg-white/20"
-                      : "text-white hover:text-yellow-400 hover:bg-white/10"
-                  }`}
-                >
-                  {item.name}
-                </Link>
+                <div key={item.name} className="relative group">
+                  {item.submenu ? (
+                    <div
+                      onClick={() => toggleMenu(item.name)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer ${
+                        isActive(item.href) || hasActiveSubmenu(item.submenu)
+                          ? "text-yellow-400 bg-white/20"
+                          : "text-white hover:text-yellow-400 hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        {item.name}
+                        <svg
+                          className={`ml-1 w-4 h-4 transition-transform ${
+                            openMenu === item.name ? "transform rotate-180" : ""
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                        isActive(item.href, item.exact)
+                          ? "text-yellow-400 bg-white/20"
+                          : "text-white hover:text-yellow-400 hover:bg-white/10"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+
+                  {item.submenu && (
+                    <div
+                      className={`absolute left-0 mt-2 w-56 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden transition-all duration-200 ${
+                        openMenu === item.name
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-2 pointer-events-none"
+                      }`}
+                    >
+                      <div className="py-1">
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                            onClick={() => setOpenMenu(null)}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </nav>
+
+            {/* Mobile menu */}
+            <div
+              className={`${
+                isMenuOpen ? "block" : "hidden"
+              } md:hidden absolute top-20 left-4 right-4 bg-white rounded-lg shadow-lg overflow-hidden z-50 max-h-[80vh] overflow-y-auto`}
+            >
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                {navigation.map((item) => (
+                  <div
+                    key={item.name}
+                    className="border-b border-gray-100 last:border-0"
+                  >
+                    {item.submenu ? (
+                      <div
+                        onClick={() => toggleMenu(item.name)}
+                        className={`flex justify-between items-center px-3 py-3 rounded-md text-base font-medium ${
+                          isActive(item.href) || hasActiveSubmenu(item.submenu)
+                            ? "bg-yellow-50 text-yellow-600"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                      >
+                        {item.name}
+                        <svg
+                          className={`ml-2 w-4 h-4 transition-transform ${
+                            openMenu === item.name ? "transform rotate-180" : ""
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    ) : (
+                      <Link
+                        to={item.href}
+                        className={`block px-3 py-3 rounded-md text-base font-medium ${
+                          isActive(item.href, item.exact)
+                            ? "bg-yellow-50 text-yellow-600"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    )}
+
+                    {item.submenu && (
+                      <div
+                        className={`pl-4 overflow-hidden transition-all duration-200 ${
+                          openMenu === item.name ? "max-h-96" : "max-h-0"
+                        }`}
+                      >
+                        {item.submenu.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.href}
+                            className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md my-1"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              setOpenMenu(null);
+                            }}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="pt-4 pb-3 border-t border-gray-200">
+                <div className="flex items-center px-5">
+                  <LanguageSelector />
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-yellow-400 hover:bg-white/10 focus:outline-none"
+                aria-expanded="false"
+              >
+                <span className="sr-only">Open main menu</span>
+                {isMenuOpen ? (
+                  <X className="block h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="block h-6 w-6" aria-hidden="true" />
+                )}
+              </button>
+            </div>
 
             {/* Lang + Mobile Toggle */}
             <div className="flex items-center space-x-4">
               <LanguageSelector />
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-white hover:text-yellow-400"
-              >
-                {isMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
             </div>
           </div>
 
@@ -91,7 +311,7 @@ export const Header: React.FC = () => {
           <div className="mt-10 mb-16 max-w-2xl">
             {location.pathname === "/" && (
               <div>
-                <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
                   {t("hero.title", "Entrega Rápida e Confiável em Luanda")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
@@ -110,7 +330,7 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/services" && (
               <div>
-                <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
                   {t("services.title", "Nossos Serviços")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
@@ -129,7 +349,7 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/about" && (
               <div>
-                <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
                   {t("about.title", "Sobre a Topronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
@@ -148,7 +368,7 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/careers" && (
               <div>
-                <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
                   {t("careers.title", "Junte-se à Topronto")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
@@ -167,7 +387,7 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/contact" && (
               <div>
-                <h1 className="text-3xl sm:text-5xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
                   {t("contact.title", "Contate-nos")}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-8">
@@ -182,6 +402,50 @@ export const Header: React.FC = () => {
                 >
                   {t("contact.cta", "Voltar para o início")}
                 </Link>
+              </div>
+            )}
+            {location.pathname === "/drivers" && (
+              <div className="text-center lg:text-left">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                  {t(
+                    "drivers.hero.title",
+                    "Cadastre-se e seja um motorista parceiro"
+                  )}
+                </h1>
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0">
+                  {t(
+                    "drivers.hero.subtitle",
+                    "Ganhe dinheiro extra com seu próprio horário e seja dono do seu negócio."
+                  )}
+                </p>
+                <button
+                  onClick={() => setIsDriverModalOpen(true)}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-8 rounded-full text-lg transition-colors duration-300 shadow-lg hover:shadow-xl"
+                >
+                  {t("drivers.cta", "Cadastre-se agora")}
+                </button>
+              </div>
+            )}
+            {location.pathname === "/enterprise" && (
+              <div className="text-center lg:text-left">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                  {t(
+                    "enterprise.hero.title",
+                    "Otimize a logística do seu negócio"
+                  )}
+                </h1>
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0">
+                  {t(
+                    "enterprise.hero.subtitle",
+                    "Entregas rápidas e confiáveis para impulsionar o seu negócio."
+                  )}
+                </p>
+                <button
+                  onClick={() => setIsEnterpriseModalOpen(true)}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-8 rounded-full text-lg transition-colors duration-300 shadow-lg hover:shadow-xl"
+                >
+                  {t("enterprise.cta", "Solicitar proposta")}
+                </button>
               </div>
             )}
           </div>
@@ -254,6 +518,138 @@ export const Header: React.FC = () => {
           </AnimatePresence>
         </div>
       </header>
+      {/* Driver Registration Modal */}
+      <AnimatePresence>
+        {isDriverModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            >
+              <div className="sticky top-0 bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-t-xl flex justify-between items-center">
+                <h3 className="text-xl font-bold">
+                  {t("drivers.form.title", "Cadastre-se como motorista")}
+                </h3>
+                <button 
+                  onClick={() => {
+                    setIsDriverModalOpen(false);
+                    setSubmitSuccess(false);
+                  }}
+                  className="text-white hover:text-yellow-200 transition-colors"
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="p-6">
+                {submitSuccess ? (
+                  <div className="text-center py-8">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="mt-3 text-lg font-medium text-gray-900">
+                      {t('drivers.form.success.title', 'Inscrição enviada!')}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      {t('drivers.form.success.message', 'Obrigado pelo seu interesse. Entraremos em contato em breve!')}
+                    </p>
+                    <button
+                      type="button"
+                      className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      onClick={() => {
+                        setIsDriverModalOpen(false);
+                        setSubmitSuccess(false);
+                      }}
+                    >
+                      {t('common.close', 'Fechar')}
+                    </button>
+                  </div>
+                ) : (
+                  <DriversForm 
+                    currentLanguage={i18n.language as 'pt' | 'en' | 'fr'}
+                    onSubmit={handleDriverSubmit}
+                    isSubmitting={isSubmitting}
+                    submitSuccess={submitSuccess}
+                  />
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Enterprise Registration Modal */}
+      <AnimatePresence>
+        {isEnterpriseModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            >
+              <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-xl flex justify-between items-center">
+                <h3 className="text-xl font-bold">
+                  {t("enterprise.form.title", "Solicite uma proposta")}
+                </h3>
+                <button 
+                  onClick={() => {
+                    setIsEnterpriseModalOpen(false);
+                    setSubmitSuccess(false);
+                  }}
+                  className="text-white hover:text-yellow-200 transition-colors"
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="p-6">
+                {submitSuccess ? (
+                  <div className="text-center py-8">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h3 className="mt-3 text-lg font-medium text-gray-900">
+                      {t('enterprise.form.success.title', 'Solicitação enviada!')}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      {t('enterprise.form.success.message', 'Obrigado pelo seu interesse. Nossa equipe entrará em contato em breve!')}
+                    </p>
+                    <button
+                      type="button"
+                      className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      onClick={() => {
+                        setIsEnterpriseModalOpen(false);
+                        setSubmitSuccess(false);
+                      }}
+                    >
+                      {t('common.close', 'Fechar')}
+                    </button>
+                  </div>
+                ) : (
+                  <EnterpriseForm 
+                    currentLanguage={i18n.language as 'pt' | 'en' | 'fr'}
+                    onSuccess={() => {
+                      setSubmitSuccess(true);
+                      // Fermer automatiquement après 3 secondes
+                      setTimeout(() => {
+                        setIsEnterpriseModalOpen(false);
+                        setSubmitSuccess(false);
+                      }, 3000);
+                    }}
+                  />
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

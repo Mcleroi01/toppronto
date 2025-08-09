@@ -6,6 +6,8 @@ import Services from './pages/Services';
 import { About } from './pages/About';
 import { Careers } from './pages/Careers';
 import { Contact } from './pages/Contact';
+import Enterprise from './pages/Enterprise';
+import Drivers from './pages/Drivers';
 import './i18n';
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/enterprise" element={<Enterprise />} />
+          <Route path="/drivers" element={<Drivers />} />
         </Routes>
       </Layout>
     </Router>

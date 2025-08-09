@@ -17,7 +17,7 @@ export const services = [
   },
   {
     id: "2",
-    image: "/images/services/public-relations.jpg",
+    image: "/images/services/publica.jpg",
     name: {
       pt: "Relações Públicas",
       en: "Public Relations",
@@ -47,7 +47,7 @@ export const services = [
   },
   {
     id: "4",
-    image: "/images/services/biological-transport.jpg",
+    image: "/images/services/biologique.jpg",
     name: {
       pt: "Transporte de Material Biológico",
       en: "Biological Material Transport",
@@ -62,7 +62,7 @@ export const services = [
   },
   {
     id: "5",
-    image: "/images/services/pharmaceutical-distribution.jpg",
+    image: "/images/services/farmacos.jpg",
     name: {
       pt: "Distribuição de Fármacos",
       en: "Pharmaceutical Distribution",
@@ -77,7 +77,7 @@ export const services = [
   },
   {
     id: "6",
-    image: "/images/services/cargo-and-logistics.jpg",
+    image: "/images/services/carga.jpg",
     name: {
       pt: "Cargas e Transporte Logístico",
       en: "Cargo & Logistics Transport",
