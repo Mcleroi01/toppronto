@@ -127,31 +127,31 @@ export const DriversBenefits: React.FC<DriversBenefitsProps> = ({ currentLanguag
   return (
     <section className="py-20 bg-white relative overflow-hidden">
       <div className="sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32 px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className=" mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {getTranslatedText(translations.title, currentLanguage)}
           </h2>
-          <div className="w-20 h-1.5 bg-green-600 rounded-full mx-auto mb-6"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6"></div>
+          <p className="text-xl text-gray-600 ">
             {getTranslatedText(translations.subtitle, currentLanguage)}
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={container}
           initial="hidden"
           animate={isInView ? "show" : "hidden"}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {translations.benefits.map((benefit, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               variants={item}
               className="group bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-green-100 hover:bg-green-50/30"
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
@@ -159,7 +159,8 @@ export const DriversBenefits: React.FC<DriversBenefitsProps> = ({ currentLanguag
               <div className="flex justify-center mb-6">
                 <div className="p-4 bg-green-50 rounded-full group-hover:bg-green-100 transition-colors duration-300">
                   {React.cloneElement(benefit.icon, {
-                    className: 'w-8 h-8 text-green-600 group-hover:text-green-700 transition-colors duration-300'
+                    className:
+                      "w-8 h-8 text-green-600 group-hover:text-green-700 transition-colors duration-300",
                   })}
                 </div>
               </div>

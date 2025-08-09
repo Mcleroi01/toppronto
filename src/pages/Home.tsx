@@ -585,42 +585,38 @@ export const Home: React.FC = () => {
                   href="https://play.google.com/store/apps/details?id=com.topronto.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto"
+                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
+                  aria-label="Download on Google Play"
                 >
-                  <svg
-                    className="w-6 h-6 mr-3"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M3.609 1.814L13.792 12 3.61 22.186a1.75 1.75 0 0 1-.61-1.32V3.134a1.75 1.75 0 0 1 .609-1.32zm2.353.9a.75.75 0 0 0-.462.28l-1.5 1.8a.75.75 0 0 0-.25.55v16.112a.75.75 0 0 0 .25.55l1.5 1.8a.75.75 0 0 0 .462.28h9.5a.75.75 0 0 0 .75-.75v-3.5a.75.75 0 0 0-1.5 0v2.75H7.5V4.25h7.25v2.75a.75.75 0 0 0 1.5 0v-3.5a.75.75 0 0 0-.75-.75h-9.5z" />
-                  </svg>
-                  <div className="text-left">
-                    <div className="text-xs">Disponível no</div>
-                    <div className="text-lg font-bold">Google Play</div>
-                  </div>
+                  <img 
+                    src="/images/icons/playstore.png" 
+                    alt="Google Play"
+                    className="h-8 w-auto object-contain"
+                    loading="lazy"
+                    width="150"
+                    height="40"
+                  />
                 </motion.a>
 
                 <motion.a
                   href="https://apps.apple.com/app/topronto"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto"
+                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
+                  aria-label="Download on the App Store"
                 >
-                  <svg
-                    className="w-6 h-6 mr-3"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M18.71 19.5c-.83 1.24-1.85 1.62-3.29 1.5-1.43 0-1.83-.5-3.42-.5-1.59 0-2.07.5-3.42.5-1.44.12-2.49-.26-3.32-1.5-1.4-2.08-3.07-5.8-1.29-10.5 1.02-2.77 2.8-4.5 4.62-4.5 1.19 0 2.3.5 3.41.5 1.1 0 2.12-.5 3.4-.5 1.38 0 2.9 1.5 3.4 3.5-3.2 1.4-2.7 8.4.92 8.5zM13 3.5c.73-.82 1.94-1.5 2.5-1.5.07 1.17-.34 2.3-1.08 3.12-.73.82-1.94 1.5-2.5 1.5-.07-1.17.34-2.3 1.08-3.12z" />
-                  </svg>
-                  <div className="text-left">
-                    <div className="text-xs">Download on the</div>
-                    <div className="text-lg font-bold">App Store</div>
-                  </div>
+                  <img 
+                    src="/images/icons/appstore.png" 
+                    alt="App Store"
+                    className="h-8 w-auto object-contain"
+                    loading="lazy"
+                    width="135"
+                    height="40"
+                  />
                 </motion.a>
               </div>
             </motion.div>

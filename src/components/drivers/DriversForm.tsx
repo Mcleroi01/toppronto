@@ -55,7 +55,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
     email: "",
     phone: "",
     city: "",
-    hasVehicle: false,
+    hasVehicle: true, // Set to true by default
     vehicleType: "",
     licenseNumber: "",
     experienceYears: 0,
@@ -91,12 +91,8 @@ export const DriversForm: React.FC<DriversFormProps> = ({
       );
     }
     
-    if (!formData.email.trim()) {
-      errors.email = getTranslatedText(
-        { pt: "E-mail é obrigatório", en: "Email is required", fr: "L'email est requis" },
-        currentLanguage
-      );
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    // Make email validation optional, only validate format if provided
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = getTranslatedText(
         { pt: "E-mail inválido", en: "Invalid email", fr: "Email invalide" },
         currentLanguage
@@ -115,7 +111,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
       );
     }
     
-    if (formData.hasVehicle && !formData.vehicleType) {
+    if (!formData.vehicleType) {
       errors.vehicleType = getTranslatedText(
         { pt: "Selecione um veículo", en: "Select a vehicle", fr: "Sélectionnez un véhicule" },
         currentLanguage
@@ -129,7 +125,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
       );
     }
     
-    if (formData.hasVehicle && !formData.licenseNumber?.trim()) {
+    if (!formData.licenseNumber?.trim()) {
       errors.licenseNumber = getTranslatedText(
         { pt: "Número da carta de condução é obrigatório", en: "Driver's license number is required", fr: "Le numéro de permis de conduire est requis" },
         currentLanguage
@@ -147,14 +143,39 @@ export const DriversForm: React.FC<DriversFormProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-
-
-  const handleVehicleSelect = (value: string) => {
-    setFormData((prev) => ({
+  // Handle vehicle type change
+  const handleVehicleTypeChange = (type: string) => {
+    setFormData(prev => ({
       ...prev,
-      vehicleType: value,
+      vehicleType: type,
+      licenseNumber: "" // Reset license number when vehicle type changes
     }));
     setVehicleModalOpen(false);
+  };
+
+  // Check if selected vehicle is a motorcycle
+  const isMotorcycle = formData.vehicleType === 'moto';
+
+  // Get the appropriate license field label based on vehicle type
+  const getLicenseLabel = () => {
+    if (isMotorcycle) {
+      return {
+        pt: "Número da Carta de Condução de Moto",
+        en: "Motorcycle License Number",
+        fr: "Numéro de permis moto"
+      }[currentLanguage];
+    } else if (formData.vehicleType) {
+      return {
+        pt: "Número da Carta de Condução",
+        en: "Driver's License Number",
+        fr: "Numéro de permis de conduire"
+      }[currentLanguage];
+    }
+    return {
+      pt: "Número da Carta de Condução",
+      en: "License Number",
+      fr: "Numéro de permis"
+    }[currentLanguage];
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,14 +192,12 @@ export const DriversForm: React.FC<DriversFormProps> = ({
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         city: formData.city,
-        has_vehicle: formData.hasVehicle,
-        ...(formData.hasVehicle && { 
-          vehicle_type: formData.vehicleType,
-          license_number: formData.licenseNumber?.trim() 
-        }),
+        vehicle_type: formData.vehicleType,
+        license_number: formData.licenseNumber?.trim(),
         experience_years: formData.experienceYears,
         message: formData.message?.trim(),
-        status: 'pending' as const
+        status: 'pending' as const,
+        has_vehicle: formData.hasVehicle
       };
 
       const response = await createDriver(driverData);
@@ -216,11 +235,11 @@ export const DriversForm: React.FC<DriversFormProps> = ({
         email: "",
         phone: "",
         city: "",
-        hasVehicle: false,
         vehicleType: "",
         licenseNumber: "",
         experienceYears: 0,
-        message: ""
+        message: "",
+        hasVehicle: false
       });
       
       setSubmitSuccess(true);
@@ -292,7 +311,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
                   <button
                     key={vehicle.type}
                     type="button"
-                    onClick={() => handleVehicleSelect(vehicle.type)}
+                    onClick={() => handleVehicleTypeChange(vehicle.type)}
                     className={`w-full flex items-start p-4 border rounded-xl text-left transition-all ${
                       formData.vehicleType === vehicle.type
                         ? 'border-green-500 bg-green-50 ring-2 ring-green-200'
@@ -462,8 +481,6 @@ export const DriversForm: React.FC<DriversFormProps> = ({
           </div>
         </div>
 
-        {/* Ce champ a été déplacé dans la section conditionnelle hasVehicle */}
-
         {/* Ville */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -495,7 +512,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
                 </option>
               ))}
             </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <div className="absolute right-3 top-2.5 text-gray-500">
               <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
@@ -506,123 +523,85 @@ export const DriversForm: React.FC<DriversFormProps> = ({
           )}
         </div>
 
-        {/* Has Vehicle Toggle */}
-        <div className="flex items-center">
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              name="hasVehicle"
-              checked={formData.hasVehicle}
-              onChange={(e) => {
-                setFormData(prev => ({
-                  ...prev,
-                  hasVehicle: e.target.checked,
-                }));
-              }}
-              className="sr-only peer"
-              disabled={isSubmitting}
-            />
-            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-            <span className="ms-3 text-sm font-medium text-gray-700">
-              {getTranslatedText(
-                { 
-                  pt: "Possui veículo próprio?", 
-                  en: "Do you have your own vehicle?", 
-                  fr: "Avez-vous votre propre véhicule ?" 
-                },
-                currentLanguage
-              )}
-            </span>
+        {/* Vehicle Type */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {getTranslatedText(
+              { pt: "Tipo de veículo", en: "Vehicle type", fr: "Type de véhicule" },
+              currentLanguage
+            )}
+            <span className="text-red-500">*</span>
           </label>
+          <button
+            type="button"
+            onClick={() => setVehicleModalOpen(true)}
+            className={`w-full flex items-center px-4 py-2 border ${
+              formErrors.vehicleType ? "border-red-500" : "border-gray-300"
+            } rounded-lg focus:ring-2 focus:ring-green-500 bg-gray-50 hover:bg-gray-100 transition`}
+          >
+            {selectedVehicle ? (
+              <div className="flex items-center">
+                <img
+                  src={selectedVehicle.image}
+                  alt={selectedVehicle.label[currentLanguage]}
+                  className="w-10 h-8 rounded mr-3 object-cover"
+                />
+                <span>{selectedVehicle.label[currentLanguage]}</span>
+              </div>
+            ) : (
+              <span className="text-gray-400">
+                {getTranslatedText(
+                  {
+                    pt: "Selecione o tipo de veículo",
+                    en: "Select vehicle type",
+                    fr: "Sélectionnez le type de véhicule",
+                  },
+                  currentLanguage
+                )}
+              </span>
+            )}
+            <svg
+              className="w-5 h-5 ml-auto text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          {formErrors.vehicleType && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.vehicleType}</p>
+          )}
         </div>
 
-        {/* Vehicle Type (conditionally shown) */}
-        {formData.hasVehicle && (
-          <>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {getTranslatedText(
-                  { pt: "Tipo de veículo", en: "Vehicle type", fr: "Type de véhicule" },
-                  currentLanguage
-                )}
-                <span className="text-red-500">*</span>
-              </label>
-              <button
-                type="button"
-                onClick={() => setVehicleModalOpen(true)}
-                className={`w-full flex items-center px-4 py-2 border ${
-                  formErrors.vehicleType ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:ring-2 focus:ring-green-500 bg-gray-50 hover:bg-gray-100 transition`}
-              >
-                {selectedVehicle ? (
-                  <div className="flex items-center">
-                    <img
-                      src={selectedVehicle.image}
-                      alt={selectedVehicle.label[currentLanguage]}
-                      className="w-10 h-8 rounded mr-3 object-cover"
-                    />
-                    <span>{selectedVehicle.label[currentLanguage]}</span>
-                  </div>
-                ) : (
-                  <span className="text-gray-400">
-                    {getTranslatedText(
-                      {
-                        pt: "Selecione o tipo de veículo",
-                        en: "Select vehicle type",
-                        fr: "Sélectionnez le type de véhicule",
-                      },
-                      currentLanguage
-                    )}
-                  </span>
-                )}
-                <svg
-                  className="w-5 h-5 ml-auto text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              {formErrors.vehicleType && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formErrors.vehicleType}
-                </p>
-              )}
-            </div>
-
-            {/* License Number */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {getTranslatedText(
-                  { pt: "Número da Carta de Condução", en: "Driver's License Number", fr: "Numéro de permis de conduire" },
-                  currentLanguage
-                )}
-                <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="licenseNumber"
-                value={formData.licenseNumber || ""}
-                onChange={handleChange}
-                disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 disabled:opacity-70 disabled:bg-gray-100"
-                placeholder={getTranslatedText(
-                  { pt: "Ex: 123456789", en: "E.g., 123456789", fr: "Ex: 123456789" },
-                  currentLanguage
-                )}
-              />
-              {formErrors.licenseNumber && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.licenseNumber}</p>
-              )}
-            </div>
-          </>
-        )}
+        {/* License Number */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="licenseNumber">
+            {getLicenseLabel()}
+          </label>
+          <input
+            type="text"
+            id="licenseNumber"
+            name="licenseNumber"
+            value={formData.licenseNumber}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder={getTranslatedText(
+              { pt: isMotorcycle ? "Ex: M-1234567" : "Ex: 123456789", 
+                en: isMotorcycle ? "e.g., M-1234567" : "e.g., 123456789", 
+                fr: isMotorcycle ? "Ex: M-1234567" : "Ex: 123456789" },
+              currentLanguage
+            )}
+          />
+          {formErrors.licenseNumber && (
+            <p className="text-red-500 text-xs italic">{formErrors.licenseNumber}</p>
+          )}
+        </div>
 
         {/* Years of Experience */}
         <div>

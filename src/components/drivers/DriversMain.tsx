@@ -172,28 +172,6 @@ export const DriversMain: React.FC<DriversMainProps> = () => {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 text-center"
-        >
-          <Link
-            to="/register"
-            className="inline-flex items-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-green-600 hover:bg-green-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
-          >
-            {getTranslatedText(
-              {
-                pt: "Comece a dirigir agora",
-                en: "Start driving now",
-                fr: "Commencez à conduire maintenant",
-              },
-              currentLanguage
-            )}
-            <FaArrowRight className="ml-2" />
-          </Link>
-        </motion.div>
       </div>
     </section>
   );
