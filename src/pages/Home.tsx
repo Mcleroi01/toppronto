@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import ClientLogos from "../components/common/ClientLogos";
-import { Bike, Shield, Truck, Users, ArrowRight } from "lucide-react";
+import { Bike, Shield, Truck, Users, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { services } from "../data/services";
 import { vehicles } from "../data/vehicles";
 import { useLanguage } from "../hooks/useLanguage";
@@ -18,6 +18,194 @@ type TranslationObject = {
 
 const getTranslatedText = (obj: TranslationObject, lang: Language): string => {
   return obj[lang] || obj.defaultValue || '';
+};
+
+// Composant Carousel pour afficher les fonctionnalités
+interface Feature {
+  icon: any;
+  title: TranslationObject;
+  description: TranslationObject;
+  backgroundImage: string;
+  image: string;
+}
+
+const Carousel = ({ features, currentLanguage }: { 
+  features: Feature[], 
+  currentLanguage: Language
+}) => {
+  const [[page, direction], setPage] = useState([0, 0]);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const paginate = (newDirection: number) => {
+    setPage([page + newDirection, newDirection]);
+  };
+
+  // Configuration du défilement automatique
+  useEffect(() => {
+    if (!isAutoPlay) return;
+    
+    const timer = setInterval(() => {
+      paginate(1);
+    }, 5000);
+    
+    return () => clearInterval(timer);
+  }, [page, isAutoPlay]);
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const currentFeature = features[Math.abs(page) % features.length];
+
+  return (
+    <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-2xl">
+      <AnimatePresence initial={false} custom={direction} mode="wait">
+        <motion.div
+          key={page}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 }
+          }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={1}
+          onDragEnd={(_e, { offset, velocity }) => {
+            const swipe = swipePower(offset.x, velocity.x);
+            if (swipe < -swipeConfidenceThreshold) {
+              paginate(1);
+            } else if (swipe > swipeConfidenceThreshold) {
+              paginate(-1);
+            }
+          }}
+          className="absolute inset-0 w-full h-full"
+        >
+          <div className="relative w-full h-full group">
+            {/* Image de fond */}
+            <div className="absolute inset-0 z-0">
+              <img
+                src={currentFeature.backgroundImage || "/images/placeholder-bg.jpg"}
+                alt=""
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
+            </div>
+
+            {/* Contenu */}
+            <div className="relative z-10 flex flex-col h-full p-8 text-white md:p-12">
+              <div className="flex-grow">
+                {/* Icône ou image */}
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
+                  <img
+                    src={currentFeature.image}
+                    alt={currentFeature.title[currentLanguage]}
+                    className="w-8 h-8 md:w-10 md:h-10 object-contain"
+                  />
+                </div>
+
+                {/* Titre et description */}
+                <motion.h3 
+                  className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 group-hover:text-green-300 transition-colors"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {currentFeature.title[currentLanguage]}
+                </motion.h3>
+                <motion.p 
+                  className="text-lg md:text-xl text-gray-200 font-semibold leading-relaxed mb-8 max-w-2xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {currentFeature.description[currentLanguage]}
+                </motion.p>
+              </div>
+
+              {/* Bouton en savoir plus */}
+              <motion.div 
+                className="mt-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <div className="inline-flex items-center text-green-300 font-medium group-hover:text-white transition-colors border-b border-transparent group-hover:border-green-300 pb-1">
+                  <span className="mr-2">
+                    {getTranslatedText(
+                      {
+                        pt: "Saiba mais",
+                        en: "Learn more",
+                        fr: "En savoir plus",
+                      },
+                      currentLanguage
+                    )}
+                  </span>
+                  <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Contrôles de navigation */}
+      <button 
+        onClick={() => {
+          setIsAutoPlay(false);
+          paginate(-1);
+        }}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all"
+        aria-label="Précédent"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      
+      <button 
+        onClick={() => {
+          setIsAutoPlay(false);
+          paginate(1);
+        }}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all"
+        aria-label="Suivant"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+
+      {/* Indicateurs de pagination */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+        {features.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setIsAutoPlay(false);
+              setPage([index, index > page ? 1 : -1]);
+            }}
+            className={`w-2.5 h-2.5 rounded-full transition-all ${Math.abs(page) % features.length === index ? 'bg-white w-6' : 'bg-white/50'}`}
+            aria-label={`Aller au slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export const Home: React.FC = () => {
@@ -124,8 +312,8 @@ export const Home: React.FC = () => {
                 currentLanguage
               )}
             </h2>
-            <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6 "></div>
-            <p className="text-lg text-gray-600 max-w-3xl ">
+            <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6"></div>
+            <p className="text-lg text-gray-600 max-w-3xl">
               {getTranslatedText(
                 {
                   pt: "Oferecemos as melhores soluções para impulsionar o crescimento do seu negócio com tecnologia de ponta e suporte especializado.",
@@ -137,82 +325,9 @@ export const Home: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Grille des fonctionnalités */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {features.map((feature, idx) => (
-              <motion.div
-                key={`feature-${feature.title.pt}`}
-                initial={{ opacity: 0, y: 30 }}
-                animate={
-                  isInView
-                    ? {
-                        opacity: 1,
-                        y: 0,
-                        transition: {
-                          duration: 0.6,
-                          delay: idx * 0.1,
-                        },
-                      }
-                    : { opacity: 0, y: 30 }
-                }
-                whileHover={{ y: -5 }}
-                className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
-              >
-                {/* Image de fond */}
-                <div className="absolute inset-0 z-0">
-                  <img
-                    src={
-                      feature.backgroundImage || "/images/placeholder-bg.jpg"
-                    }
-                    alt=""
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
-                </div>
-
-                {/* Contenu */}
-                <div className="relative z-10 flex flex-col h-full p-8 text-white">
-                  <div className="flex-grow">
-                    {/* Icône ou image */}
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
-                      <img
-                        src={feature.image}
-                        alt={feature.title[currentLanguage]}
-                        className="w-8 h-8 md:w-10 md:h-10 object-contain"
-                      />
-                    </div>
-
-                    {/* Titre et description */}
-                    <h3 className="text-2xl font-bold text-yellow-400 mb-3 group-hover:text-green-300 transition-colors">
-                      {feature.title[currentLanguage]}
-                    </h3>
-                    <p className="text-gray-200 font-semibold leading-relaxed mb-6">
-                      {feature.description[currentLanguage]}
-                    </p>
-                  </div>
-
-                  {/* Bouton en savoir plus */}
-                  <div className="mt-auto">
-                    <div className="inline-flex items-center text-green-300 font-medium group-hover:text-white transition-colors border-b border-transparent group-hover:border-green-300 pb-1">
-                      <span className="mr-2">
-                        {getTranslatedText(
-                          {
-                            pt: "Saiba mais",
-                            en: "Learn more",
-                            fr: "En savoir plus",
-                          },
-                          currentLanguage
-                        )}
-                      </span>
-                      <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Effet de survol */}
-                <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </motion.div>
-            ))}
+          {/* Carrousel des fonctionnalités */}
+          <div className="relative">
+            <Carousel features={features} currentLanguage={currentLanguage} />
           </div>
         </div>
       </section>
@@ -466,10 +581,10 @@ export const Home: React.FC = () => {
                         </span>
 
                         {/* Titre et description */}
-                        <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 group-hover:text-green-300 transition-colors">
+                        <h3 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 group-hover:text-green-300 transition-colors">
                           {service.name[currentLanguage]}
                         </h3>
-                        <p className="text-gray-200 text-lg leading-relaxed max-w-2xl">
+                        <p className="text-gray-200 font-bold text-lg leading-relaxed max-w-2xl">
                           {service.description[currentLanguage]}
                         </p>
                       </div>
@@ -580,45 +695,7 @@ export const Home: React.FC = () => {
                 )}
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
-                <motion.a
-                  href="https://play.google.com/store/apps/details?id=com.topronto.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label="Download on Google Play"
-                >
-                  <img 
-                    src="/images/icons/playstore.png" 
-                    alt="Google Play"
-                    className="h-8 w-auto object-contain"
-                    loading="lazy"
-                    width="150"
-                    height="40"
-                  />
-                </motion.a>
-
-                <motion.a
-                  href="https://apps.apple.com/app/topronto"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label="Download on the App Store"
-                >
-                  <img 
-                    src="/images/icons/appstore.png" 
-                    alt="App Store"
-                    className="h-8 w-auto object-contain"
-                    loading="lazy"
-                    width="135"
-                    height="40"
-                  />
-                </motion.a>
-              </div>
+              
             </motion.div>
           </div>
         </div>

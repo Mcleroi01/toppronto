@@ -85,7 +85,7 @@ export const Header: React.FC = () => {
       href: "/about",
       submenu: [
         { name: t("nav.about_company", "A nossa empresa"), href: "/about" },
-        { name: t("nav.careers", "Carreiras"), href: "/careers" },
+        { name: t("nav.careers", "Venha fazer parte do nosso time profissional"), href: "/careers" },
         { name: t("nav.contact", "Contato"), href: "/contact" },
       ],
     },

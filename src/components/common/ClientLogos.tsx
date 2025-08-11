@@ -88,7 +88,7 @@ const ClientLogos: React.FC<ClientLogosProps> = ({ className = '' }) => {
     <section className={`py-12 bg-white ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8  sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32">
-          <h2 className="text-4xl md:text-5xl  font-bold text-gray-900">
+          <h2 className="text-4xl md:text-5xl  font-bold text-gray-900 text-center">
             {getTranslatedText(
               {
                 pt: "Nossos Clientes",
@@ -98,8 +98,8 @@ const ClientLogos: React.FC<ClientLogosProps> = ({ className = '' }) => {
               currentLanguage
             )}
           </h2>
-          <div className="w-16 h-1 bg-green-600 my-4"></div>
-          <p className="text-gray-600 ">
+          <div className="w-16 h-1 bg-green-600 my-4 mx-auto"></div>
+          <p className="text-gray-600 text-center">
             {getTranslatedText(
               {
                 pt: "Empresas que confiam em nossos serviços",

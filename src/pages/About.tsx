@@ -439,45 +439,7 @@ export const About: React.FC = () => {
                 )}
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8">
-                <motion.a
-                  href="https://play.google.com/store/apps/details?id=com.topronto.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label="Download on Google Play"
-                >
-                  <img
-                    src="/images/icons/playstore.png"
-                    alt="Google Play"
-                    className="h-8 w-auto object-contain"
-                    loading="lazy"
-                    width="150"
-                    height="40"
-                  />
-                </motion.a>
-
-                <motion.a
-                  href="https://apps.apple.com/app/topronto"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-center bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 w-full sm:w-48 h-14"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  aria-label="Download on the App Store"
-                >
-                  <img
-                    src="/images/icons/appstore.png"
-                    alt="App Store"
-                    className="h-8 w-auto object-contain"
-                    loading="lazy"
-                    width="135"
-                    height="40"
-                  />
-                </motion.a>
-              </div>
+              
             </motion.div>
           </div>
         </div>
