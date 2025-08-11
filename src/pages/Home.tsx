@@ -785,7 +785,7 @@ export const Home: React.FC = () => {
           ></div>
 
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl md:text-4xl font-bold text-yellow-400 mb-6 drop-shadow-lg">
+            <h2 className="text-4xl md:text-5xl  font-bold text-yellow-400 mb-6 drop-shadow-lg">
               {t("contact.title", "Contactez-nous")}
             </h2>
             <p className="text-lg mb-8 drop-shadow">

@@ -9,6 +9,7 @@ interface ApplyModalProps {
   isOpen: boolean;
   onClose: () => void;
   jobTitle: string;
+  jobId?: string;
 }
 
 interface FormData {
@@ -25,7 +26,7 @@ interface FormData {
 
 const MySwal = withReactContent(Swal);
 
-export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitle }) => {
+export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitle, jobId }) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -169,6 +170,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, jobTitl
         portfolio: formData.portfolio,
         message: formData.message,
         jobTitle: jobTitle,
+        jobOfferId: jobId,
         cv: formData.cv!,
         idCard: formData.idCard!
       };

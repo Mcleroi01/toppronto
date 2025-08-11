@@ -3,16 +3,15 @@ import { z } from 'zod';
 
 // Schéma de validation avec Zod
 const jobApplicationSchema = z.object({
-  name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères').max(100),
+  first_name: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères').max(100),
+  last_name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères').max(100),
   email: z.string().email('Adresse email invalide'),
   phone: z.string().min(10, 'Le numéro de téléphone est invalide'),
   experience_years: z.number().min(0, 'Le nombre d\'années d\'expérience doit être positif'),
-  motivation: z.string().min(10, 'Le message doit contenir au moins 10 caractères').max(2000),
-  portfolio: z.string().url('URL du portfolio invalide').or(z.literal('')),
+  motivation: z.string().min(3, 'Le message doit contenir au moins 10 caractères').max(2000).optional(),
   message: z.string().optional(),
-  job_title: z.string(),
-  cv_url: z.string().url('URL du CV invalide'),
-  id_card_url: z.string().url('URL de la pièce d\'identité invalide'),
+  job_offer_id: z.string().optional(),
+  // Les URLs des fichiers sont gérées directement dans le stockage, pas dans la base de données
   status: z.enum(['pending', 'reviewed', 'accepted', 'rejected']).default('pending'),
   created_at: z.string()
 });
@@ -99,7 +98,7 @@ const uploadFile = async (file: File, type: 'cv' | 'idCard'): Promise<string> =>
 
 // Type pour les données de candidature
 export interface JobApplicationData {
-  name: string;
+  name: string; // Will be split into first_name and last_name
   email: string;
   phone: string;
   experience_years: number | string;
@@ -107,6 +106,7 @@ export interface JobApplicationData {
   portfolio: string;
   message?: string;
   jobTitle: string;
+  jobOfferId?: string;
   cv: File;
   idCard: File;
 }
@@ -115,29 +115,41 @@ export interface JobApplicationData {
 export const submitJobApplication = async (applicationData: JobApplicationData) => {
   try {
     // Télécharger les fichiers en parallèle
-    const [cvUrl, idCardUrl] = await Promise.all([
+    await Promise.all([
       uploadFile(applicationData.cv, 'cv'),
       uploadFile(applicationData.idCard, 'idCard')
     ]);
 
-    // Préparer les données pour la validation
-    const applicationToValidate = {
-      name: applicationData.name,
+    // Split the name into first and last name, ensuring we always have both
+    const nameParts = applicationData.name.trim().split(/\s+/);
+    let first_name = '';
+    let last_name = '';
+    
+    if (nameParts.length === 1) {
+      // If only one name is provided, use it as the first name
+      first_name = nameParts[0];
+      last_name = 'N/A';
+    } else {
+      // Use the first part as first name and the rest as last name
+      first_name = nameParts[0];
+      last_name = nameParts.slice(1).join(' ');
+    }
+    
+    // Prepare data for database
+    const applicationDataForDb = {
+      first_name: first_name,
+      last_name: last_name,
       email: applicationData.email,
       phone: applicationData.phone,
       experience_years: Number(applicationData.experience_years) || 0,
-      motivation: applicationData.motivation,
-      portfolio: applicationData.portfolio,
-      message: applicationData.message,
-      job_title: applicationData.jobTitle,
-      cv_url: cvUrl,
-      id_card_url: idCardUrl,
-      status: 'pending' as const, // Type assertion pour le statut
+      message: applicationData.motivation,
+      job_offer_id: applicationData.jobOfferId,
+      status: 'pending' as const,
       created_at: new Date().toISOString(),
     };
 
     // Valider les données
-    const validatedData = validateJobApplication(applicationToValidate);
+    const validatedData = validateJobApplication(applicationDataForDb);
 
     // Insert the application data
     const { data, error } = await supabase

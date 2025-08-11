@@ -8,7 +8,7 @@ const jobOfferSchema = z.object({
   description: z.string().min(10, 'La description doit contenir au moins 10 caractères'),
   location: z.string().min(2, 'La localisation est requise'),
   salary_range: z.string().optional().nullable(),
-  employment_type: z.enum(['full-time', 'part-time', 'contract']),
+  employment_type: z.string(),
   requirements: z.array(z.string()).default([]),
   benefits: z.array(z.string()).default([]),
   is_active: z.boolean().default(true),

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ApplyModal } from './ApplyModal';
 
@@ -32,12 +31,7 @@ export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLangu
             <span className="font-medium text-gray-700">Location</span>
             <span className="ml-2 text-gray-600">{job.location}</span>
           </div>
-          <div className="flex items-center">
-            <span className="font-medium text-gray-700">Department</span>
-            <span className="ml-2 text-gray-600">
-              {job.department[currentLanguage]}
-            </span>
-          </div>
+        
           <div className="flex items-center">
             <span className="font-medium text-gray-700">Posted</span>
             <span className="ml-2 text-gray-600">
@@ -60,7 +54,7 @@ export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLangu
         <div className="space-y-4">
           <h3 className="text-xl font-semibold text-gray-900">Requirements</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
-            {job.requirements[currentLanguage].map(
+            {job.requirements.map(
               (req: string, index: number) => (
                 <li key={index}>{req}</li>
               )
@@ -71,7 +65,7 @@ export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLangu
         <div className="space-y-4">
           <h3 className="text-xl font-semibold text-gray-900">Benefits</h3>
           <ul className="list-disc list-inside text-gray-600 space-y-2">
-            {job.benefits[currentLanguage].map(
+            {job.benefits.map(
               (benefit: string, index: number) => (
                 <li key={index}>{benefit}</li>
               )
@@ -91,6 +85,7 @@ export const JobDetail: React.FC<JobDetailProps> = ({ job, onClose, currentLangu
           isOpen={isApplyModalOpen}
           onClose={() => setIsApplyModalOpen(false)}
           jobTitle={job.title[currentLanguage]}
+          jobId={job.id}
         />
       </div>
     </div>
