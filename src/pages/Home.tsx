@@ -1,24 +1,75 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import ClientLogos from "../components/common/ClientLogos";
-import { Bike, Shield, Truck, Users, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { services } from "../data/services";
-import { vehicles } from "../data/vehicles";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import {
+  Bike,
+  Shield,
+  Users,
+  Truck,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useLanguage } from "../hooks/useLanguage";
-import { VehicleFleet } from "../components/common/VehicleFleet";
-import PricingSection from "../components/enterprise/PricingSection";
+import { Language } from "../types/language";
 
-type Language = 'pt' | 'en' | 'fr';
+// Fonction utilitaire pour la traduction
+const getTranslatedText = (
+  text: { [key in Language]: string },
+  language: Language
+) => {
+  return text[language] || text["en"] || "";
+};
+import ClientLogos from "../components/common/ClientLogos";
+import { getNews } from "../services/newsService";
+import { NewsCarousel } from "../components/news/NewsCarousel";
+import { VehicleFleet } from "../components/common/VehicleFleet";
+import { vehicles } from "../data/vehicles";
+import { services } from "../data/services";
+// NewsItem n'est plus utilisé directement ici, il est importé par les composants enfants
 
 type TranslationObject = {
   [key in Language]: string;
-} & { defaultValue?: string };
-
-const getTranslatedText = (obj: TranslationObject, lang: Language): string => {
-  return obj[lang] || obj.defaultValue || '';
 };
+
+// Composant temporaire pour PricingSection
+interface PricingSectionProps {
+  currentLanguage: Language;
+}
+
+const PricingSection: React.FC<PricingSectionProps> = ({ currentLanguage }) => {
+  return (
+    <div className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+            {getTranslatedText(
+              {
+                pt: "Preços Simples e Transparentes",
+                en: "Simple and Transparent Pricing",
+                fr: "Tarification Simple et Transparente",
+              },
+              currentLanguage
+            )}
+          </h2>
+          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+            {getTranslatedText(
+              {
+                pt: "Escolha le plan qui correspond le mieux à vos besoins.",
+                en: "Choose the plan that best fits your needs.",
+                fr: "Choisissez le forfait qui correspond le mieux à vos besoins.",
+              },
+              currentLanguage
+            )}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Le composant Testimonials a été intégré directement dans la section des témoignages
 
 // Composant Carousel pour afficher les fonctionnalités
 interface Feature {
@@ -29,9 +80,12 @@ interface Feature {
   image: string;
 }
 
-const Carousel = ({ features, currentLanguage }: { 
-  features: Feature[], 
-  currentLanguage: Language
+const Carousel = ({
+  features,
+  currentLanguage,
+}: {
+  features: Feature[];
+  currentLanguage: Language;
 }) => {
   const [[page, direction], setPage] = useState([0, 0]);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
@@ -42,27 +96,27 @@ const Carousel = ({ features, currentLanguage }: {
   // Configuration du défilement automatique
   useEffect(() => {
     if (!isAutoPlay) return;
-    
+
     const timer = setInterval(() => {
       paginate(1);
     }, 5000);
-    
+
     return () => clearInterval(timer);
   }, [page, isAutoPlay]);
 
   const variants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 1000 : -1000,
-      opacity: 0
+      opacity: 0,
     }),
     center: {
       x: 0,
-      opacity: 1
+      opacity: 1,
     },
     exit: (direction: number) => ({
       x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
+      opacity: 0,
+    }),
   };
 
   const swipeConfidenceThreshold = 10000;
@@ -84,7 +138,7 @@ const Carousel = ({ features, currentLanguage }: {
           exit="exit"
           transition={{
             x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 }
+            opacity: { duration: 0.2 },
           }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
@@ -103,7 +157,9 @@ const Carousel = ({ features, currentLanguage }: {
             {/* Image de fond */}
             <div className="absolute inset-0 z-0">
               <img
-                src={currentFeature.backgroundImage || "/images/placeholder-bg.jpg"}
+                src={
+                  currentFeature.backgroundImage || "/images/placeholder-bg.jpg"
+                }
                 alt=""
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -123,7 +179,7 @@ const Carousel = ({ features, currentLanguage }: {
                 </div>
 
                 {/* Titre et description */}
-                <motion.h3 
+                <motion.h3
                   className="text-3xl text-center md:text-4xl font-bold text-yellow-400 mb-4 group-hover:text-green-300 transition-colors"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -131,7 +187,7 @@ const Carousel = ({ features, currentLanguage }: {
                 >
                   {currentFeature.title[currentLanguage]}
                 </motion.h3>
-                <motion.p 
+                <motion.p
                   className="text-lg text-center md:text-xl text-gray-200 font-semibold leading-relaxed mb-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -142,7 +198,7 @@ const Carousel = ({ features, currentLanguage }: {
               </div>
 
               {/* Bouton en savoir plus */}
-              <motion.div 
+              <motion.div
                 className="mt-auto text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -168,7 +224,7 @@ const Carousel = ({ features, currentLanguage }: {
       </AnimatePresence>
 
       {/* Contrôles de navigation */}
-      <button 
+      <button
         onClick={() => {
           setIsAutoPlay(false);
           paginate(-1);
@@ -178,8 +234,8 @@ const Carousel = ({ features, currentLanguage }: {
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
-      
-      <button 
+
+      <button
         onClick={() => {
           setIsAutoPlay(false);
           paginate(1);
@@ -199,7 +255,11 @@ const Carousel = ({ features, currentLanguage }: {
               setIsAutoPlay(false);
               setPage([index, index > page ? 1 : -1]);
             }}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${Math.abs(page) % features.length === index ? 'bg-white w-6' : 'bg-white/50'}`}
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
+              Math.abs(page) % features.length === index
+                ? "bg-white w-6"
+                : "bg-white/50"
+            }`}
             aria-label={`Aller au slide ${index + 1}`}
           />
         ))}
@@ -227,7 +287,8 @@ export const Home: React.FC = () => {
         en: "Deliveries within 2 hours in Luanda",
         fr: "Livraisons en 2 heures à Luanda",
       },
-      backgroundImage: "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
+      backgroundImage:
+        "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
       image:
         "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
     },
@@ -243,7 +304,8 @@ export const Home: React.FC = () => {
         en: "Secure products and real-time tracking",
         fr: "Produits sécurisés et suivi en temps réel",
       },
-      backgroundImage: "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
+      backgroundImage:
+        "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
       image:
         "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
     },
@@ -259,16 +321,19 @@ export const Home: React.FC = () => {
         en: "Trained and experienced drivers",
         fr: "Chauffeurs formés et expérimentés",
       },
-      backgroundImage: "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+      backgroundImage:
+        "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
       image:
         "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
     },
-
   ];
-  
+
   // Création d'une référence pour la section des services
   const servicesRef = useRef(null);
   const isInView = useInView(servicesRef, { once: true, amount: 0.1 });
+
+  // Récupération des nouvelles
+  const newsItems = getNews();
 
   return (
     <div className="space-y-24">
@@ -333,7 +398,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-green-800 to-green-700 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-r from-green-800 to-green-700 text-white overflow-hidden py-8">
         {/* Effet de fond décoratif */}
         <div
           className="absolute inset-0 opacity-5 bg-cover bg-center"
@@ -342,134 +407,38 @@ export const Home: React.FC = () => {
           }}
         />
 
-        <div className="max-w-7xl sm:mx-4 lg:mx-8 xl:mx-16 2xl:mx-32  py-16 px-4 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Contenu texte */}
-            <div className="relative z-10">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <h1 className="text-4xl text-yellow-400 md:text-5xl font-bold leading-tight mb-6">
-                  {getTranslatedText(
-                    {
-                      pt: "Entrega Rápida e Confiável em Luanda",
-                      en: "Fast and Reliable Delivery in Luanda",
-                      fr: "Livraison Rapide et Fiable à Luanda",
-                    },
-                    currentLanguage
-                  )}
-                </h1>
-                <div className="w-20 h-1.5 bg-green-600 rounded-full mb-6 "></div>
-                <p className="text-lg md:text-xl text-green-100 mb-8 max-w-lg">
-                  {getTranslatedText(
-                    {
-                      pt: "Soluções logísticas eficientes para o seu negócio, com rastreamento em tempo real e equipe profissional.",
-                      en: "Efficient logistics solutions for your business, with real-time tracking and professional team.",
-                      fr: "Solutions logistiques efficaces pour votre entreprise, avec suivi en temps réel et équipe professionnelle.",
-                    },
-                    currentLanguage
-                  )}
-                </p>
+        {/* Section Nouvelles */}
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-green-900 font-semibold rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-                  >
-                    <span>
-                      {getTranslatedText(
-                        {
-                          pt: "Solicitar Orçamento",
-                          en: "Get a Quote",
-                          fr: "Demander un Devis",
-                        },
-                        currentLanguage
-                      )}
-                    </span>
-                    <ArrowRight className="ml-3 w-5 h-5" />
-                  </Link>
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4">
+              {getTranslatedText(
+                {
+                  pt: "Últimas Notícias",
+                  en: "Latest News",
+                  fr: "Dernières Nouvelles",
+                },
+                currentLanguage
+              )}
+            </h1>
+         
+            <p className="mt-5 text-lg text-gray-100 max-w-3xl mx-auto">
+              {getTranslatedText(
+                {
+                  pt: "Fique por dentro das últimas novidades e atualizações da Topronto.",
+                  en: "Stay up to date with the latest news and updates from Topronto.",
+                  fr: "Restez informé des dernières nouvelles et mises à jour de Topronto.",
+                },
+                currentLanguage
+              )}
+            </p>
+          </div>
 
-                  <Link
-                    to="/services"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-medium rounded-lg transition-all duration-300"
-                  >
-                    <span>
-                      {getTranslatedText(
-                        {
-                          pt: "Nossos Serviços",
-                          en: "Our Services",
-                          fr: "Nos Services",
-                        },
-                        currentLanguage
-                      )}
-                    </span>
-                  </Link>
-                </div>
-
-                <div className="mt-8 flex items-center space-x-6">
-                  <div className="flex items-center">
-                    <div className="flex -space-x-2">
-                      {[1, 2, 3].map((item) => (
-                        <div
-                          key={item}
-                          className="w-8 h-8 rounded-full bg-white/20 border-2 border-white flex items-center justify-center"
-                        >
-                          <Truck className="w-4 h-4 text-white" />
-                        </div>
-                      ))}
-                    </div>
-                    <span className="ml-3 text-sm text-green-100">
-                      {getTranslatedText(
-                        {
-                          pt: "+1000 entregas realizadas",
-                          en: "+1000 deliveries completed",
-                          fr: "+1000 livraisons effectuées",
-                        },
-                        currentLanguage
-                      )}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Image */}
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
-                <img
-                  src="/images/banier.png"
-                  alt={getTranslatedText(
-                    {
-                      pt: "Serviços de entrega Topronto",
-                      en: "Topronto delivery services",
-                      fr: "Services de livraison Topronto",
-                    },
-                    currentLanguage
-                  )}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-
-              {/* Badge flottant */}
-              <div className="absolute -bottom-4 -left-4 bg-white text-green-900 px-4 py-2 rounded-lg shadow-lg font-semibold flex items-center">
-                <Shield className="w-5 h-5 mr-2 text-yellow-500" />
-                {getTranslatedText(
-                  {
-                    pt: "100% Seguro",
-                    en: "100% Secure",
-                    fr: "100% Sécurisé",
-                  },
-                  currentLanguage
-                )}
-              </div>
-            </motion.div>
+          <div className="relative">
+            <NewsCarousel
+              newsItems={newsItems}
+              currentLanguage={currentLanguage}
+            />
           </div>
         </div>
       </section>
@@ -676,7 +645,6 @@ export const Home: React.FC = () => {
                     pt: "Baixe o aplicativo Topronto",
                     en: "Download the Topronto App",
                     fr: "Téléchargez l'application Topronto",
-                    defaultValue: "Baixe o aplicativo Topronto",
                   },
                   currentLanguage
                 )}
@@ -688,14 +656,10 @@ export const Home: React.FC = () => {
                     pt: "A maneira mais fácil de encomendar, rastrear e receber suas entregas diretamente do seu smartphone.",
                     en: "The easiest way to order, track, and receive your deliveries right from your smartphone.",
                     fr: "Le moyen le plus simple de commander, suivre et recevoir vos livraisons directement depuis votre smartphone.",
-                    defaultValue:
-                      "A maneira mais fácil de encomendar, rastrear e receber suas entregas diretamente do seu smartphone.",
                   },
                   currentLanguage
                 )}
               </p>
-
-              
             </motion.div>
           </div>
         </div>
@@ -711,7 +675,6 @@ export const Home: React.FC = () => {
                   pt: "O que nossos clientes dizem",
                   en: "What Our Customers Say",
                   fr: "Ce que disent nos clients",
-                  defaultValue: "O que nossos clientes dizem",
                 },
                 currentLanguage
               )}
@@ -723,8 +686,6 @@ export const Home: React.FC = () => {
                   pt: "Avaliações reais de clientes satisfeitos com nossos serviços",
                   en: "Real reviews from satisfied customers about our services",
                   fr: "Avis réels de clients satisfaits de nos services",
-                  defaultValue:
-                    "Avaliações reais de clientes satisfeitos com nossos serviços",
                 },
                 currentLanguage
               )}
@@ -840,7 +801,6 @@ export const Home: React.FC = () => {
                   pt: "Ver todos os depoimentos",
                   en: "View all testimonials",
                   fr: "Voir tous les témoignages",
-                  defaultValue: "Ver todos os depoimentos",
                 },
                 currentLanguage
               )}

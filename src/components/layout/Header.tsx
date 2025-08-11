@@ -22,40 +22,10 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
   const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const { t, i18n } = useTranslation();
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-
-  const handleDriverSubmit = async (formData: any) => {
-    try {
-      setIsSubmitting(true);
-      setSubmitSuccess(false);
-      
-      // Simuler un appel API - Remplacez ceci par votre véritable logique d'envoi
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulation de délai
-      
-      // Logique d'envoi réelle irait ici
-      console.log('Driver form submitted:', formData);
-      
-      // En cas de succès
-      setSubmitSuccess(true);
-      
-      // Réinitialiser le formulaire après un délai
-      setTimeout(() => {
-        setIsDriverModalOpen(false);
-        // La réinitialisation du formulaire est gérée par le composant DriversForm
-      }, 3000);
-      
-    } catch (error) {
-      console.error('Error submitting driver form:', error);
-      setSubmitSuccess(false);
-      // Ici, vous pourriez ajouter un état d'erreur plus détaillé si nécessaire
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const { t, i18n } = useTranslation();
 
   // La logique de soumission est maintenant gérée directement dans le composant EnterpriseForm
   // qui appelle onSuccess en cas de réussite
@@ -584,9 +554,14 @@ export const Header: React.FC = () => {
                 ) : (
                   <DriversForm
                     currentLanguage={i18n.language as "pt" | "en" | "fr"}
-                    onSubmit={handleDriverSubmit}
-                    isSubmitting={isSubmitting}
-                    submitSuccess={submitSuccess}
+                    onSubmitSuccess={() => {
+                      setSubmitSuccess(true);
+                      // Fermer le modal après un délai
+                      setTimeout(() => {
+                        setIsDriverModalOpen(false);
+                        setSubmitSuccess(false);
+                      }, 3000);
+                    }}
                   />
                 )}
               </div>
