@@ -111,7 +111,7 @@ const Carousel = ({ features, currentLanguage }: {
             </div>
 
             {/* Contenu */}
-            <div className="relative z-10 flex flex-col h-full p-8 text-white md:p-12">
+            <div className="relative text-center z-10 flex flex-col h-full p-8 text-white md:p-12">
               <div className="flex-grow">
                 {/* Icône ou image */}
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
@@ -124,7 +124,7 @@ const Carousel = ({ features, currentLanguage }: {
 
                 {/* Titre et description */}
                 <motion.h3 
-                  className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 group-hover:text-green-300 transition-colors"
+                  className="text-3xl text-center md:text-4xl font-bold text-yellow-400 mb-4 group-hover:text-green-300 transition-colors"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -132,7 +132,7 @@ const Carousel = ({ features, currentLanguage }: {
                   {currentFeature.title[currentLanguage]}
                 </motion.h3>
                 <motion.p 
-                  className="text-lg md:text-xl text-gray-200 font-semibold leading-relaxed mb-8 max-w-2xl"
+                  className="text-lg text-center md:text-xl text-gray-200 font-semibold leading-relaxed mb-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -143,7 +143,7 @@ const Carousel = ({ features, currentLanguage }: {
 
               {/* Bouton en savoir plus */}
               <motion.div 
-                className="mt-auto"
+                className="mt-auto text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}

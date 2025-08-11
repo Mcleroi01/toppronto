@@ -160,7 +160,7 @@ export const DriversForm: React.FC<DriversFormProps> = ({
   const getLicenseLabel = () => {
     if (isMotorcycle) {
       return {
-        pt: "Número da Carta de Condução de Moto",
+        pt: "Número da Carta",
         en: "Motorcycle License Number",
         fr: "Numéro de permis moto"
       }[currentLanguage];
