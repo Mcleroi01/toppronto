@@ -26,6 +26,7 @@ export type JobFilters = {
   location?: string;
   employment_type?: string[];
   is_active?: boolean;
+  date_posted?: string;
 };
 
 // Récupérer toutes les offres d'emploi

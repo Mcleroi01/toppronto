@@ -59,7 +59,8 @@ export default function JobList({ currentLanguage }: JobListProps) {
           is_active: true,
           search: searchQuery || undefined,
           location: filters.location || undefined,
-          employment_type: filters.type.length > 0 ? filters.type : undefined
+          employment_type: filters.type.length > 0 ? filters.type : undefined,
+          date_posted: filters.datePosted || undefined
         };
 
         const jobs = await getJobOffers(supabaseFilters);
@@ -72,6 +73,7 @@ export default function JobList({ currentLanguage }: JobListProps) {
       } catch (err) {
         console.error('Error loading jobs:', err);
         setError('Failed to load job offers. Please try again later.');
+        setJobs([]); // Réinitialiser la liste des jobs en cas d'erreur
       } finally {
         setIsLoading(false);
       }
@@ -79,20 +81,6 @@ export default function JobList({ currentLanguage }: JobListProps) {
 
     loadJobs();
   }, [searchQuery, filters]);
-
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const jobOffers = await getJobOffers();
-        setJobs(jobOffers);
-      } catch (error) {
-        setError('Error fetching job offers');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchJobs();
-  }, []);
 
   const filteredJobs = jobs.filter(job => {
     if (!job.is_active) return false;
