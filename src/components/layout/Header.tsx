@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Overlay foncé pour lisibilité */}
-        <div className="absolute inset-0 bg-black/60 z-0" />
+        <div className="absolute inset-0  z-0" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
