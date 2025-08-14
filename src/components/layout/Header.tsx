@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Overlay foncé pour lisibilité */}
-        <div className="absolute inset-0  z-0" />
+        <div className="absolute inset-0   z-0" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
@@ -100,7 +100,7 @@ export const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center space-x-6 bg-white/10 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">
+            <nav className="hidden md:flex items-center space-x-6 bg-black/30 px-6 py-2 rounded-full backdrop-blur-md border border-white/20">
               {navigation.map((item) => (
                 <div key={item.name} className="relative group">
                   {item.submenu ? (
@@ -108,7 +108,7 @@ export const Header: React.FC = () => {
                       onClick={() => toggleMenu(item.name)}
                       className={`px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer ${
                         isActive(item.href) || hasActiveSubmenu(item.submenu)
-                          ? "text-yellow-400 bg-white/20"
+                          ? "text-yellow-400 bg-black/20"
                           : "text-white hover:text-yellow-400 hover:bg-white/10"
                       }`}
                     >
@@ -137,7 +137,7 @@ export const Header: React.FC = () => {
                       to={item.href}
                       className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                         isActive(item.href, item.exact)
-                          ? "text-yellow-400 bg-white/20"
+                          ? "text-yellow-400 bg-black/20"
                           : "text-white hover:text-yellow-400 hover:bg-white/10"
                       }`}
                     >
@@ -175,7 +175,7 @@ export const Header: React.FC = () => {
             <div
               className={`${
                 isMenuOpen ? "block" : "hidden"
-              } md:hidden absolute top-20 left-4 right-4 bg-white rounded-lg shadow-lg overflow-hidden z-50 max-h-[80vh] overflow-y-auto`}
+              } md:hidden absolute top-20 left-4 right-4 bg-black rounded-lg shadow-lg overflow-hidden z-50 max-h-[80vh] overflow-y-auto`}
             >
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {navigation.map((item) => (
@@ -280,11 +280,11 @@ export const Header: React.FC = () => {
           {/* Hero Section dynamique */}
           <div className="mt-10 mb-16 max-w-2xl">
             {location.pathname === "/" && (
-              <div>
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+              <div className=" ">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t("hero.title", "Entrega Rápida e Confiável em Luanda")}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 [text-shadow:_0_3px_3px_rgba(0,0,0,0.8)]">
                   {t(
                     "hero.subtitle",
                     "Seu parceiro de confiança para todas as entregas em Angola."
@@ -300,10 +300,10 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/services" && (
               <div>
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t("services.title", "Nossos Serviços")}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "services.subtitle",
                     "Descubra todas as nossas soluções de entrega adaptadas às suas necessidades."
@@ -319,10 +319,10 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/about" && (
               <div>
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t("about.title", "Sobre a Topronto")}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "about.subtitle",
                     "Uma equipe apaixonada ao serviço da sua logística."
@@ -338,10 +338,10 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/careers" && (
               <div>
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t("careers.title", "Junte-se à Topronto")}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "careers.subtitle",
                     "Descubra nossas oportunidades e candidate-se hoje mesmo."
@@ -357,10 +357,10 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/contact" && (
               <div>
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t("contact.title", "Contate-nos")}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "contact.subtitle",
                     "Nossa equipe está à disposição para todas as suas solicitações."
@@ -376,13 +376,13 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/drivers" && (
               <div className="text-center lg:text-left">
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "drivers.hero.title",
                     "Cadastre-se e seja um motorista parceiro"
                   )}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "drivers.hero.subtitle",
                     "Ganhe dinheiro extra com seu próprio horário e seja dono do seu negócio."
@@ -398,13 +398,13 @@ export const Header: React.FC = () => {
             )}
             {location.pathname === "/enterprise" && (
               <div className="text-center lg:text-left">
-                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 drop-shadow">
+                <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "enterprise.hero.title",
                     "Otimize a logística do seu negócio"
                   )}
                 </h1>
-                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0">
+                <p className="text-lg sm:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "enterprise.hero.subtitle",
                     "Entregas rápidas e confiáveis para impulsionar o seu negócio."
