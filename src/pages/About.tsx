@@ -289,80 +289,91 @@ export const About: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Grille des fonctionnalités */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.6,
-                    delay: idx * 0.1,
-                  },
-                }}
-                viewport={{ once: true, margin: "-100px" }}
-                whileHover={{ y: -5 }}
-                className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
-              >
-                {/* Image de fond */}
-                <div className="absolute inset-0 z-0">
-                  <img
-                    src={
-                      feature.backgroundImage || "/images/placeholder-bg.jpg"
-                    }
-                    alt=""
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
-                </div>
+          {/* Slider des fonctionnalités - 2 cartes par slide (lg) */}
+          {(() => {
+            // Regroupe les features par paquets de 2 pour chaque slide
+            const chunk = <T,>(arr: T[], size: number): T[][] => {
+              const out: T[][] = [];
+              for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+              return out;
+            };
+            const slides = chunk(features, 2);
+            return (
+              <div className="flex gap-6 overflow-x-auto overflow-y-hidden no-scrollbar snap-x snap-mandatory pb-2 -mx-4 px-4">
+                {slides.map((group, slideIdx) => (
+                  <div
+                    key={slideIdx}
+                    className="snap-start shrink-0 w-[85%] sm:w-[70%] lg:w-full"
+                  >
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {group.map((feature, idx) => (
+                        <motion.div
+                          key={`${slideIdx}-${idx}`}
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{
+                            opacity: 1,
+                            y: 0,
+                            transition: { duration: 0.6, delay: (slideIdx * 2 + idx) * 0.1 },
+                          }}
+                          viewport={{ once: true, margin: "-100px" }}
+                          whileHover={{ y: -5 }}
+                          className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
+                        >
+                          {/* Image de fond */}
+                          <div className="absolute inset-0 z-0">
+                            <img
+                              src={feature.backgroundImage || "/images/placeholder-bg.jpg"}
+                              alt=""
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
+                          </div>
 
-                {/* Contenu */}
-                <div className="relative z-10 flex flex-col h-full p-8 text-white">
-                  <div className="flex-grow">
-                    {/* Icône ou image */}
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
-                      <img
-                        src={feature.image}
-                        alt={feature.title[currentLanguage]}
-                        className="w-8 h-8 md:w-10 md:h-10 object-contain"
-                      />
+                          {/* Contenu */}
+                          <div className="relative z-10 flex flex-col h-full p-8 text-white">
+                            <div className="flex-grow">
+                              {/* Icône ou image */}
+                              <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
+                                <img
+                                  src={feature.image}
+                                  alt={feature.title[currentLanguage]}
+                                  className="w-8 h-8 md:w-10 md:h-10 object-contain"
+                                />
+                              </div>
+
+                              {/* Titre et description */}
+                              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
+                                {feature.title[currentLanguage]}
+                              </h3>
+                              <p className="text-gray-200 leading-relaxed mb-6">
+                                {feature.description[currentLanguage]}
+                              </p>
+                            </div>
+
+                            {/* Bouton en savoir plus */}
+                            <div className="mt-auto">
+                              <div className="inline-flex items-center text-green-300 font-medium group-hover:text-white transition-colors border-b border-transparent group-hover:border-green-300 pb-1">
+                                <span className="mr-2">
+                                  {getTranslatedText(
+                                    { pt: "Saiba mais", en: "Learn more", fr: "En savoir plus" },
+                                    currentLanguage
+                                  )}
+                                </span>
+                                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Effet de survol */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </motion.div>
+                      ))}
                     </div>
-
-                    {/* Titre et description */}
-                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
-                      {feature.title[currentLanguage]}
-                    </h3>
-                    <p className="text-gray-200 leading-relaxed mb-6">
-                      {feature.description[currentLanguage]}
-                    </p>
                   </div>
-
-                  {/* Bouton en savoir plus */}
-                  <div className="mt-auto">
-                    <div className="inline-flex items-center text-green-300 font-medium group-hover:text-white transition-colors border-b border-transparent group-hover:border-green-300 pb-1">
-                      <span className="mr-2">
-                        {getTranslatedText(
-                          {
-                            pt: "Saiba mais",
-                            en: "Learn more",
-                            fr: "En savoir plus",
-                          },
-                          currentLanguage
-                        )}
-                      </span>
-                      <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Effet de survol */}
-                <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </motion.div>
-            ))}
-          </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </section>
 

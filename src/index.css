@@ -70,3 +70,12 @@ html {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
+
+/* Utility to hide scrollbars (cross-browser) */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

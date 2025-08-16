@@ -5,6 +5,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { ArrowRight, Link } from "lucide-react";
 import { motion } from "framer-motion";
 import { BenefitsSlider } from "../components/BenefitsSlider";
+import { getTranslatedText } from "@/utils/translations";
 
 // Composant Carrousel pour les avantages
 const benefits = [
@@ -107,28 +108,38 @@ export const Careers: React.FC = () => {
           ></div>
 
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">
-              {currentLanguage === "pt" &&
-                "Pronto para otimizar sua logística?"}
-              {currentLanguage === "en" && "Ready to optimize your logistics?"}
-              {currentLanguage === "fr" &&
-                "Prêt à optimiser votre logistique ?"}
+            <h2 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-6 drop-shadow-lg">
+              {getTranslatedText(
+                {
+                  pt: "Entre em Contato Conosco",
+                  en: "Get in Touch with Us",
+                  fr: "Contactez-Nous",
+                },
+                currentLanguage
+              )}
             </h2>
-            <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
-              {currentLanguage === "pt" &&
-                "Entre em contato conosco hoje mesmo para uma consulta gratuita."}
-              {currentLanguage === "en" &&
-                "Contact us today for a free consultation."}
-              {currentLanguage === "fr" &&
-                "Contactez-nous dès aujourd'hui pour une consultation gratuite."}
+            <p className="text-lg mb-8 drop-shadow">
+              {getTranslatedText(
+                {
+                  pt: "Estamos aqui para ajudar! Entre em contato conosco para mais informações sobre nossos serviços.",
+                  en: "We are here to help! Contact us for more information about our services.",
+                  fr: "Nous sommes là pour vous aider ! Contactez-nous pour plus d'informations sur nos services.",
+                },
+                currentLanguage
+              )}
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center bg-white text-green-700 font-semibold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 bg-yellow-400 text-green-900 font-semibold rounded-full hover:bg-yellow-300 transition-colors shadow"
             >
-              {currentLanguage === "pt" && "Fale Conosco"}
-              {currentLanguage === "en" && "Contact Us"}
-              {currentLanguage === "fr" && "Contactez-nous"}
+              {getTranslatedText(
+                {
+                  pt: "Fale Conosco",
+                  en: "Contact Us",
+                  fr: "Contactez-Nous",
+                },
+                currentLanguage
+              )}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </div>
