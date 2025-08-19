@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist.",
+    "backToHome": "Go back home"
+  },
   "nav": {
     "home": "Home",
     "services": "Services",

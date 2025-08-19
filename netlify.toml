@@ -6,12 +6,26 @@
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["formidable", "nodemailer"]
-
   included_files = ["netlify/functions/*.cjs"]
-  # Augmenter le timeout à 60 secondes
+  
   [functions.sendmail]
     timeout = 60  # 60 secondes
 
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/404"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
 
 [dev]
   framework = "vite"

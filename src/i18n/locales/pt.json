@@ -1,4 +1,9 @@
 {
+  "notFound": {
+    "title": "Página não encontrada",
+    "message": "A página que procura não existe.",
+    "backToHome": "Voltar à página inicial"
+  },
   "nav": {
     "home": "Início",
     "services": "Serviços",
