@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
   return (
     <>
       <header
-        className=" relative h-screen sm:px-4 lg:px-8 xl:px-16 2xl:px-32 text-white bg-cover bg-center bg-no-repeat overflow-hidden"
+        className=" relative h-[calc(100vh-1rem)] md:h-screen sm:px-4 lg:px-8 xl:px-16 2xl:px-32 text-white bg-cover bg-right md:bg-center bg-no-repeat overflow-hidden"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         {/* Overlay foncé pour lisibilité */}
@@ -95,7 +95,7 @@ export const Header: React.FC = () => {
               <img
                 src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
                 alt="Topronto Logo"
-                className=" h-20 w-auto rounded-lg"
+                className=" h-14 md:h-20 w-auto rounded-lg"
               />
             </Link>
 
@@ -272,7 +272,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Lang + Mobile Toggle */}
-            <div className="flex items-center space-x-4">
+            <div className=" hidden md:flex items-center space-x-4">
               <LanguageSelector />
             </div>
           </div>
@@ -397,7 +397,7 @@ export const Header: React.FC = () => {
               </div>
             )}
             {location.pathname === "/enterprise" && (
-              <div className="text-center lg:text-left">
+              <div className="">
                 <h1 className="text-3xl sm:text-6xl font-bold text-yellow-400 mb-4 [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
                   {t(
                     "enterprise.hero.title",
