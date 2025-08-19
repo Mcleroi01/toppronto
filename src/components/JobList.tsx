@@ -72,7 +72,11 @@ export default function JobList({ currentLanguage }: JobListProps) {
         setJobs(jobs);
       } catch (err) {
         console.error('Error loading jobs:', err);
-        setError('Failed to load job offers. Please try again later.');
+        let errorMessage = 'Failed to load job offers. Please try again later.';
+        if (err instanceof Error && err.message.includes('Supabase')) {
+            errorMessage = 'There is a configuration problem. The site administrator needs to configure the Supabase environment variables.'
+        }
+        setError(errorMessage);
         setJobs([]); // Réinitialiser la liste des jobs en cas d'erreur
       } finally {
         setIsLoading(false);
