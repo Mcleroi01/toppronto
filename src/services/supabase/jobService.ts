@@ -34,6 +34,36 @@ export const getJobOffers = async (filters: JobFilters = {}) => {
   console.log('getJobOffers called with filters:', JSON.stringify(filters, null, 2));
   
   try {
+    console.log('Testing Supabase connection and RLS...');
+    
+    // Test 1: Compter les offres actives
+    const { count, error: countError } = await supabase
+      .from('job_offers')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true);
+      
+    // Test 2: Récupérer les 5 premières offres
+    const { data: testJobs, error: fetchError } = await supabase
+      .from('job_offers')
+      .select('*')
+      .eq('is_active', true)
+      .limit(5);
+    
+    if (countError || fetchError) {
+      console.error('Supabase test failed:', {
+        countError,
+        fetchError,
+        rlsHint: 'Vérifiez les politiques RLS dans Supabase > Authentication > Policies'
+      });
+    } else {
+      console.log('Supabase test results:', {
+        activeJobsCount: count,
+        fetchedJobs: testJobs?.length || 0,
+        firstJob: testJobs?.[0] ? 'exists' : 'none',
+        rlsStatus: 'Si le comptage est différent de zéro mais que fetchedJobs est vide, vérifiez les politiques RLS'
+      });
+    }
+
     console.log('Creating Supabase query...');
     let query = supabase
       .from('job_offers')

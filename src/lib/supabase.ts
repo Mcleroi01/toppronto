@@ -32,18 +32,37 @@ const supabaseOptions = {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, supabaseOptions);
 
-// Tester la connexion à Supabase au démarrage
+// Tester la connexion et les permissions RLS
 const testConnection = async () => {
   try {
-    console.log('Testing Supabase connection...');
-    const { data, error } = await supabase
+    console.log('Testing Supabase connection and RLS...');
+    
+    // Test 1: Compter les offres actives
+    const { count, error: countError } = await supabase
       .from('job_offers')
-      .select('count', { count: 'exact', head: true });
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true);
       
-    if (error) {
-      console.error('Supabase connection test failed:', error);
+    // Test 2: Récupérer les 5 premières offres
+    const { data: jobsData, error: fetchError } = await supabase
+      .from('job_offers')
+      .select('*')
+      .eq('is_active', true)
+      .limit(5);
+    
+    if (countError || fetchError) {
+      console.error('Supabase test failed:', {
+        countError,
+        fetchError,
+        rlsHint: 'Vérifiez les politiques RLS dans Supabase > Authentication > Policies'
+      });
     } else {
-      console.log('Supabase connection test successful, job count:', data ? 'data received' : 'no data');
+      console.log('Supabase test results:', {
+        activeJobsCount: count,
+        fetchedJobs: jobsData?.length || 0,
+        firstJob: jobsData?.[0] ? 'exists' : 'none',
+        rlsStatus: 'Si le comptage est différent de zéro mais que fetchedJobs est vide, vérifiez les politiques RLS'
+      });
     }
   } catch (err) {
     console.error('Error testing Supabase connection:', err);
