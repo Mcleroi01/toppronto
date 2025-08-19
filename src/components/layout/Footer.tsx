@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
               <img
                 src="/images/logo/logo.png" // Mettez le bon chemin de votre logo
                 alt="Topronto Logo"
-                className=" h-32 w-auto rounded-lg"
+                className=" h-20 w-auto rounded-lg"
               />
             </Link>
 

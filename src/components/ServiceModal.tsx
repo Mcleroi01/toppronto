@@ -6,9 +6,10 @@ interface ServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
   service: {
-    title: string;
+    id: string;
+    name: string;
     description: string;
-    importance: string[];
+    importance?: string[];
     image: string;
   };
 }
@@ -53,8 +54,8 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
               {/* Hero Image */}
               <div className="h-64 w-full overflow-hidden rounded-t-2xl">
                 <img
-                  src={`/images/services/${service.image}.jpg`}
-                  alt={service.title}
+                  src={`/images/services/${service.image}`}
+                  alt={service.name}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -62,7 +63,7 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
               {/* Content */}
               <div className="p-6 md:p-8">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                  {service.title}
+                  {service.name}
                 </h2>
                 
                 <p className="text-gray-600 text-lg mb-6">
@@ -70,31 +71,35 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
                 </p>
 
                 <div className="mt-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Key Benefits
-                  </h3>
-                  <ul className="space-y-3">
-                    {service.importance.map((item, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="flex-shrink-0 h-6 w-6 text-green-500 mr-3 mt-0.5">
-                          <svg
-                            className="h-full w-full"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                        <span className="text-gray-700">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {service.importance && service.importance.length > 0 && (
+                    <>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Key Benefits
+                      </h3>
+                      <ul className="space-y-3">
+                        {service.importance.map((item, index) => (
+                          <li key={index} className="flex items-start">
+                            <div className="flex-shrink-0 h-6 w-6 text-green-500 mr-3 mt-0.5">
+                              <svg
+                                className="h-full w-full"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            </div>
+                            <span className="text-gray-700">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-gray-100">

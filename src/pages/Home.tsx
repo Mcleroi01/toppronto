@@ -6,7 +6,6 @@ import {
   Bike,
   Shield,
   Users,
-  Truck,
   ArrowRight,
   ChevronLeft,
   ChevronRight,
@@ -73,7 +72,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ currentLanguage }) => {
 
 // Composant Carousel pour afficher les fonctionnalités
 interface Feature {
-  icon: any;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: TranslationObject;
   description: TranslationObject;
   backgroundImage: string;
@@ -288,9 +287,9 @@ export const Home: React.FC = () => {
         fr: "Livraisons en 2 heures à Luanda",
       },
       backgroundImage:
-        "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
+        "/images/services/rapida.jpg",
       image:
-        "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
+        "/images/services/rapida.jpg",
     },
     {
       icon: Shield,
@@ -305,9 +304,9 @@ export const Home: React.FC = () => {
         fr: "Produits sécurisés et suivi en temps réel",
       },
       backgroundImage:
-        "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
+        "/images/services/securite.jpg",
       image:
-        "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
+        "/images/services/securite.jpg",
     },
     {
       icon: Users,
@@ -322,9 +321,9 @@ export const Home: React.FC = () => {
         fr: "Chauffeurs formés et expérimentés",
       },
       backgroundImage:
-        "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+        "/images/services/equipe.jpg",
       image:
-        "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+        "/images/services/equipe.jpg",
     },
   ];
 

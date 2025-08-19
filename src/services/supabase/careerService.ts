@@ -13,7 +13,10 @@ const jobApplicationSchema = z.object({
   job_offer_id: z.string().optional(),
   // Les URLs des fichiers sont gérées directement dans le stockage, pas dans la base de données
   status: z.enum(['pending', 'reviewed', 'accepted', 'rejected']).default('pending'),
-  created_at: z.string()
+  created_at: z.string(),
+  // Références de fichiers stockées avec la candidature
+  cv_url: z.string().url().optional(),
+  id_card_url: z.string().url().optional(),
 });
 
 // Type TypeScript généré à partir du schéma Zod
@@ -114,8 +117,8 @@ export interface JobApplicationData {
 // Soumettre une candidature
 export const submitJobApplication = async (applicationData: JobApplicationData) => {
   try {
-    // Télécharger les fichiers en parallèle
-    await Promise.all([
+    // Télécharger les fichiers en parallèle et récupérer les URLs publiques
+    const [cvUrl, idCardUrl] = await Promise.all([
       uploadFile(applicationData.cv, 'cv'),
       uploadFile(applicationData.idCard, 'idCard')
     ]);
@@ -146,6 +149,8 @@ export const submitJobApplication = async (applicationData: JobApplicationData) 
       job_offer_id: applicationData.jobOfferId,
       status: 'pending' as const,
       created_at: new Date().toISOString(),
+      cv_url: cvUrl,
+      id_card_url: idCardUrl,
     };
 
     // Valider les données

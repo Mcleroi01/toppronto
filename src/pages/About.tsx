@@ -1,20 +1,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLanguage } from "../hooks/useLanguage";
 import { FAQAccordion } from "../components/FAQAccordion";
-import { Shield, Bike, Users, Link, ArrowRight } from "lucide-react";
+import { Shield, Bike, Users, ArrowRight } from "lucide-react";
 import PricingSection from "@/components/enterprise/PricingSection";
+import { getTranslatedText, Language } from "@/utils/translations";
+import FeaturesCarousel from "@/components/common/FeaturesCarousel";
 
-type Language = "pt" | "en" | "fr";
-
-type TranslationObject = {
-  [key in Language]: string;
-} & { defaultValue?: string };
-
-const getTranslatedText = (obj: TranslationObject, lang: Language): string => {
-  return obj[lang] || obj.defaultValue || "";
-};
+// Using shared Language and getTranslatedText from utils/translations
 
 export const About: React.FC = () => {
   const { t } = useTranslation();
@@ -73,7 +68,13 @@ export const About: React.FC = () => {
       },
     ],
   };
-  const features = [
+  const features: Array<{
+    icon: React.ComponentType<{ className?: string }>;
+    title: Record<Language, string>;
+    description: Record<Language, string>;
+    backgroundImage: string;
+    image: string;
+  }> = [
     {
       icon: Bike,
       title: {
@@ -87,9 +88,9 @@ export const About: React.FC = () => {
         fr: "Livraisons en 2 heures à Luanda",
       },
       backgroundImage:
-        "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
+        "/images/services/rapida.jpg",
       image:
-        "https://cdn.prod.website-files.com/637d6390b70424b49c14ff1e/66066981f2d884346df02cbc_deliver-packages-faster-HERO.webp",
+        "/images/services/rapida.jpg",
     },
     {
       icon: Shield,
@@ -104,9 +105,9 @@ export const About: React.FC = () => {
         fr: "Produits sécurisés et suivi en temps réel",
       },
       backgroundImage:
-        "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
+        "/images/services/securite.jpg",
       image:
-        "https://images.squarespace-cdn.com/content/v1/6047adb1f3383c71b64f494b/22f1c571-9121-4d6c-9c0b-406e2824742b/Untitled+%283+x+2+in%29+%2811%29.png",
+        "/images/services/securite.jpg",
     },
     {
       icon: Users,
@@ -121,9 +122,9 @@ export const About: React.FC = () => {
         fr: "Chauffeurs formés et expérimentés",
       },
       backgroundImage:
-        "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+        "/images/services/equipe.jpg",
       image:
-        "https://media.istockphoto.com/id/1474043686/photo/business-manager-talking-to-a-group-of-employees-at-a-distribution-warehouse.jpg?s=612x612&w=0&k=20&c=i-sXngKASrpPfoOA0-NdebfCHbFlLZ_OsDyyQspvNWw=",
+        "/images/services/equipe.jpg",
     },
   ];
   return (
@@ -289,91 +290,8 @@ export const About: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Slider des fonctionnalités - 2 cartes par slide (lg) */}
-          {(() => {
-            // Regroupe les features par paquets de 2 pour chaque slide
-            const chunk = <T,>(arr: T[], size: number): T[][] => {
-              const out: T[][] = [];
-              for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-              return out;
-            };
-            const slides = chunk(features, 2);
-            return (
-              <div className="flex gap-6 overflow-x-auto overflow-y-hidden no-scrollbar snap-x snap-mandatory pb-2 -mx-4 px-4">
-                {slides.map((group, slideIdx) => (
-                  <div
-                    key={slideIdx}
-                    className="snap-start shrink-0 w-[85%] sm:w-[70%] lg:w-full"
-                  >
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      {group.map((feature, idx) => (
-                        <motion.div
-                          key={`${slideIdx}-${idx}`}
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{
-                            opacity: 1,
-                            y: 0,
-                            transition: { duration: 0.6, delay: (slideIdx * 2 + idx) * 0.1 },
-                          }}
-                          viewport={{ once: true, margin: "-100px" }}
-                          whileHover={{ y: -5 }}
-                          className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 h-full min-h-[300px] flex flex-col"
-                        >
-                          {/* Image de fond */}
-                          <div className="absolute inset-0 z-0">
-                            <img
-                              src={feature.backgroundImage || "/images/placeholder-bg.jpg"}
-                              alt=""
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
-                          </div>
-
-                          {/* Contenu */}
-                          <div className="relative z-10 flex flex-col h-full p-8 text-white">
-                            <div className="flex-grow">
-                              {/* Icône ou image */}
-                              <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-white/20">
-                                <img
-                                  src={feature.image}
-                                  alt={feature.title[currentLanguage]}
-                                  className="w-8 h-8 md:w-10 md:h-10 object-contain"
-                                />
-                              </div>
-
-                              {/* Titre et description */}
-                              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
-                                {feature.title[currentLanguage]}
-                              </h3>
-                              <p className="text-gray-200 leading-relaxed mb-6">
-                                {feature.description[currentLanguage]}
-                              </p>
-                            </div>
-
-                            {/* Bouton en savoir plus */}
-                            <div className="mt-auto">
-                              <div className="inline-flex items-center text-green-300 font-medium group-hover:text-white transition-colors border-b border-transparent group-hover:border-green-300 pb-1">
-                                <span className="mr-2">
-                                  {getTranslatedText(
-                                    { pt: "Saiba mais", en: "Learn more", fr: "En savoir plus" },
-                                    currentLanguage
-                                  )}
-                                </span>
-                                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Effet de survol */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          {/* Features Carousel */}
+          <FeaturesCarousel features={features} currentLanguage={currentLanguage} />
         </div>
       </section>
 

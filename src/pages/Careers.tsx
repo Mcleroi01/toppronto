@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import JobList from "../components/JobList";
 import { useLanguage } from "../hooks/useLanguage";
-import { ArrowRight, Link } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { BenefitsSlider } from "../components/BenefitsSlider";
 import { getTranslatedText } from "@/utils/translations";
 

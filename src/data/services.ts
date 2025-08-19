@@ -1,4 +1,4 @@
-import { Shield, Users, Bike, Car, Truck } from "lucide-react";
+import { Shield } from "lucide-react";
 export const services = [
   {
     id: "1",
