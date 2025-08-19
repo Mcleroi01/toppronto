@@ -31,11 +31,16 @@ export type JobFilters = {
 
 // Récupérer toutes les offres d'emploi
 export const getJobOffers = async (filters: JobFilters = {}) => {
+  console.log('getJobOffers called with filters:', JSON.stringify(filters, null, 2));
+  
   try {
+    console.log('Creating Supabase query...');
     let query = supabase
       .from('job_offers')
       .select('*')
       .eq('is_active', true);
+      
+    console.log('Base query created');
 
     // Appliquer les filtres
     if (filters.search) {
@@ -50,18 +55,39 @@ export const getJobOffers = async (filters: JobFilters = {}) => {
       query = query.in('employment_type', filters.employment_type);
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    console.log('Executing Supabase query...');
+    const { data, error, status, statusText } = await query.order('created_at', { ascending: false });
+    
+    console.log('Query result:', {
+      status,
+      statusText,
+      error,
+      dataLength: data?.length || 0
+    });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase query error:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint
+      });
+      throw error;
+    }
 
-    // Valider les données avec Zod
+    console.log('Validating data with Zod...');
     const validatedData = z.array(jobOfferSchema).safeParse(data);
     
     if (!validatedData.success) {
-      console.error('Erreur de validation des données:', validatedData.error);
+      console.error('Erreur de validation des données:', {
+        error: validatedData.error,
+        firstInvalidItem: data?.[0],
+        dataLength: data?.length
+      });
       throw new Error('Données des offres d\'emploi invalides');
     }
 
+    console.log('Data validated successfully, returning', validatedData.data.length, 'jobs');
     return validatedData.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des offres d\'emploi:', error);

@@ -40,12 +40,14 @@ export default function JobList({ currentLanguage }: JobListProps) {
 
   // Fetch jobs from Supabase
   useEffect(() => {
+    console.log('useEffect triggered');
+    
     const loadJobs = async () => {
       try {
+        console.log('Starting to load jobs...');
         setIsLoading(true);
         setError(null);
         
-        // Convert our filter format to the Supabase filter format
         const supabaseFilters: JobFilters = {
           is_active: true,
           search: searchQuery || undefined,
@@ -54,18 +56,28 @@ export default function JobList({ currentLanguage }: JobListProps) {
           date_posted: filters.datePosted || undefined
         };
 
+        console.log('Calling getJobOffers with filters:', supabaseFilters);
         const jobs = await getJobOffers(supabaseFilters);
         
+        console.log('Received jobs:', jobs);
+        
         if (jobs === null) {
+          console.error('getJobOffers returned null');
           throw new Error('Failed to fetch jobs');
         }
         
         setJobs(jobs);
       } catch (err) {
-        console.error('Error loading jobs:', err);
+        console.error('Error loading jobs:', {
+          message: err instanceof Error ? err.message : 'Unknown error',
+          error: err,
+          env: import.meta.env.MODE,
+          supabaseUrl: import.meta.env.VITE_SUPABASE_URL ? 'Configured' : 'Missing'
+        });
         setError('Failed to load job offers. Please try again later.');
-        setJobs([]); // Réinitialiser la liste des jobs en cas d'erreur
+        setJobs([]);
       } finally {
+        console.log('Loading finished');
         setIsLoading(false);
       }
     };
