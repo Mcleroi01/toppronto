@@ -23,15 +23,6 @@ export interface FilterChangeHandler {
   (field: keyof FilterOptions, value: string): void;
 }
 
-// Fonction utilitaire pour formater la date
-const formatDate = (dateString: string, locale: string = 'fr-FR') => {
-  return new Date(dateString).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
-
 export default function JobList({ currentLanguage }: JobListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -86,8 +77,9 @@ export default function JobList({ currentLanguage }: JobListProps) {
     if (!job.is_active) return false;
     
     // Filter by job type
+    const employmentType = job.employment_type as 'full-time' | 'part-time' | 'contract';
     const matchesType = filters.type.length === 0 || 
-      filters.type.includes(job.employment_type as any);
+      filters.type.includes(employmentType);
 
     // Filter by location (handled by Supabase)
     
