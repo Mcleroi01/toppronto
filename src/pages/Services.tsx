@@ -38,24 +38,24 @@ const faqs = {
     {
       question: "Como posso solicitar um serviço de entrega?",
       answer:
-        "Você pode solicitar um serviço de entrega entrando em contato conosco através do nosso site, aplicativo ou por telefone. Nossa equipe irá guiá-lo pelo processo.",
+        "Você pode solicitar um serviço de entrega entrando em contato connosco através do nosso site, WhatsApp, aplicativo ou por telefone. Nossa equipe irá guiá-lo pelo processo.",
     },
     {
-      question: "Quais são as áreas de cobertura?",
+      question: "Quais São as áreas de cobertura que nós atendemos?",
       answer:
-        "Atendemos em toda a região metropolitana, com cobertura em todas as principais cidades. Entre em contato para verificar a disponibilidade na sua região.",
+        "Atendemos em toda a região metropolitana, com cobertura em todas as principais cidades. Entre em contato para verificar a disponibilidade na sua região.Atendemos em toda região da provincial de Luanda, e algumas regiões nas provincias de BENGUELA, LOBITO, LUBANGO, HUAMBO, MALANJE e BIÉ.",
     },
     {
       question: "Quais são os métodos de pagamento aceitos?",
       answer:
-        "Aceitamos cartões de crédito/débito, transferência bancária e pagamento na entrega em algumas localizações.",
+        "Aceitamos cartões de crédito/débito, transferência bancária e pagamento na entrega em algumas localizações.Aceitamos todos os métodos de pagamentos usados em Angola, desde cartões, transferência, Multicaixa expresso e pagamentos na entrega.",
     },
   ],
   en: [
     {
       question: "How can I request a delivery service?",
       answer:
-        "You can request a delivery service by contacting us through our website, app, or by phone. Our team will guide you through the process.",
+        "You can request a delivery service by contacting us through our website, WhatsApp, app, or by phone. Our team will guide you through the process.",
     },
     {
       question: "What are the coverage areas?",
@@ -72,7 +72,7 @@ const faqs = {
     {
       question: "Comment puis-je demander un service de livraison ?",
       answer:
-        "Vous pouvez demander un service de livraison en nous contactant via notre site Web, notre application ou par téléphone. Notre équipe vous guidera tout au long du processus.",
+        "Vous pouvez demander un service de livraison en nous contactant via notre site Web, WhatsApp, application ou par téléphone. Notre équipe vous guidera tout au long du processus.",
     },
     {
       question: "Quelles sont les zones de couverture ?",

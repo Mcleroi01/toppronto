@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
 
 interface FAQAccordionProps {
   faqs: {

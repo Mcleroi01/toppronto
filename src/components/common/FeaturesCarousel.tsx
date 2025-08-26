@@ -22,16 +22,18 @@ const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({ features, currentLa
   const slideInterval = useRef<NodeJS.Timeout>();
   const slideDuration = 5000; // 5 seconds per slide
 
-  // Group features into slides of 2
+  // Créer des paires de cartes avec chevauchement
   const slides = useMemo(() => {
-    const chunk = <T,>(arr: T[], size: number): T[][] => {
-      const out: T[][] = [];
-      for (let i = 0; i < arr.length; i += size) {
-        out.push(arr.slice(i, i + size));
-      }
-      return out;
-    };
-    return chunk(features, 2);
+    if (features.length === 0) return [];
+    if (features.length <= 2) return [features];
+    
+    const slides = [];
+    for (let i = 0; i < features.length; i++) {
+      const current = features[i];
+      const next = features[(i + 1) % features.length];
+      slides.push([current, next]);
+    }
+    return slides;
   }, [features]);
 
   const nextSlide = () => {
@@ -76,14 +78,16 @@ const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({ features, currentLa
       <div className="overflow-hidden">
         <div 
           className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          style={{ 
+            display: 'flex',
+            width: '100%',
+            transform: `translateX(-${currentSlide * 100}%)`,
+            transition: 'transform 0.5s ease-in-out'
+          }}
         >
           {slides.map((group, slideIdx) => (
-            <div
-              key={slideIdx}
-              className="w-full flex-shrink-0 px-4"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div key={slideIdx} className="w-full flex-shrink-0 px-4" style={{ minWidth: '100%' }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 {group.map((feature, idx) => (
                   <motion.div
                     key={`${slideIdx}-${idx}`}
@@ -91,7 +95,7 @@ const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({ features, currentLa
                     whileInView={{
                       opacity: 1,
                       y: 0,
-                      transition: { duration: 0.6, delay: (slideIdx * 2 + idx) * 0.1 },
+                      transition: { duration: 0.6, delay: idx * 0.1 },
                     }}
                     viewport={{ once: true, margin: "-100px" }}
                     whileHover={{ y: -5 }}

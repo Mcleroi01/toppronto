@@ -35,7 +35,7 @@ export const vehicles: Vehicle[] = [
     image: "/images/vehicules/bike.png",
     limite: "20 kg",
     Tamanho: "35 × 40 × 35 cm ",
-    Ideal: "documentos, flores, pacotes pequenos e delivery de comida. ",
+    Ideal: "documentos, flores, pequenos pacotes e entrega de comida",
   },
   {
     type: 'city-car',
@@ -52,7 +52,7 @@ export const vehicles: Vehicle[] = [
     },
     image: "/images/vehicules/city-car.jpg",
     limite: "50 kg",
-    Ideal: "documents, colis légers, et petits meubles.",
+    Ideal: "documentos, pacotes leves e mobiliário pequeno",
     volume: "200 litros ",
   },
   {
@@ -70,7 +70,7 @@ export const vehicles: Vehicle[] = [
     },
     image: "/images/vehicules/utility-car.png",
     limite: "100 kg",
-    Ideal: "meubles, électroménagers, et colis volumineux.",
+    Ideal: "documentos, móveis, eletrodomésticos e pacotes volumosos",
     volume: "400 litros ",
   },
   {
@@ -88,7 +88,7 @@ export const vehicles: Vehicle[] = [
     },
     image: "/images/vehicules/van.png",
     limite: "200 kg",
-    Ideal: "meubles, électroménagers, et colis volumineux.",
+    Ideal: "documentos, móveis, eletrodomésticos e pacotes volumosos",
     volume: "800 litros ",
   },
   {
@@ -106,7 +106,7 @@ export const vehicles: Vehicle[] = [
     },
     image: "/images/vehicules/pickup.jpg",
     limite: "300 kg",
-    Ideal: "meubles, électroménagers, et colis volumineux.",
+    Ideal: "móveis, eletrodomésticos e pacotes volumososdocumentos, móveis, eletrodomésticos e pacotes volumosos",
     volume: "1000 litros ",
   },
   {
@@ -124,7 +124,7 @@ export const vehicles: Vehicle[] = [
     },
     image: "/images/vehicules/truck.png",
     limite: "500 kg",
-    Ideal: "grandes quantités, équipements lourds, et déménagements.",
+    Ideal:  "grandes quantidades, equipamentos pesados e mudanças.documentos, grandes quantidades, equipamentos pesados e mudanças.",
     volume: "2000 litros ",
   },
 ];

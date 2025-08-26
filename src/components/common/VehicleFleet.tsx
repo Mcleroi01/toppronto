@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Popover } from "@headlessui/react";
 import { X } from "lucide-react";
