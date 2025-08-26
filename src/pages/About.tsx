@@ -20,17 +20,17 @@ export const About: React.FC = () => {
       {
         question: "Como posso solicitar um serviço de entrega?",
         answer:
-          "Você pode solicitar um serviço de entrega entrando em contato conosco através do nosso site, aplicativo ou por telefone. Nossa equipe irá guiá-lo pelo processo.",
+          "Você pode solicitar um serviço de entrega entrando em contato connosco através do nosso site, WhatsApp, aplicativo ou por telefone. Nossa equipe irá guiá-lo pelo processo.",
       },
       {
         question: "Quais são as áreas de cobertura?",
         answer:
-          "Atendemos em toda a região metropolitana, com cobertura em todas as principais cidades. Entre em contato para verificar a disponibilidade na sua região.",
+          "Atendemos em toda região da provincial de Luanda, e algumas regiões nas provincias de BENGUELA, LOBITO, LUBANGO, HUAMBO, MALANJE e BIÉ.",
       },
       {
         question: "Quais são os métodos de pagamento aceitos?",
         answer:
-          "Aceitamos cartões de crédito/débito, transferência bancária e pagamento na entrega em algumas localizações.",
+          "Aceitamos todos os métodos de pagamentos usados em Angola, desde cartões, transferência, Multicaixa expresso e pagamentos na entrega.",
       },
     ],
     en: [
