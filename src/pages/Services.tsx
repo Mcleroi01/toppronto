@@ -43,12 +43,12 @@ const faqs = {
     {
       question: "Quais São as áreas de cobertura que nós atendemos?",
       answer:
-        "Atendemos em toda a região metropolitana, com cobertura em todas as principais cidades. Entre em contato para verificar a disponibilidade na sua região.Atendemos em toda região da provincial de Luanda, e algumas regiões nas provincias de BENGUELA, LOBITO, LUBANGO, HUAMBO, MALANJE e BIÉ.",
+        "Atendemos em toda região da provincial de Luanda, e algumas regiões nas provincias de BENGUELA, LOBITO, LUBANGO, HUAMBO, MALANJE e BIÉ.",
     },
     {
       question: "Quais são os métodos de pagamento aceitos?",
       answer:
-        "Aceitamos cartões de crédito/débito, transferência bancária e pagamento na entrega em algumas localizações.Aceitamos todos os métodos de pagamentos usados em Angola, desde cartões, transferência, Multicaixa expresso e pagamentos na entrega.",
+        "Aceitamos todos os métodos de pagamentos usados em Angola, desde cartões, transferência, Multicaixa expresso e pagamentos na entrega.",
     },
   ],
   en: [

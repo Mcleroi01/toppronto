@@ -1,4 +1,5 @@
-import { Shield } from "lucide-react";
+import { Warehouse, FileText, Package, FlaskConical, Pill, Truck } from "lucide-react";
+
 export const services = [
   {
     id: "1",
@@ -13,7 +14,7 @@ export const services = [
       en: "TOPRONTO's stock management is essential for companies that need efficient inventory control, avoiding losses or excess.",
       fr: "La gestion de stock de TOPRONTO est essentielle pour les entreprises qui souhaitent contrôler efficacement leurs marchandises, en évitant pertes et excès.",
     },
-    icon: Shield,
+    icon: Warehouse,
   },
   {
     id: "2",
@@ -28,7 +29,7 @@ export const services = [
       en: "Rapid distribution of official documents, invitations, event materials and corporate communication for companies and institutions.",
       fr: "Distribution rapide de documents officiels, invitations, matériels d'événements et communication d'entreprise.",
     },
-    icon: Shield,
+    icon: FileText,
   },
   {
     id: "3",
@@ -43,7 +44,7 @@ export const services = [
       en: "Fast and secure deliveries of personal and corporate items, focusing on speed and convenience.",
       fr: "Livraisons rapides et sécurisées d'objets personnels et professionnels, avec un accent sur la rapidité et la commodité.",
     },
-    icon: Shield,
+    icon: Package,
   },
   {
     id: "4",
@@ -58,7 +59,7 @@ export const services = [
       en: "Strict protocols for safe transport of biological samples, essential for clinics, hospitals, and laboratories.",
       fr: "Protocoles stricts pour le transport sécurisé de matériel biologique, essentiel pour les cliniques, hôpitaux et laboratoires.",
     },
-    icon: Shield,
+    icon: FlaskConical,
   },
   {
     id: "5",
@@ -73,7 +74,7 @@ export const services = [
       en: "Fast delivery of medicines and health products to pharmacies, hospitals, and end customers.",
       fr: "Livraison rapide de médicaments et de produits de santé aux pharmacies, hôpitaux et clients finaux.",
     },
-    icon: Shield,
+    icon: Pill,
   },
   {
     id: "6",
@@ -88,6 +89,6 @@ export const services = [
       en: "Cargo transport for companies with personalized and scalable logistics solutions.",
       fr: "Transport de marchandises pour les entreprises avec des solutions logistiques personnalisées et évolutives.",
     },
-    icon: Shield,
+    icon: Truck,
   },
 ];

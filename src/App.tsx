@@ -8,6 +8,7 @@ import { Careers } from './pages/Careers';
 import { Contact } from './pages/Contact';
 import Enterprise from './pages/Enterprise';
 import Drivers from './pages/Drivers';
+import WhatsAppButton from './components/common/WhatsAppButton';
 import './i18n';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/enterprise" element={<Enterprise />} />
           <Route path="/drivers" element={<Drivers />} />
         </Routes>
+        <WhatsAppButton />
       </Layout>
     </Router>
   );
