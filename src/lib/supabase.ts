@@ -26,6 +26,10 @@ const supabaseOptions = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      // Important: avoid returning inserted rows by default to prevent RLS SELECT violations
+      // PostgREST uses this header to return minimal response for inserts/upsserts
+      // You can override per-request if you need the inserted representation
+      Prefer: 'return=minimal',
     },
   },
 };
