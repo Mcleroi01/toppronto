@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ProgressBar from '../components/survey/ProgressBar';
 import RatingStars from '../components/survey/RatingStars';
 import RadioGroup from '../components/survey/RadioGroup';
@@ -62,6 +62,64 @@ const Survey: React.FC = () => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const successStep = totalSteps + 1;
+  const { t } = useTranslation();
+  const [attemptedNext, setAttemptedNext] = useState(false);
+
+  // Meta tags personalization
+  useEffect(() => {
+    const lang = i18n.language?.slice(0, 2) || 'pt';
+    const titles: Record<string, string> = {
+      pt: 'Inquérito de Satisfação – TopPronto',
+      fr: 'Enquête de Satisfaction – TopPronto',
+      en: 'Satisfaction Survey – TopPronto',
+    };
+    const descs: Record<string, string> = {
+      pt: 'Partilhe a sua experiência com a plataforma de entregas TopPronto. As suas respostas ajudam-nos a melhorar o serviço.',
+      fr: 'Partagez votre expérience avec la plateforme de livraison TopPronto. Vos réponses nous aident à améliorer le service.',
+      en: 'Share your experience with TopPronto delivery platform. Your responses help us improve the service.',
+    };
+    const title = titles[lang] || titles.pt;
+    const description = descs[lang] || descs.pt;
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+
+    const prevTitle = document.title;
+    document.title = title;
+
+    const upsertMeta = (attr: 'name' | 'property', key: string, content: string) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      const prev = el.getAttribute('content') || '';
+      el.setAttribute('content', content);
+      return () => el && el.setAttribute('content', prev);
+    };
+
+    const cleanups: Array<() => void> = [];
+    cleanups.push(upsertMeta('name', 'description', description));
+    cleanups.push(upsertMeta('property', 'og:title', title));
+    cleanups.push(upsertMeta('property', 'og:description', description));
+    cleanups.push(upsertMeta('property', 'og:type', 'website'));
+    if (url) cleanups.push(upsertMeta('property', 'og:url', url));
+
+    // canonical link
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    const prevHref = link?.getAttribute('href') || '';
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    if (url) link.setAttribute('href', url);
+
+    return () => {
+      document.title = prevTitle;
+      cleanups.forEach((fn) => fn());
+      if (link && prevHref) link.setAttribute('href', prevHref);
+    };
+  }, [i18n.language]);
 
   const canGoNext = useMemo(() => {
     if (step === 0) {
@@ -73,14 +131,14 @@ const Survey: React.FC = () => {
     return true;
   }, [step, answers]);
 
-  const goNext = () => {
-    if (step < totalSteps) setStep((s) => s + 1);
-  };
-  const goPrev = () => {
-    if (step > 0) setStep((s) => s - 1);
-  };
+  const goNext = useCallback(() => {
+    setStep((s) => (s < totalSteps ? s + 1 : s));
+  }, [totalSteps]);
+  const goPrev = useCallback(() => {
+    setStep((s) => (s > 0 ? s - 1 : s));
+  }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     try {
       setIsSubmitting(true);
       console.log('Respostas do Inquérito:', answers);
@@ -93,7 +151,29 @@ const Survey: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [answers, i18n.language, successStep]);
+
+  // Enter key to advance/submit/close
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter') return;
+      if (isSubmitting) return;
+      if (step === successStep) {
+        navigate('/');
+        return;
+      }
+      if (step < totalSteps) {
+        setAttemptedNext(true);
+        if (canGoNext) goNext();
+        return;
+      }
+      if (step >= totalSteps) {
+        void handleSubmit();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step, totalSteps, successStep, canGoNext, isSubmitting, goNext, handleSubmit, navigate]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -101,9 +181,9 @@ const Survey: React.FC = () => {
       <div className="sticky top-0 z-20 bg-slate-50/80 backdrop-blur supports-[backdrop-filter]:bg-slate-50/70 border-b border-slate-100">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <ProgressBar
-            current={Math.min(step + 1, totalSteps)}
+            current={step === successStep ? totalSteps : Math.min(step + 1, totalSteps)}
             total={totalSteps}
-            label="Progresso"
+            label={t('survey.progress', 'Progresso')}
             showPercent
             compact
           />
@@ -115,9 +195,9 @@ const Survey: React.FC = () => {
         <div className={`${cardClass} animate-slideDownIn`}> 
           {step === 0 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>1. Informações Gerais</h1>
+              <h1 className={h1Class}>{t('survey.general_info.title', '1. Informações Gerais')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>Nome da Empresa/Restaurante</label>
+                <label className={labelClass}>{t('survey.general_info.company', 'Nome da Empresa/Restaurante')}</label>
                 <input
                   type="text"
                   value={answers.informacoesGerais.empresa}
@@ -127,13 +207,18 @@ const Survey: React.FC = () => {
                       informacoesGerais: { ...prev.informacoesGerais, empresa: e.target.value },
                     }))
                   }
-                  placeholder="Ex.: Pizzaria Sabor & Arte"
+                  placeholder={t('survey.general_info.company_ph', 'Ex.: Pizzaria Sabor & Arte')}
                   className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {attemptedNext && step === 0 && !canGoNext && (
+                  <p className="text-xs text-red-600 mt-1" role="alert">
+                    {t('survey.validation.fill_required', 'Por favor, preencha os campos obrigatórios.')}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <label className={labelClass}>Tempo de parceria com a plataforma</label>
+                <label className={labelClass}>{t('survey.general_info.duration', 'Tempo de parceria com a plataforma')}</label>
                 <RadioGroup<'menos_6m' | '6m_1a' | '1a_2a' | 'mais_2a'>
                   name="tempoParceria"
                   value={answers.informacoesGerais.tempoParceria}
@@ -144,10 +229,10 @@ const Survey: React.FC = () => {
                     }))
                   }
                   options={[
-                    { label: 'Menos de 6 meses', value: 'menos_6m' },
-                    { label: '6 meses a 1 ano', value: '6m_1a' },
-                    { label: '1 a 2 anos', value: '1a_2a' },
-                    { label: 'Mais de 2 anos', value: 'mais_2a' },
+                    { label: t('survey.duration.lt6', 'Menos de 6 meses'), value: 'menos_6m' },
+                    { label: t('survey.duration.6to1', '6 meses a 1 ano'), value: '6m_1a' },
+                    { label: t('survey.duration.1to2', '1 a 2 anos'), value: '1a_2a' },
+                    { label: t('survey.duration.gt2', 'Mais de 2 anos'), value: 'mais_2a' },
                   ]}
                 />
               </div>
@@ -156,9 +241,9 @@ const Survey: React.FC = () => {
 
           {step === 1 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>2. Experiência Geral</h1>
+              <h1 className={h1Class}>{t('survey.exp.title', '2. Experiência Geral')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>Como avalia a sua satisfação geral com o App?</label>
+                <label className={labelClass}>{t('survey.exp.satisfaction', 'Como avalia a sua satisfação geral com o App?')}</label>
                 <RatingStars
                   value={answers.experienciaGeral.satisfacaoGeral || 0}
                   onChange={(v) => setAnswers((prev) => ({
@@ -168,7 +253,7 @@ const Survey: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>A plataforma é fácil de usar e intuitiva?</label>
+                <label className={labelClass}>{t('survey.exp.usability', 'A plataforma é fácil de usar e intuitiva?')}</label>
                 <RadioGroup<'sim' | 'parcialmente' | 'nao'>
                   name="facilidadeUso"
                   value={answers.experienciaGeral.facilidadeUso}
@@ -177,14 +262,14 @@ const Survey: React.FC = () => {
                     experienciaGeral: { ...prev.experienciaGeral, facilidadeUso: val },
                   }))}
                   options={[
-                    { label: 'Sim', value: 'sim' },
-                    { label: 'Parcialmente', value: 'parcialmente' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('common.yes', 'Sim'), value: 'sim' },
+                    { label: t('common.partially', 'Parcialmente'), value: 'parcialmente' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>Como avalia a clareza e precisão das informações sobre os pedidos?</label>
+                <label className={labelClass}>{t('survey.exp.orders_info', 'Como avalia a clareza e precisão das informações sobre os pedidos?')}</label>
                 <RatingStars
                   value={answers.experienciaGeral.clarezaInfo || 0}
                   onChange={(v) => setAnswers((prev) => ({
@@ -198,9 +283,9 @@ const Survey: React.FC = () => {
 
           {step === 2 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>3. Logística e Entregas</h1>
+              <h1 className={h1Class}>{t('survey.logistics.title', '3. Logística e Entregas')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>A pontualidade dos motoboys/entregadores tem sido satisfatória?</label>
+                <label className={labelClass}>{t('survey.logistics.punctuality', 'A pontualidade dos motoboys/entregadores tem sido satisfatória?')}</label>
                 <RadioGroup<'sempre' | 'maioria' | 'raramente' | 'nunca'>
                   name="pontualidade"
                   value={answers.logistica.pontualidade}
@@ -209,15 +294,15 @@ const Survey: React.FC = () => {
                     logistica: { ...prev.logistica, pontualidade: val },
                   }))}
                   options={[
-                    { label: 'Sempre', value: 'sempre' },
-                    { label: 'Na maioria das vezes', value: 'maioria' },
-                    { label: 'Raramente', value: 'raramente' },
-                    { label: 'Nunca', value: 'nunca' },
+                    { label: t('common.always', 'Sempre'), value: 'sempre' },
+                    { label: t('common.most_times', 'Na maioria das vezes'), value: 'maioria' },
+                    { label: t('common.rarely', 'Raramente'), value: 'raramente' },
+                    { label: t('common.never', 'Nunca'), value: 'nunca' },
                   ]}
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>Como classifica a qualidade e profissionalismo dos entregadores?</label>
+                <label className={labelClass}>{t('survey.logistics.quality', 'Como classifica a qualidade e profissionalismo dos entregadores?')}</label>
                 <RatingStars
                   value={answers.logistica.qualidadeProf || 0}
                   onChange={(v) => setAnswers((prev) => ({
@@ -227,7 +312,7 @@ const Survey: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>Já enfrentou problemas com pedidos não entregues ou extraviados?</label>
+                <label className={labelClass}>{t('survey.logistics.lost_orders', 'Já enfrentou problemas com pedidos não entregues ou extraviados?')}</label>
                 <RadioGroup<'sim_frequente' | 'sim_asvezes' | 'nao'>
                   name="problemasExtravio"
                   value={answers.logistica.problemasExtravio}
@@ -236,9 +321,9 @@ const Survey: React.FC = () => {
                     logistica: { ...prev.logistica, problemasExtravio: val },
                   }))}
                   options={[
-                    { label: 'Sim, frequentemente', value: 'sim_frequente' },
-                    { label: 'Sim, às vezes', value: 'sim_asvezes' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('survey.often', 'Sim, frequentemente'), value: 'sim_frequente' },
+                    { label: t('survey.sometimes', 'Sim, às vezes'), value: 'sim_asvezes' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
@@ -247,9 +332,9 @@ const Survey: React.FC = () => {
 
           {step === 3 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>4. Relacionamento e Apoio</h1>
+              <h1 className={h1Class}>{t('survey.support.title', '4. Relacionamento e Apoio')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>Como avalia o suporte/atendimento ao cliente da plataforma?</label>
+                <label className={labelClass}>{t('survey.support.rating', 'Como avalia o suporte/atendimento ao cliente da plataforma?')}</label>
                 <RatingStars
                   value={answers.relacionamento.suporte || 0}
                   onChange={(v) => setAnswers((prev) => ({
@@ -259,7 +344,7 @@ const Survey: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>A comunicação entre o restaurante/lojista e a plataforma é eficiente?</label>
+                <label className={labelClass}>{t('survey.support.communication', 'A comunicação entre o restaurante/lojista e a plataforma é eficiente?')}</label>
                 <RadioGroup<'sim' | 'parcialmente' | 'nao'>
                   name="comunicacao"
                   value={answers.relacionamento.comunicacao}
@@ -268,9 +353,9 @@ const Survey: React.FC = () => {
                     relacionamento: { ...prev.relacionamento, comunicacao: val },
                   }))}
                   options={[
-                    { label: 'Sim', value: 'sim' },
-                    { label: 'Parcialmente', value: 'parcialmente' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('common.yes', 'Sim'), value: 'sim' },
+                    { label: t('common.partially', 'Parcialmente'), value: 'parcialmente' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
@@ -279,9 +364,9 @@ const Survey: React.FC = () => {
 
           {step === 4 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>5. Financeiro</h1>
+              <h1 className={h1Class}>{t('survey.financial.title', '5. Financeiro')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>Como avalia a clareza e pontualidade dos pagamentos recebidos?</label>
+                <label className={labelClass}>{t('survey.financial.payments', 'Como avalia a clareza e pontualidade dos pagamentos recebidos?')}</label>
                 <RatingStars
                   value={answers.financeiro.pagamentos || 0}
                   onChange={(v) => setAnswers((prev) => ({
@@ -291,7 +376,7 @@ const Survey: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>As taxas cobradas pela plataforma são justas?</label>
+                <label className={labelClass}>{t('survey.financial.fees', 'As taxas cobradas pela plataforma são justas?')}</label>
                 <RadioGroup<'sim' | 'parcialmente' | 'nao'>
                   name="taxas"
                   value={answers.financeiro.taxas}
@@ -300,14 +385,14 @@ const Survey: React.FC = () => {
                     financeiro: { ...prev.financeiro, taxas: val },
                   }))}
                   options={[
-                    { label: 'Sim', value: 'sim' },
-                    { label: 'Parcialmente', value: 'parcialmente' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('common.yes', 'Sim'), value: 'sim' },
+                    { label: t('common.partially', 'Parcialmente'), value: 'parcialmente' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>Trabalhar com aplicativos de entrega aumentou as suas vendas?</label>
+                <label className={labelClass}>{t('survey.financial.sales', 'Trabalhar com aplicativos de entrega aumentou as suas vendas?')}</label>
                 <RadioGroup<'sim' | 'parcialmente' | 'nao'>
                   name="aumentouVendas"
                   value={answers.financeiro.aumentouVendas}
@@ -316,9 +401,9 @@ const Survey: React.FC = () => {
                     financeiro: { ...prev.financeiro, aumentouVendas: val },
                   }))}
                   options={[
-                    { label: 'Sim', value: 'sim' },
-                    { label: 'Parcialmente', value: 'parcialmente' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('common.yes', 'Sim'), value: 'sim' },
+                    { label: t('common.partially', 'Parcialmente'), value: 'parcialmente' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
@@ -327,22 +412,22 @@ const Survey: React.FC = () => {
 
           {step === 5 && (
             <div className="space-y-6">
-              <h1 className={h1Class}>6. Sugestões</h1>
+              <h1 className={h1Class}>{t('survey.suggestions.title', '6. Sugestões')}</h1>
               <div className="space-y-2">
-                <label className={labelClass}>Quais melhorias gostaria de ver no App?</label>
+                <label className={labelClass}>{t('survey.suggestions.improvements', 'Quais melhorias gostaria de ver no App?')}</label>
                 <textarea
                   value={answers.sugestoes.melhorias || ''}
                   onChange={(e) => setAnswers((prev) => ({
                     ...prev,
                     sugestoes: { ...prev.sugestoes, melhorias: e.target.value },
                   }))}
-                  placeholder="Conte-nos suas ideias..."
+                  placeholder={t('survey.suggestions.placeholder', 'Conte-nos suas ideias...')}
                   rows={4}
                   className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="space-y-2">
-                <label className={labelClass}>Recomenda o uso desta plataforma a outros lojistas/restaurantes?</label>
+                <label className={labelClass}>{t('survey.suggestions.recommend', 'Recomenda o uso desta plataforma a outros lojistas/restaurantes?')}</label>
                 <RadioGroup<'sim' | 'nao'>
                   name="recomenda"
                   value={answers.sugestoes.recomenda}
@@ -351,8 +436,8 @@ const Survey: React.FC = () => {
                     sugestoes: { ...prev.sugestoes, recomenda: val },
                   }))}
                   options={[
-                    { label: 'Sim', value: 'sim' },
-                    { label: 'Não', value: 'nao' },
+                    { label: t('common.yes', 'Sim'), value: 'sim' },
+                    { label: t('common.no', 'Não'), value: 'nao' },
                   ]}
                 />
               </div>
@@ -426,14 +511,14 @@ const Survey: React.FC = () => {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <h1 className={h1Class}>Obrigado!</h1>
-              <p className="text-slate-600 text-sm max-w-md mx-auto">Recebemos o seu inquérito com sucesso. A sua opinião ajuda-nos a melhorar continuamente.</p>
+              <h1 className={h1Class}>{t('survey.success.title', 'Obrigado!')}</h1>
+              <p className="text-slate-600 text-sm max-w-md mx-auto">{t('survey.success.subtitle', 'Recebemos o seu inquérito com sucesso. A sua opinião ajuda-nos a melhorar continuamente.')}</p>
             </div>
           )}
 
           {/* Step hint */}
           {step < totalSteps && (
-            <div className="mt-4 text-center text-xs text-slate-500">Questão {step + 1} de {totalSteps}</div>
+            <div className="mt-4 text-center text-xs text-slate-500">{t('survey.hint.step_of', 'Questão {{current}} de {{total}}', { current: step + 1, total: totalSteps })}</div>
           )}
         </div>
       </div>
@@ -449,7 +534,7 @@ const Survey: React.FC = () => {
                 disabled={step === 0 || isSubmitting}
                 className={`${actionBtn} border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50`}
               >
-                Anterior
+                {t('common.prev', 'Anterior')}
               </button>
 
               {step < totalSteps && (
@@ -459,7 +544,7 @@ const Survey: React.FC = () => {
                   disabled={!canGoNext || isSubmitting}
                   className={`${actionBtn} bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50`}
                 >
-                  Próximo
+                  {t('common.next', 'Próximo')}
                 </button>
               )}
 
@@ -470,7 +555,7 @@ const Survey: React.FC = () => {
                   disabled={isSubmitting}
                   className={`${actionBtn} bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50`}
                 >
-                  {isSubmitting ? 'Enviando...' : 'Enviar'}
+                  {isSubmitting ? t('common.sending', 'Enviando...') : t('common.submit', 'Enviar')}
                 </button>
               )}
             </>
@@ -483,7 +568,7 @@ const Survey: React.FC = () => {
                 onClick={() => navigate('/')}
                 className={`${actionBtn} bg-blue-600 text-white hover:bg-blue-700`}
               >
-                Fechar
+                {t('common.close', 'Fechar')}
               </button>
             </div>
           )}
